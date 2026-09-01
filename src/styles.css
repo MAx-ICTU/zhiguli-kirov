@@ -21,6 +21,7 @@ body {
   margin: 0;
   color: var(--ink);
   background: #eef2f6;
+  overflow-x: hidden;
 }
 
 a {
@@ -553,6 +554,238 @@ textarea {
   box-shadow: 0 12px 30px rgba(16, 32, 56, 0.08);
 }
 
+.admin-link {
+  display: inline-flex;
+  justify-content: center;
+  padding: 13px 16px;
+  border-radius: 8px;
+  background: var(--blue);
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.admin-page {
+  background: #f3f6fa;
+}
+
+.admin-main {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 34px 24px 70px;
+}
+
+.admin-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 480px;
+  gap: 28px;
+  align-items: stretch;
+  margin-bottom: 24px;
+}
+
+.admin-hero h1 {
+  margin: 0;
+  font-size: 42px;
+  line-height: 1.08;
+}
+
+.admin-hero p:not(.eyebrow) {
+  max-width: 680px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.admin-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-summary article,
+.admin-info-card,
+.admin-list-panel,
+.editor-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 34px rgba(16, 32, 56, 0.08);
+}
+
+.admin-summary article {
+  display: grid;
+  align-content: center;
+  min-height: 130px;
+  padding: 18px;
+}
+
+.admin-summary span {
+  color: var(--blue-dark);
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.admin-summary p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.admin-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 22px;
+  align-items: start;
+}
+
+.admin-hero > *,
+.admin-workspace > *,
+.admin-bottom-grid > * {
+  min-width: 0;
+}
+
+.admin-list-panel,
+.editor-panel,
+.admin-info-card {
+  padding: 20px;
+}
+
+.admin-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.admin-panel-heading h2,
+.editor-panel h2,
+.admin-info-card h2 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.admin-tools {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-tools input,
+.admin-tools select,
+.editor-form input,
+.editor-form select,
+.editor-form textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.editor-form textarea {
+  min-height: 112px;
+  padding-top: 12px;
+  resize: vertical;
+}
+
+.admin-table-wrap {
+  max-width: 100%;
+  max-height: 640px;
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+  font-size: 14px;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.admin-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #edf4fb;
+  color: var(--blue-dark);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.admin-table tr {
+  cursor: pointer;
+}
+
+.admin-table tr:hover,
+.admin-table tr.is-selected {
+  background: #f4f8fc;
+}
+
+.editor-muted {
+  margin: 8px 0 18px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.editor-form {
+  display: grid;
+  gap: 14px;
+}
+
+.editor-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.checkbox-line {
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: center;
+}
+
+.checkbox-line input {
+  min-height: auto;
+}
+
+.photo-preview {
+  display: grid;
+  place-items: center;
+  min-height: 170px;
+  padding: 16px;
+  border: 1px dashed #b6c4d4;
+  border-radius: 8px;
+  background: #f7fafc center / cover no-repeat;
+  color: var(--muted);
+  text-align: center;
+  font-weight: 800;
+}
+
+.admin-bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 22px;
+}
+
+.admin-info-card p:not(.eyebrow) {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .site-footer {
   display: flex;
   justify-content: space-between;
@@ -685,7 +918,9 @@ textarea {
 
   .catalog-layout,
   .selection-section,
-  .admin-section {
+  .admin-section,
+  .admin-hero,
+  .admin-workspace {
     grid-template-columns: 1fr;
   }
 
@@ -730,6 +965,9 @@ textarea {
   .product-grid,
   .store-grid,
   .admin-flow,
+  .admin-summary,
+  .admin-tools,
+  .admin-bottom-grid,
   .filters,
   .product-details {
     grid-template-columns: 1fr;

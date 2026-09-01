@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Прототип админ-панели каталога автозапчастей Жигули в Кирове."
+    />
+    <title>Админ-панель - Жигули</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body class="admin-page">
+    <header class="site-header">
+      <div class="topbar">
+        <a class="brand" href="index.html" aria-label="Жигули">
+          <span class="brand-mark">Ж</span>
+          <span>
+            <strong>Жигули</strong>
+            <small>управление каталогом</small>
+          </span>
+        </a>
+        <nav class="main-nav" aria-label="Навигация админ-панели">
+          <a href="index.html">Сайт</a>
+          <a href="#products">Товары</a>
+          <a href="#import">Импорт</a>
+          <a href="#settings">Настройки</a>
+        </nav>
+        <div class="header-actions">
+          <a class="primary-btn" href="index.html#catalog">Открыть каталог</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <section class="admin-hero">
+        <div>
+          <p class="eyebrow">Прототип рабочего кабинета</p>
+          <h1>Админ-панель каталога</h1>
+          <p>
+            Здесь будет ручное управление товарами, фотографиями, ценами и
+            публикацией позиций до подключения синхронизации с 1С.
+          </p>
+        </div>
+        <div class="admin-summary" aria-label="Сводка каталога">
+          <article>
+            <span id="adminProductsCount">0</span>
+            <p>товаров</p>
+          </article>
+          <article>
+            <span id="adminCategoriesCount">0</span>
+            <p>разделов</p>
+          </article>
+          <article>
+            <span id="adminRequestPriceCount">0</span>
+            <p>цену уточнить</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="admin-workspace" id="products">
+        <div class="admin-list-panel">
+          <div class="admin-panel-heading">
+            <div>
+              <p class="eyebrow">Каталог</p>
+              <h2>Товары</h2>
+            </div>
+            <button class="secondary-btn" id="resetAdminDraft" type="button">Сбросить правки</button>
+          </div>
+
+          <div class="admin-tools">
+            <input id="adminSearch" type="search" placeholder="Поиск по коду или названию" />
+            <select id="adminCategory">
+              <option value="">Все разделы</option>
+            </select>
+          </div>
+
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Код</th>
+                  <th>Наименование</th>
+                  <th>Раздел</th>
+                  <th>Цена</th>
+                  <th>Статус</th>
+                </tr>
+              </thead>
+              <tbody id="adminProductRows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <aside class="editor-panel" aria-label="Редактор товара">
+          <p class="eyebrow">Карточка товара</p>
+          <h2 id="editorTitle">Выберите товар</h2>
+          <p class="editor-muted" id="editorHint">
+            Нажмите на строку в таблице, чтобы открыть товар на редактирование.
+          </p>
+
+          <form class="editor-form" id="editorForm">
+            <label>
+              Код
+              <input id="editorCode" type="text" readonly />
+            </label>
+            <label>
+              Название
+              <textarea id="editorName"></textarea>
+            </label>
+            <label>
+              Раздел
+              <select id="editorCategory"></select>
+            </label>
+            <label>
+              Цена
+              <input id="editorPrice" type="number" min="0" step="1" />
+            </label>
+            <label class="checkbox-line">
+              <input id="editorPublished" type="checkbox" />
+              <span>Показывать товар на сайте</span>
+            </label>
+            <label>
+              Фото товара
+              <input id="editorPhoto" type="file" accept="image/*" />
+            </label>
+            <div class="photo-preview" id="photoPreview">Фото не выбрано</div>
+            <button class="primary-btn" type="submit">Сохранить в черновик</button>
+          </form>
+        </aside>
+      </section>
+
+      <section class="admin-bottom-grid">
+        <article class="admin-info-card" id="import">
+          <p class="eyebrow">Импорт</p>
+          <h2>Загрузка прайса</h2>
+          <p>
+            В рабочей версии здесь будет загрузка нового Excel-прайса,
+            предварительная проверка изменений и публикация после подтверждения.
+          </p>
+          <button class="secondary-btn" type="button">Выбрать файл прайса</button>
+        </article>
+        <article class="admin-info-card" id="settings">
+          <p class="eyebrow">Настройки</p>
+          <h2>Правила каталога</h2>
+          <p>
+            Цена 0 показывается как «цену уточнить». Товары можно скрывать, не
+            удаляя их из базы, чтобы сохранить связь с кодом из прайса.
+          </p>
+        </article>
+      </section>
+    </main>
+
+    <script src="src/products.js"></script>
+    <script src="src/admin.js"></script>
+  </body>
+</html>
