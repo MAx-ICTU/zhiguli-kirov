@@ -1,0 +1,9 @@
+{
+  "name": "Жигули - автозапчасти",
+  "short_name": "Жигули",
+  "start_url": "/zhiguli-kirov/",
+  "display": "standalone",
+  "background_color": "#eef2f6",
+  "theme_color": "#083760",
+  "lang": "ru"
+}

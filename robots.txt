@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://max-ictu.github.io/zhiguli-kirov/sitemap.xml
