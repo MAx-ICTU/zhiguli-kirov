@@ -6,7 +6,8 @@
     "start": "python -m http.server 4173",
     "admin": "node server/index.mjs",
     "build": "node tools/build-products.mjs",
-    "check": "node tools/check-data.mjs"
+    "check": "node tools/check-data.mjs",
+    "check:import": "node tools/check-import.mjs"
   },
   "devDependencies": {}
 }

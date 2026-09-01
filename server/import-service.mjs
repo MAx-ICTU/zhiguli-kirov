@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { inferCategory } from "../tools/build-products.mjs";
 import { loadProducts } from "./catalog-store.mjs";
+import { parseXlsxRows } from "./xlsx-parser.mjs";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const productsPath = path.join(rootDir, "src", "products.js");
@@ -43,6 +44,88 @@ function parsePrice(value) {
   return Math.max(0, Math.round(Number(clean) || 0));
 }
 
+function normalizeText(value) {
+  return String(value || "").toLowerCase().replaceAll("ё", "е").trim();
+}
+
+function normalizeHeader(value) {
+  return normalizeText(value).replace(/[^a-zа-я0-9]/g, "");
+}
+
+function mapHeader(header) {
+  const aliases = {
+    code: ["код", "артикул", "номенклатурныйномер", "sku", "id"],
+    name: ["название", "наименование", "товар", "номенклатура", "name"],
+    unit: ["ед", "единица", "единицаизмерения", "unit"],
+    price: ["цена", "розница", "прайс", "price"],
+    sourceCategory: ["группа", "раздел", "категорияисточника", "sourcecategory"],
+    category: ["категориясайта", "категория", "category"],
+  };
+  const normalized = normalizeHeader(header);
+  return Object.keys(aliases).find((field) => aliases[field].includes(normalized)) || "";
+}
+
+function splitTextRows(text, delimiter) {
+  return text
+    .split(/\r?\n/)
+    .map((line) => line.split(delimiter).map((cell) => cell.trim().replace(/^"|"$/g, "")))
+    .filter((row) => row.some(Boolean));
+}
+
+function detectDelimiter(text) {
+  const firstLine = text.split(/\r?\n/).find(Boolean) || "";
+  if (firstLine.includes("\t")) return "\t";
+  if (firstLine.includes(";")) return ";";
+  return ",";
+}
+
+function parseHtmlTable(text) {
+  const rowMatches = [...text.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)];
+  return rowMatches
+    .map((rowMatch) =>
+      [...rowMatch[1].matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)].map((cellMatch) =>
+        String(cellMatch[1] || "").replace(/<[^>]+>/g, "").trim(),
+      ),
+    )
+    .filter((row) => row.some(Boolean));
+}
+
+function rowsToProducts(rows) {
+  if (!rows.length) return [];
+  const headers = rows[0].map(mapHeader);
+  return rows.slice(1).map((row) =>
+    headers.reduce((product, field, index) => {
+      if (field) product[field] = row[index] || "";
+      return product;
+    }, {}),
+  );
+}
+
+export function parseImportFile({ fileName = "", contentBase64 = "" }) {
+  const buffer = Buffer.from(contentBase64, "base64");
+  const name = String(fileName || "").toLowerCase();
+
+  if (!buffer.length) throw new Error("Файл пустой.");
+
+  if (name.endsWith(".xlsx")) {
+    return rowsToProducts(parseXlsxRows(buffer));
+  }
+
+  if (name.endsWith(".xls") && buffer.subarray(0, 8).toString("hex") === "d0cf11e0a1b11ae1") {
+    throw new Error("Бинарный .xls пока не поддержан. Сохраните прайс как .xlsx и загрузите повторно.");
+  }
+
+  const text = buffer.toString("utf8").trim();
+  if (!text) throw new Error("Файл пустой.");
+  if (text.startsWith("[") || text.startsWith("{")) {
+    const parsed = JSON.parse(text);
+    return Array.isArray(parsed) ? parsed : parsed.products || [];
+  }
+
+  const rows = /<table/i.test(text) ? parseHtmlTable(text) : splitTextRows(text, detectDelimiter(text));
+  return rowsToProducts(rows);
+}
+
 export function normalizeImportProducts(rawProducts) {
   if (!Array.isArray(rawProducts)) return [];
 
@@ -72,7 +155,8 @@ function changeSamples(items) {
 }
 
 export function createImportPreview(payload) {
-  const nextProducts = normalizeImportProducts(payload.products);
+  const rawProducts = payload.file ? parseImportFile(payload.file) : payload.products;
+  const nextProducts = normalizeImportProducts(rawProducts);
   if (!nextProducts.length) {
     throw new Error("В файле не найдены товары с кодом и названием.");
   }

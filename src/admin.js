@@ -72,73 +72,15 @@
     }).format(new Date(value));
   }
 
-  function splitTextRows(text, delimiter) {
-    return text
-      .split(/\r?\n/)
-      .map((line) => line.split(delimiter).map((cell) => cell.trim().replace(/^"|"$/g, "")))
-      .filter((row) => row.some(Boolean));
-  }
-
-  function detectDelimiter(text) {
-    const firstLine = text.split(/\r?\n/).find(Boolean) || "";
-    if (firstLine.includes("\t")) return "\t";
-    if (firstLine.includes(";")) return ";";
-    return ",";
-  }
-
-  function normalizeHeader(value) {
-    return normalize(value).replace(/[^a-zа-я0-9]/g, "");
-  }
-
-  function mapHeader(header) {
-    const aliases = {
-      code: ["код", "артикул", "номенклатурныйномер", "sku", "id"],
-      name: ["название", "наименование", "товар", "номенклатура", "name"],
-      unit: ["ед", "единица", "единицаизмерения", "unit"],
-      price: ["цена", "розница", "прайс", "price"],
-      sourceCategory: ["группа", "раздел", "категорияисточника", "sourcecategory"],
-      category: ["категориясайта", "категория", "category"],
-    };
-    const normalized = normalizeHeader(header);
-    return Object.keys(aliases).find((field) => aliases[field].includes(normalized)) || "";
-  }
-
-  function rowsToProducts(rows) {
-    if (!rows.length) return [];
-    const headers = rows[0].map(mapHeader);
-    return rows.slice(1).map((row) =>
-      headers.reduce((product, field, index) => {
-        if (field) product[field] = row[index] || "";
-        return product;
-      }, {}),
-    );
-  }
-
-  function parseHtmlTable(text) {
-    const doc = new DOMParser().parseFromString(text, "text/html");
-    const table = doc.querySelector("table");
-    if (!table) return [];
-    return [...table.querySelectorAll("tr")]
-      .map((row) => [...row.children].map((cell) => cell.textContent.trim()))
-      .filter((row) => row.some(Boolean));
-  }
-
-  async function readImportProducts(file) {
-    const text = await file.text();
-    const trimmed = text.trim();
-
-    if (!trimmed) throw new Error("Файл пустой.");
-    if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
-      const parsed = JSON.parse(trimmed);
-      return Array.isArray(parsed) ? parsed : parsed.products || [];
-    }
-
-    const rows = /<table/i.test(trimmed) ? parseHtmlTable(trimmed) : splitTextRows(trimmed, detectDelimiter(trimmed));
-    const products = rowsToProducts(rows);
-    if (!products.some((product) => product.code && product.name)) {
-      throw new Error("Не удалось найти колонки с кодом и названием. Поддерживаются: код, артикул, наименование, цена, группа.");
-    }
-    return products;
+  function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        resolve(String(reader.result || "").split(",")[1] || "");
+      });
+      reader.addEventListener("error", () => reject(new Error("Не удалось прочитать файл.")));
+      reader.readAsDataURL(file);
+    });
   }
 
   async function fetchJson(url, options = {}, retry = true) {
@@ -325,10 +267,13 @@
     importResult.innerHTML = '<p class="empty-state">Проверяем прайс...</p>';
 
     try {
-      const productsToImport = await readImportProducts(file);
+      const contentBase64 = await readFileAsBase64(file);
       const preview = await fetchJson("/api/imports/preview", {
         method: "POST",
-        body: JSON.stringify({ sourceName: file.name, products: productsToImport }),
+        body: JSON.stringify({
+          sourceName: file.name,
+          file: { fileName: file.name, contentBase64 },
+        }),
       });
       renderImportPreview(preview);
     } catch (error) {
