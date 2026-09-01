@@ -740,13 +740,14 @@ textarea {
 
 .admin-summary {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
 }
 
 .admin-summary article,
 .admin-info-card,
 .admin-list-panel,
+.admin-requests-panel,
 .editor-panel {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -787,6 +788,7 @@ textarea {
 
 .admin-list-panel,
 .editor-panel,
+.admin-requests-panel,
 .admin-info-card {
   padding: 20px;
 }
@@ -922,6 +924,110 @@ textarea {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 22px;
   margin-top: 22px;
+}
+
+.admin-requests-panel {
+  margin-top: 22px;
+}
+
+.request-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.request-column {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-height: 260px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.request-column h3 {
+  margin: 0;
+  color: var(--blue-dark);
+  font-size: 16px;
+}
+
+.admin-request-list {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-request-card {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.admin-request-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.admin-request-head strong {
+  color: var(--blue-dark);
+}
+
+.admin-request-phone {
+  color: var(--red);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.admin-request-card p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.admin-request-items {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-request-items span {
+  display: grid;
+  gap: 4px;
+  padding: 9px;
+  border-radius: 8px;
+  background: #edf4fb;
+  color: var(--blue-dark);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.admin-request-items small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-request-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.admin-request-actions button {
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--blue);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
 }
 
 .admin-info-card p:not(.eyebrow) {
@@ -1180,7 +1286,7 @@ textarea {
     order: 3;
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     overflow: visible;
   }
 
@@ -1204,7 +1310,8 @@ textarea {
   .selection-section,
   .admin-section,
   .admin-hero,
-  .admin-workspace {
+  .admin-workspace,
+  .request-board {
     grid-template-columns: 1fr;
   }
 
@@ -1236,6 +1343,7 @@ textarea {
 
   .main-nav {
     gap: 4px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .main-nav a {

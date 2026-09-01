@@ -2,7 +2,13 @@ import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { addRequest, loadProducts, loadRequests, saveProductOverride } from "./catalog-store.mjs";
+import {
+  addRequest,
+  loadProducts,
+  loadRequests,
+  saveProductOverride,
+  updateRequestStatus,
+} from "./catalog-store.mjs";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const port = Number(process.env.PORT || 4173);
@@ -148,6 +154,18 @@ async function handleApi(request, response, url) {
       return true;
     }
     sendJson(response, 200, { items: loadRequests() });
+    return true;
+  }
+
+  const requestMatch = url.pathname.match(/^\/api\/requests\/([^/]+)$/);
+  if (requestMatch && request.method === "PATCH") {
+    if (!isAuthorized(request)) {
+      sendJson(response, 401, { error: "Authorization required" });
+      return true;
+    }
+    const body = await readBody(request);
+    const requestRecord = updateRequestStatus(decodeURIComponent(requestMatch[1]), body.status);
+    sendJson(response, requestRecord ? 200 : 404, requestRecord || { error: "Request not found" });
     return true;
   }
 

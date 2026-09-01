@@ -80,6 +80,20 @@ export function loadRequests() {
   return readJson(requestsPath, []);
 }
 
+export function updateRequestStatus(id, status) {
+  const allowedStatuses = ["new", "in_progress", "done"];
+  if (!allowedStatuses.includes(status)) return null;
+
+  const requests = loadRequests();
+  const request = requests.find((item) => item.id === id);
+  if (!request) return null;
+
+  request.status = status;
+  request.updatedAt = new Date().toISOString();
+  writeJson(requestsPath, requests);
+  return request;
+}
+
 export function addRequest(payload) {
   const requests = loadRequests();
   const request = {
