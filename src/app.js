@@ -33,6 +33,8 @@
   const copyProductLink = document.getElementById("copyProductLink");
   const productLinkStatus = document.getElementById("productLinkStatus");
   const requestDetails = document.getElementById("requestDetails");
+  const requestCar = document.getElementById("requestCar");
+  const requestPhone = document.getElementById("requestPhone");
   const requestNote = document.getElementById("requestNote");
   const requestListToggle = document.getElementById("requestListToggle");
   const requestListCount = document.getElementById("requestListCount");
@@ -275,6 +277,32 @@
     return lines.join("\n");
   }
 
+  async function submitRequestToBackend() {
+    const details = requestDetails.value.trim();
+    const car = requestCar.value.trim();
+    const phone = requestPhone.value.trim();
+    const commentLines = [];
+
+    if (car) commentLines.push(`Автомобиль: ${car}`);
+    if (details) commentLines.push(`Запрос: ${details}`);
+
+    const response = await fetch("/api/requests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        customer: { phone },
+        comment: commentLines.join("\n"),
+        items: requestItems,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    return response.json();
+  }
+
   function updateRequestEmail() {
     const subject = encodeURIComponent("Запрос по товарам с сайта Жигули");
     const body = encodeURIComponent(buildRequestText());
@@ -473,9 +501,17 @@
     });
   });
 
-  document.querySelector(".request-form").addEventListener("submit", (event) => {
+  document.querySelector(".request-form").addEventListener("submit", async (event) => {
     event.preventDefault();
-    alert("Заявка подготовлена. В рабочей версии она будет уходить менеджеру.");
+    try {
+      await submitRequestToBackend();
+      requestNote.textContent = "Заявка отправлена менеджеру. Он проверит наличие и перезвонит.";
+      requestDetails.value = "";
+      requestCar.value = "";
+      requestPhone.value = "";
+    } catch (error) {
+      requestNote.textContent = "Заявка подготовлена. Свяжитесь с магазином по телефону или отправьте список на email.";
+    }
   });
 
   const initialProductCode = new URLSearchParams(window.location.search).get("product");
