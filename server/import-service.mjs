@@ -127,11 +127,25 @@ export function parseImportFile({ fileName = "", contentBase64 = "" }) {
 }
 
 export function normalizeImportProducts(rawProducts) {
-  if (!Array.isArray(rawProducts)) return [];
+  return normalizeImportProductsWithStats(rawProducts).products;
+}
+
+function normalizeImportProductsWithStats(rawProducts) {
+  if (!Array.isArray(rawProducts)) {
+    return { products: [], stats: { rows: 0, skipped: 0, duplicates: 0, missingCode: 0, missingName: 0 } };
+  }
 
   const seen = new Set();
-  return rawProducts
-    .map((product) => {
+  const stats = {
+    rows: rawProducts.length,
+    skipped: 0,
+    duplicates: 0,
+    missingCode: 0,
+    missingName: 0,
+  };
+  const products = [];
+
+  rawProducts.forEach((product) => {
       const normalized = {
         code: String(product.code || "").trim(),
         name: String(product.name || "").trim(),
@@ -141,22 +155,147 @@ export function normalizeImportProducts(rawProducts) {
         category: String(product.category || "").trim(),
       };
       normalized.category = normalized.category || inferCategory(normalized);
-      return normalized;
-    })
-    .filter((product) => {
-      if (!product.code || !product.name || seen.has(product.code)) return false;
-      seen.add(product.code);
-      return true;
-    });
+      if (!normalized.code) stats.missingCode += 1;
+      if (!normalized.name) stats.missingName += 1;
+      if (seen.has(normalized.code)) stats.duplicates += 1;
+      if (!normalized.code || !normalized.name || seen.has(normalized.code)) {
+        stats.skipped += 1;
+        return;
+      }
+      seen.add(normalized.code);
+      products.push(normalized);
+  });
+
+  return { products, stats };
 }
 
 function changeSamples(items) {
   return items.slice(0, 20);
 }
 
+function percent(value, total) {
+  if (!total) return 0;
+  return Math.round((value / total) * 100);
+}
+
+function qualityCheck(id, title, severity, detail) {
+  return { id, title, severity, detail };
+}
+
+function analyzeImportQuality(currentProducts, nextProducts, summary, stats) {
+  const checks = [];
+  const currentTotal = currentProducts.length;
+  const removedPercent = percent(summary.removed, currentTotal);
+  const skippedPercent = percent(stats.skipped, stats.rows);
+  const noPriceCount = nextProducts.filter((product) => !product.price).length;
+  const noPricePercent = percent(noPriceCount, nextProducts.length);
+
+  if (summary.total < 1000) {
+    checks.push(
+      qualityCheck(
+        "too_few_products",
+        "Слишком мало товаров",
+        "block",
+        `В файле найдено ${summary.total.toLocaleString("ru-RU")} товаров. Для рабочего прайса это похоже на неполную выгрузку.`,
+      ),
+    );
+  }
+
+  if (currentTotal && summary.total < Math.round(currentTotal * 0.5)) {
+    checks.push(
+      qualityCheck(
+        "catalog_shrank",
+        "Каталог резко уменьшился",
+        "block",
+        `Новый файл меньше текущего каталога больше чем в два раза: ${summary.total.toLocaleString("ru-RU")} против ${currentTotal.toLocaleString("ru-RU")}.`,
+      ),
+    );
+  }
+
+  if (removedPercent >= 40) {
+    checks.push(
+      qualityCheck(
+        "many_removed",
+        "Много исчезнувших товаров",
+        "block",
+        `Из нового прайса исчезло ${removedPercent}% текущего каталога. Проверьте, что загружен полный файл.`,
+      ),
+    );
+  } else if (removedPercent >= 15) {
+    checks.push(
+      qualityCheck(
+        "many_removed",
+        "Заметно много исчезнувших товаров",
+        "warn",
+        `Из нового прайса исчезло ${removedPercent}% текущего каталога. Перед публикацией лучше проверить причину.`,
+      ),
+    );
+  }
+
+  if (skippedPercent >= 5) {
+    checks.push(
+      qualityCheck(
+        "many_skipped",
+        "Много строк пропущено",
+        "block",
+        `Пропущено ${skippedPercent}% строк из-за пустого кода, названия или дублей.`,
+      ),
+    );
+  } else if (stats.skipped > 0) {
+    checks.push(
+      qualityCheck(
+        "some_skipped",
+        "Есть пропущенные строки",
+        "warn",
+        `Пропущено строк: ${stats.skipped}. Без кода или названия товар нельзя связать с каталогом.`,
+      ),
+    );
+  }
+
+  if (noPricePercent >= 80) {
+    checks.push(
+      qualityCheck(
+        "many_empty_prices",
+        "Почти все цены пустые",
+        "warn",
+        `У ${noPricePercent}% товаров цена будет показана как «цену уточнить».`,
+      ),
+    );
+  }
+
+  if (!checks.length) {
+    checks.push(
+      qualityCheck(
+        "ok",
+        "Прайс выглядит нормально",
+        "ok",
+        "Критичных проблем не найдено. Каталог можно публиковать после ручной проверки изменений.",
+      ),
+    );
+  }
+
+  return {
+    canApply: !checks.some((check) => check.severity === "block"),
+    level: checks.some((check) => check.severity === "block")
+      ? "block"
+      : checks.some((check) => check.severity === "warn")
+        ? "warn"
+        : "ok",
+    stats: {
+      rows: stats.rows,
+      skipped: stats.skipped,
+      duplicates: stats.duplicates,
+      missingCode: stats.missingCode,
+      missingName: stats.missingName,
+      noPrice: noPriceCount,
+    },
+    checks,
+  };
+}
+
 export function createImportPreview(payload) {
   const rawProducts = payload.file ? parseImportFile(payload.file) : payload.products;
-  const nextProducts = normalizeImportProducts(rawProducts);
+  const { products: nextProducts, stats } = normalizeImportProductsWithStats(rawProducts);
   if (!nextProducts.length) {
     throw new Error("В файле не найдены товары с кодом и названием.");
   }
@@ -183,18 +322,22 @@ export function createImportPreview(payload) {
     })
     .filter(Boolean);
 
+  const summary = {
+    total: nextProducts.length,
+    added: added.length,
+    removed: removed.length,
+    changed: changed.length,
+    unchanged: nextProducts.length - added.length - changed.length,
+  };
+  const quality = analyzeImportQuality(currentProducts, nextProducts, summary, stats);
+
   const preview = {
     id: `IMP-${new Date().toISOString().replace(/\D/g, "").slice(0, 14)}`,
     sourceName: String(payload.sourceName || "price").trim(),
     createdAt: new Date().toISOString(),
     products: nextProducts,
-    summary: {
-      total: nextProducts.length,
-      added: added.length,
-      removed: removed.length,
-      changed: changed.length,
-      unchanged: nextProducts.length - added.length - changed.length,
-    },
+    summary,
+    quality,
     samples: {
       added: changeSamples(added),
       removed: changeSamples(removed),
@@ -212,6 +355,9 @@ export function applyImport(importId) {
   const pendingImports = readJson(pendingImportsPath, {});
   const preview = pendingImports[importId];
   if (!preview) return null;
+  if (preview.quality && !preview.quality.canApply) {
+    throw new Error("Публикация заблокирована проверкой качества прайса.");
+  }
 
   fs.writeFileSync(
     productsPath,

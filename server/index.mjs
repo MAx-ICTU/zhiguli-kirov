@@ -160,6 +160,7 @@ async function handleApi(request, response, url) {
       sourceName: preview.sourceName,
       createdAt: preview.createdAt,
       summary: preview.summary,
+      quality: preview.quality,
       samples: preview.samples,
     });
     return true;

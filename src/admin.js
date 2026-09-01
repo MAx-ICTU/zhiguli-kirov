@@ -210,8 +210,25 @@
 
   function renderImportPreview(preview) {
     pendingImportId = preview.id;
-    applyImport.disabled = false;
+    applyImport.disabled = preview.quality && !preview.quality.canApply;
     const summary = preview.summary;
+    const quality = preview.quality || { level: "ok", checks: [] };
+    const qualityTitle =
+      quality.level === "block"
+        ? "Публикация заблокирована"
+        : quality.level === "warn"
+          ? "Есть предупреждения"
+          : "Можно публиковать";
+    const qualityChecks = quality.checks
+      .map(
+        (check) => `
+          <li class="import-check import-check-${escapeHtml(check.severity)}">
+            <strong>${escapeHtml(check.title)}</strong>
+            <small>${escapeHtml(check.detail)}</small>
+          </li>
+        `,
+      )
+      .join("");
     const changed = preview.samples.changed
       .map((item) => {
         const fields = Object.entries(item.changes)
@@ -234,6 +251,10 @@
         <span><strong>${summary.changed.toLocaleString("ru-RU")}</strong> изменено</span>
         <span><strong>${summary.removed.toLocaleString("ru-RU")}</strong> исчезло</span>
       </div>
+      <section class="import-quality import-quality-${escapeHtml(quality.level)}">
+        <h3>${qualityTitle}</h3>
+        <ul>${qualityChecks}</ul>
+      </section>
       <div class="import-samples">
         <section>
           <h3>Измененные</h3>

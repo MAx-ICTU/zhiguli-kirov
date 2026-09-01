@@ -1086,6 +1086,76 @@ textarea {
   gap: 12px;
 }
 
+.import-quality {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.import-quality h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.import-quality-ok {
+  border-color: rgba(25, 120, 93, 0.35);
+}
+
+.import-quality-ok h3 {
+  color: var(--green);
+}
+
+.import-quality-warn {
+  border-color: rgba(167, 105, 18, 0.38);
+}
+
+.import-quality-warn h3 {
+  color: var(--amber);
+}
+
+.import-quality-block {
+  border-color: rgba(199, 53, 46, 0.42);
+}
+
+.import-quality-block h3 {
+  color: var(--red);
+}
+
+.import-quality ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.import-check {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.import-check strong {
+  color: var(--blue-dark);
+}
+
+.import-check small {
+  color: var(--muted);
+}
+
+.import-check-block {
+  background: #f9e5e3;
+}
+
+.import-check-warn {
+  background: #fbf0df;
+}
+
 .import-samples section {
   display: grid;
   gap: 8px;
