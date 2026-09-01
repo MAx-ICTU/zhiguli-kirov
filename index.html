@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Автозапчасти ВАЗ и LADA в Кирове. Каталог товаров, цены, подбор деталей и контакты магазинов Жигули."
+    />
+    <title>Жигули - автозапчасти ВАЗ и LADA в Кирове</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="topbar">
+        <a class="brand" href="#top" aria-label="Жигули">
+          <span class="brand-mark">Ж</span>
+          <span>
+            <strong>Жигули</strong>
+            <small>автозапчасти ВАЗ и LADA</small>
+          </span>
+        </a>
+        <nav class="main-nav" aria-label="Основная навигация">
+          <a href="#catalog">Каталог</a>
+          <a href="#selection">Подбор</a>
+          <a href="#stores">Магазины</a>
+          <a href="#admin">Админка</a>
+        </nav>
+        <div class="header-actions">
+          <a class="phone-link" href="tel:+78332620888">+7 (8332) 620-888</a>
+          <a class="primary-btn" href="#selection">Уточнить наличие</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-media" aria-hidden="true"></div>
+        <div class="hero-content">
+          <p class="eyebrow">Киров - Кольцова, 18 и Сормовская, 42</p>
+          <h1>Каталог автозапчастей ВАЗ и LADA с быстрым уточнением наличия</h1>
+          <p>
+            Более 9 000 позиций из прайса магазина: детали двигателя, подвески,
+            тормозной системы, кузова, стекла, масла, автохимия и инструмент.
+          </p>
+          <form class="hero-search" role="search" aria-label="Поиск товаров">
+            <input
+              id="heroSearch"
+              type="search"
+              placeholder="Код, название или модель авто"
+              autocomplete="off"
+            />
+            <button type="submit">Найти</button>
+          </form>
+          <div class="hero-stats" aria-label="Ключевые показатели">
+            <span><strong id="statProducts">9000+</strong> товаров</span>
+            <span><strong id="statCategories">12</strong> разделов</span>
+            <span><strong>2</strong> магазина</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="quick-categories" aria-label="Популярные разделы">
+        <button data-category="Двигатель">Двигатель</button>
+        <button data-category="Подвеска">Подвеска</button>
+        <button data-category="Тормоза">Тормоза</button>
+        <button data-category="Электрика">Электрика</button>
+        <button data-category="Кузов">Кузов</button>
+        <button data-category="Масла и жидкости">Масла</button>
+        <button data-category="Автохимия">Автохимия</button>
+        <button data-category="Инструменты">Инструменты</button>
+      </section>
+
+      <section class="section-shell catalog-section" id="catalog">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Витрина вместо скачивания прайса</p>
+            <h2>Каталог товаров</h2>
+          </div>
+          <p>
+            Цены загружены из текущего прайса. Для товаров с нулевой ценой
+            показывается статус «уточнить».
+          </p>
+        </div>
+
+        <div class="catalog-layout">
+          <aside class="filters" aria-label="Фильтры каталога">
+            <label>
+              Поиск
+              <input id="catalogSearch" type="search" placeholder="Код или название" />
+            </label>
+            <label>
+              Раздел
+              <select id="categoryFilter">
+                <option value="">Все разделы</option>
+              </select>
+            </label>
+            <label>
+              Цена
+              <select id="priceFilter">
+                <option value="">Любая</option>
+                <option value="priced">С указанной ценой</option>
+                <option value="request">Цену уточнить</option>
+                <option value="under1000">До 1 000 ₽</option>
+                <option value="over5000">От 5 000 ₽</option>
+              </select>
+            </label>
+            <button class="secondary-btn" id="resetFilters" type="button">Сбросить</button>
+          </aside>
+
+          <div class="catalog-main">
+            <div class="catalog-toolbar">
+              <p id="catalogCount">Загрузка каталога...</p>
+              <select id="sortSelect" aria-label="Сортировка">
+                <option value="relevance">По умолчанию</option>
+                <option value="priceAsc">Сначала дешевле</option>
+                <option value="priceDesc">Сначала дороже</option>
+                <option value="nameAsc">По названию</option>
+              </select>
+            </div>
+            <div class="product-grid" id="productGrid" aria-live="polite"></div>
+            <button class="load-more" id="loadMore" type="button">Показать еще</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-shell selection-section" id="selection">
+        <div class="selection-copy">
+          <p class="eyebrow">Когда артикул неизвестен</p>
+          <h2>Подбор детали по автомобилю</h2>
+          <p>
+            Клиент оставляет модель, год, нужную деталь и телефон. Менеджер
+            проверяет наличие и перезванивает.
+          </p>
+        </div>
+        <form class="request-form">
+          <label>
+            Автомобиль
+            <input type="text" placeholder="Например: ВАЗ 2114, 2011" />
+          </label>
+          <label>
+            Что нужно найти
+            <textarea placeholder="Например: передние стойки, тормозные колодки, стекло"></textarea>
+          </label>
+          <label>
+            Телефон
+            <input type="tel" placeholder="+7 ___ ___-__-__" />
+          </label>
+          <button class="primary-btn" type="submit">Отправить заявку</button>
+        </form>
+      </section>
+
+      <section class="section-shell stores-section" id="stores">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Самовывоз и консультация</p>
+            <h2>Магазины в Кирове</h2>
+          </div>
+        </div>
+        <div class="store-grid">
+          <article class="store-card">
+            <h3>Жигули</h3>
+            <p>ул. Кольцова, 18</p>
+            <p>Пн-Пт: 8:00-20:00, Сб: 8:00-19:00, Вс: 9:00-17:00</p>
+            <a href="tel:+78332620888">620-888</a>
+          </article>
+          <article class="store-card">
+            <h3>Автоунивермаг, отдел Жигули-ВАЗ</h3>
+            <p>ул. Сормовская, 42</p>
+            <p>Пн-Пт: 8:00-19:00, Сб: 9:00-18:00, Вс: 9:00-16:00</p>
+            <a href="tel:+78332532989">532-989</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-shell admin-section" id="admin">
+        <div>
+          <p class="eyebrow">Следующий слой проекта</p>
+          <h2>Админ-панель для прайса и фотографий</h2>
+          <p>
+            В первой версии администратор сможет обновлять прайс вручную,
+            редактировать карточки, загружать фотографии и скрывать неактуальные позиции.
+          </p>
+        </div>
+        <div class="admin-flow">
+          <span>Загрузка прайса</span>
+          <span>Проверка цен</span>
+          <span>Фото товаров</span>
+          <span>Публикация</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Жигули - автозапчасти ВАЗ и LADA в Кирове</p>
+      <a href="mailto:info@zhiguli-kirov.ru">info@zhiguli-kirov.ru</a>
+    </footer>
+
+    <script src="src/products.js"></script>
+    <script src="src/app.js"></script>
+  </body>
+</html>
