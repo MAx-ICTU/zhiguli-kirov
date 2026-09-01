@@ -9,6 +9,7 @@ import {
   saveProductOverride,
   updateRequestStatus,
 } from "./catalog-store.mjs";
+import { applyImport, createImportPreview, loadImportHistory } from "./import-service.mjs";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const port = Number(process.env.PORT || 4173);
@@ -38,7 +39,7 @@ function readBody(request) {
     let body = "";
     request.on("data", (chunk) => {
       body += chunk;
-      if (body.length > 1024 * 1024) {
+      if (body.length > 20 * 1024 * 1024) {
         reject(new Error("Payload too large"));
         request.destroy();
       }
@@ -145,6 +146,42 @@ async function handleApi(request, response, url) {
   if (url.pathname === "/api/requests" && request.method === "POST") {
     const requestRecord = addRequest(await readBody(request));
     sendJson(response, 201, requestRecord);
+    return true;
+  }
+
+  if (url.pathname === "/api/imports/preview" && request.method === "POST") {
+    if (!isAuthorized(request)) {
+      sendJson(response, 401, { error: "Authorization required" });
+      return true;
+    }
+    const preview = createImportPreview(await readBody(request));
+    sendJson(response, 201, {
+      id: preview.id,
+      sourceName: preview.sourceName,
+      createdAt: preview.createdAt,
+      summary: preview.summary,
+      samples: preview.samples,
+    });
+    return true;
+  }
+
+  if (url.pathname === "/api/imports/history" && request.method === "GET") {
+    if (!isAuthorized(request)) {
+      sendJson(response, 401, { error: "Authorization required" });
+      return true;
+    }
+    sendJson(response, 200, { items: loadImportHistory() });
+    return true;
+  }
+
+  const importMatch = url.pathname.match(/^\/api\/imports\/([^/]+)\/apply$/);
+  if (importMatch && request.method === "POST") {
+    if (!isAuthorized(request)) {
+      sendJson(response, 401, { error: "Authorization required" });
+      return true;
+    }
+    const record = applyImport(decodeURIComponent(importMatch[1]));
+    sendJson(response, record ? 200 : 404, record || { error: "Import preview not found" });
     return true;
   }
 

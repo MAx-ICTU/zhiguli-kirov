@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const inputPath = path.resolve("work/products.raw.json");
 const outputPath = path.resolve("src/products.js");
-const rawProducts = JSON.parse(fs.readFileSync(inputPath, "utf8"));
 
-function inferCategory(product) {
+export function inferCategory(product) {
   const text = `${product.name} ${product.sourceCategory}`.toLowerCase();
 
   if (/масл|антифриз|тосол|жидк|лукойл|shell|gazprom|g-energy/.test(text)) return "Масла и жидкости";
@@ -23,15 +23,22 @@ function inferCategory(product) {
   return "Прочее";
 }
 
-const products = rawProducts.map((product) => ({
-  ...product,
-  category: inferCategory(product),
-}));
+export function buildProducts(rawProducts) {
+  return rawProducts.map((product) => ({
+    ...product,
+    category: inferCategory(product),
+  }));
+}
 
-fs.writeFileSync(
-  outputPath,
-  `window.ZHIGULI_PRODUCTS = ${JSON.stringify(products, null, 2)};\n`,
-  "utf8",
-);
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const rawProducts = JSON.parse(fs.readFileSync(inputPath, "utf8"));
+  const products = buildProducts(rawProducts);
 
-console.log(`Saved ${products.length} products to ${outputPath}`);
+  fs.writeFileSync(
+    outputPath,
+    `window.ZHIGULI_PRODUCTS = ${JSON.stringify(products, null, 2)};\n`,
+    "utf8",
+  );
+
+  console.log(`Saved ${products.length} products to ${outputPath}`);
+}

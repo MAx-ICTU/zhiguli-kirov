@@ -170,10 +170,17 @@
           <p class="eyebrow">Импорт</p>
           <h2>Загрузка прайса</h2>
           <p>
-            В рабочей версии здесь будет загрузка нового Excel-прайса,
-            предварительная проверка изменений и публикация после подтверждения.
+            Загрузите новый прайс, проверьте изменения и опубликуйте каталог
+            только после подтверждения.
           </p>
-          <button class="secondary-btn" type="button">Выбрать файл прайса</button>
+          <div class="import-controls">
+            <input id="importFile" type="file" accept=".json,.csv,.tsv,.txt,.xls" />
+            <button class="secondary-btn" id="previewImport" type="button">Проверить прайс</button>
+            <button class="primary-btn" id="applyImport" type="button" disabled>Опубликовать каталог</button>
+          </div>
+          <div class="import-result" id="importResult">
+            <p class="empty-state">Выберите файл прайса для предварительной проверки.</p>
+          </div>
         </article>
         <article class="admin-info-card" id="settings">
           <p class="eyebrow">Настройки</p>

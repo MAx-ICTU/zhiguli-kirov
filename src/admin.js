@@ -23,6 +23,10 @@
   const newRequestsList = document.getElementById("newRequestsList");
   const progressRequestsList = document.getElementById("progressRequestsList");
   const doneRequestsList = document.getElementById("doneRequestsList");
+  const importFile = document.getElementById("importFile");
+  const previewImport = document.getElementById("previewImport");
+  const applyImport = document.getElementById("applyImport");
+  const importResult = document.getElementById("importResult");
   const resetAdminDraft = document.getElementById("resetAdminDraft");
   const editorTitle = document.getElementById("editorTitle");
   const editorHint = document.getElementById("editorHint");
@@ -34,6 +38,7 @@
   const editorPublished = document.getElementById("editorPublished");
   const editorPhoto = document.getElementById("editorPhoto");
   const photoPreview = document.getElementById("photoPreview");
+  let pendingImportId = "";
 
   function normalize(value) {
     return String(value || "").toLowerCase().replaceAll("ё", "е").trim();
@@ -65,6 +70,75 @@
       hour: "2-digit",
       minute: "2-digit",
     }).format(new Date(value));
+  }
+
+  function splitTextRows(text, delimiter) {
+    return text
+      .split(/\r?\n/)
+      .map((line) => line.split(delimiter).map((cell) => cell.trim().replace(/^"|"$/g, "")))
+      .filter((row) => row.some(Boolean));
+  }
+
+  function detectDelimiter(text) {
+    const firstLine = text.split(/\r?\n/).find(Boolean) || "";
+    if (firstLine.includes("\t")) return "\t";
+    if (firstLine.includes(";")) return ";";
+    return ",";
+  }
+
+  function normalizeHeader(value) {
+    return normalize(value).replace(/[^a-zа-я0-9]/g, "");
+  }
+
+  function mapHeader(header) {
+    const aliases = {
+      code: ["код", "артикул", "номенклатурныйномер", "sku", "id"],
+      name: ["название", "наименование", "товар", "номенклатура", "name"],
+      unit: ["ед", "единица", "единицаизмерения", "unit"],
+      price: ["цена", "розница", "прайс", "price"],
+      sourceCategory: ["группа", "раздел", "категорияисточника", "sourcecategory"],
+      category: ["категориясайта", "категория", "category"],
+    };
+    const normalized = normalizeHeader(header);
+    return Object.keys(aliases).find((field) => aliases[field].includes(normalized)) || "";
+  }
+
+  function rowsToProducts(rows) {
+    if (!rows.length) return [];
+    const headers = rows[0].map(mapHeader);
+    return rows.slice(1).map((row) =>
+      headers.reduce((product, field, index) => {
+        if (field) product[field] = row[index] || "";
+        return product;
+      }, {}),
+    );
+  }
+
+  function parseHtmlTable(text) {
+    const doc = new DOMParser().parseFromString(text, "text/html");
+    const table = doc.querySelector("table");
+    if (!table) return [];
+    return [...table.querySelectorAll("tr")]
+      .map((row) => [...row.children].map((cell) => cell.textContent.trim()))
+      .filter((row) => row.some(Boolean));
+  }
+
+  async function readImportProducts(file) {
+    const text = await file.text();
+    const trimmed = text.trim();
+
+    if (!trimmed) throw new Error("Файл пустой.");
+    if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+      const parsed = JSON.parse(trimmed);
+      return Array.isArray(parsed) ? parsed : parsed.products || [];
+    }
+
+    const rows = /<table/i.test(trimmed) ? parseHtmlTable(trimmed) : splitTextRows(trimmed, detectDelimiter(trimmed));
+    const products = rowsToProducts(rows);
+    if (!products.some((product) => product.code && product.name)) {
+      throw new Error("Не удалось найти колонки с кодом и названием. Поддерживаются: код, артикул, наименование, цена, группа.");
+    }
+    return products;
   }
 
   async function fetchJson(url, options = {}, retry = true) {
@@ -190,6 +264,94 @@
       body: JSON.stringify({ status }),
     });
     await loadRequests();
+  }
+
+  function renderImportPreview(preview) {
+    pendingImportId = preview.id;
+    applyImport.disabled = false;
+    const summary = preview.summary;
+    const changed = preview.samples.changed
+      .map((item) => {
+        const fields = Object.entries(item.changes)
+          .map(([field, value]) => `${field}: ${escapeHtml(value.before)} -> ${escapeHtml(value.after)}`)
+          .join("; ");
+        return `<li><strong>${escapeHtml(item.code)}</strong> ${escapeHtml(item.name)}<small>${fields}</small></li>`;
+      })
+      .join("");
+    const added = preview.samples.added
+      .map((item) => `<li><strong>${escapeHtml(item.code)}</strong> ${escapeHtml(item.name)}</li>`)
+      .join("");
+    const removed = preview.samples.removed
+      .map((item) => `<li><strong>${escapeHtml(item.code)}</strong> ${escapeHtml(item.name)}</li>`)
+      .join("");
+
+    importResult.innerHTML = `
+      <div class="import-summary">
+        <span><strong>${summary.total.toLocaleString("ru-RU")}</strong> товаров в файле</span>
+        <span><strong>${summary.added.toLocaleString("ru-RU")}</strong> новых</span>
+        <span><strong>${summary.changed.toLocaleString("ru-RU")}</strong> изменено</span>
+        <span><strong>${summary.removed.toLocaleString("ru-RU")}</strong> исчезло</span>
+      </div>
+      <div class="import-samples">
+        <section>
+          <h3>Измененные</h3>
+          <ul>${changed || "<li>Нет изменений.</li>"}</ul>
+        </section>
+        <section>
+          <h3>Новые</h3>
+          <ul>${added || "<li>Нет новых товаров.</li>"}</ul>
+        </section>
+        <section>
+          <h3>Не найдены в файле</h3>
+          <ul>${removed || "<li>Все текущие товары есть в файле.</li>"}</ul>
+        </section>
+      </div>
+    `;
+  }
+
+  async function previewSelectedImport() {
+    if (!apiEnabled) {
+      importResult.innerHTML = '<p class="empty-state">Импорт работает при запуске backend.</p>';
+      return;
+    }
+    const file = importFile.files && importFile.files[0];
+    if (!file) {
+      importResult.innerHTML = '<p class="empty-state">Выберите файл прайса.</p>';
+      return;
+    }
+
+    applyImport.disabled = true;
+    pendingImportId = "";
+    importResult.innerHTML = '<p class="empty-state">Проверяем прайс...</p>';
+
+    try {
+      const productsToImport = await readImportProducts(file);
+      const preview = await fetchJson("/api/imports/preview", {
+        method: "POST",
+        body: JSON.stringify({ sourceName: file.name, products: productsToImport }),
+      });
+      renderImportPreview(preview);
+    } catch (error) {
+      importResult.innerHTML = `<p class="empty-state">${escapeHtml(error.message)}</p>`;
+    }
+  }
+
+  async function applySelectedImport() {
+    if (!pendingImportId) return;
+    applyImport.disabled = true;
+    importResult.insertAdjacentHTML("afterbegin", '<p class="empty-state">Публикуем каталог...</p>');
+    try {
+      const record = await fetchJson(`/api/imports/${encodeURIComponent(pendingImportId)}/apply`, {
+        method: "POST",
+        body: JSON.stringify({}),
+      });
+      pendingImportId = "";
+      importResult.innerHTML = `<p class="empty-state">Каталог опубликован. В файле ${record.summary.total.toLocaleString("ru-RU")} товаров.</p>`;
+      await loadSummary();
+      await renderRows();
+    } catch (error) {
+      importResult.innerHTML = `<p class="empty-state">Не удалось опубликовать каталог: ${escapeHtml(error.message)}</p>`;
+    }
   }
 
   function filteredProducts() {
@@ -349,6 +511,8 @@
   });
 
   refreshRequests.addEventListener("click", loadRequests);
+  previewImport.addEventListener("click", previewSelectedImport);
+  applyImport.addEventListener("click", applySelectedImport);
 
   document.querySelectorAll(".admin-request-list").forEach((list) => {
     list.addEventListener("click", async (event) => {
