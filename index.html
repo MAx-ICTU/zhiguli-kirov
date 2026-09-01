@@ -133,19 +133,22 @@
             проверяет наличие и перезванивает.
           </p>
         </div>
-        <form class="request-form">
+        <form class="request-form" id="requestForm">
           <label>
             Автомобиль
-            <input type="text" placeholder="Например: ВАЗ 2114, 2011" />
+            <input id="requestCar" type="text" placeholder="Например: ВАЗ 2114, 2011" />
           </label>
           <label>
             Что нужно найти
-            <textarea placeholder="Например: передние стойки, тормозные колодки, стекло"></textarea>
+            <textarea id="requestDetails" placeholder="Например: передние стойки, тормозные колодки, стекло"></textarea>
           </label>
           <label>
             Телефон
-            <input type="tel" placeholder="+7 ___ ___-__-__" />
+            <input id="requestPhone" type="tel" placeholder="+7 ___ ___-__-__" />
           </label>
+          <p class="form-note" id="requestNote">
+            Можно отправить общий запрос или выбрать товар в каталоге.
+          </p>
           <button class="primary-btn" type="submit">Отправить заявку</button>
         </form>
       </section>
@@ -195,6 +198,37 @@
       <p>Жигули - автозапчасти ВАЗ и LADA в Кирове</p>
       <a href="mailto:info@zhiguli-kirov.ru">info@zhiguli-kirov.ru</a>
     </footer>
+
+    <div class="modal" id="productModal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal></div>
+      <article class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal-close" type="button" data-close-modal aria-label="Закрыть">×</button>
+        <p class="eyebrow" id="modalCategory">Категория</p>
+        <h2 id="modalTitle">Товар</h2>
+        <dl class="product-details">
+          <div>
+            <dt>Код</dt>
+            <dd id="modalCode"></dd>
+          </div>
+          <div>
+            <dt>Исходная группа</dt>
+            <dd id="modalSource"></dd>
+          </div>
+          <div>
+            <dt>Единица</dt>
+            <dd id="modalUnit"></dd>
+          </div>
+          <div>
+            <dt>Цена</dt>
+            <dd id="modalPrice"></dd>
+          </div>
+        </dl>
+        <div class="modal-actions">
+          <a class="primary-btn" href="tel:+78332620888">Позвонить</a>
+          <button class="secondary-btn" id="requestProduct" type="button">Запросить этот товар</button>
+        </div>
+      </article>
+    </div>
 
     <script src="src/products.js"></script>
     <script src="src/app.js"></script>

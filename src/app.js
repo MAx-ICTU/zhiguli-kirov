@@ -21,6 +21,18 @@
   const sortSelect = document.getElementById("sortSelect");
   const resetFilters = document.getElementById("resetFilters");
   const loadMore = document.getElementById("loadMore");
+  const productModal = document.getElementById("productModal");
+  const modalCategory = document.getElementById("modalCategory");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalCode = document.getElementById("modalCode");
+  const modalSource = document.getElementById("modalSource");
+  const modalUnit = document.getElementById("modalUnit");
+  const modalPrice = document.getElementById("modalPrice");
+  const requestProduct = document.getElementById("requestProduct");
+  const requestDetails = document.getElementById("requestDetails");
+  const requestNote = document.getElementById("requestNote");
+
+  let selectedProduct = null;
 
   document.getElementById("statProducts").textContent = products.length.toLocaleString("ru-RU");
   document.getElementById("statCategories").textContent = categories.length.toLocaleString("ru-RU");
@@ -38,6 +50,11 @@
       return '<span class="request-price">цену уточнить</span>';
     }
     return `<span class="price">${Number(price).toLocaleString("ru-RU")} ₽</span>`;
+  }
+
+  function formatPlainPrice(price) {
+    if (!price) return "цену уточнить";
+    return `${Number(price).toLocaleString("ru-RU")} ₽`;
   }
 
   function escapeHtml(value) {
@@ -91,7 +108,7 @@
       visibleItems
         .map(
           (product) => `
-            <article class="product-card">
+            <article class="product-card" data-code="${escapeHtml(product.code)}">
               <div class="product-top">
                 <span class="product-code">Код ${escapeHtml(product.code)}</span>
                 <span class="product-category">${escapeHtml(product.category)}</span>
@@ -100,12 +117,38 @@
               <div class="source-category">${escapeHtml(product.sourceCategory || "")}</div>
               <div class="product-bottom">
                 ${formatPrice(product.price)}
-                <a href="tel:+78332620888">Уточнить</a>
+                <button class="details-btn" type="button" data-product-code="${escapeHtml(product.code)}">
+                  Подробнее
+                </button>
               </div>
             </article>
           `,
         )
         .join("") || '<p class="empty-state">Ничего не найдено. Попробуйте изменить запрос.</p>';
+  }
+
+  function openProduct(product) {
+    selectedProduct = product;
+    modalCategory.textContent = product.category;
+    modalTitle.textContent = product.name;
+    modalCode.textContent = product.code;
+    modalSource.textContent = product.sourceCategory || "Без группы";
+    modalUnit.textContent = product.unit || "шт";
+    modalPrice.textContent = formatPlainPrice(product.price);
+    productModal.classList.add("is-open");
+    productModal.setAttribute("aria-hidden", "false");
+  }
+
+  function closeProduct() {
+    productModal.classList.remove("is-open");
+    productModal.setAttribute("aria-hidden", "true");
+  }
+
+  function fillRequestFromProduct(product) {
+    requestDetails.value = `Интересует товар: ${product.name}\nКод: ${product.code}\nЦена: ${formatPlainPrice(product.price)}`;
+    requestNote.textContent = "В заявку добавлен выбранный товар из каталога.";
+    closeProduct();
+    document.getElementById("selection").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function setQuery(value) {
@@ -162,6 +205,32 @@
     render();
   });
 
+  productGrid.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-product-code]");
+    if (!button) return;
+
+    const product = products.find((item) => item.code === button.dataset.productCode);
+    if (product) {
+      openProduct(product);
+    }
+  });
+
+  document.querySelectorAll("[data-close-modal]").forEach((element) => {
+    element.addEventListener("click", closeProduct);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeProduct();
+    }
+  });
+
+  requestProduct.addEventListener("click", () => {
+    if (selectedProduct) {
+      fillRequestFromProduct(selectedProduct);
+    }
+  });
+
   document.querySelectorAll(".quick-categories button").forEach((button) => {
     button.addEventListener("click", () => {
       state.category = button.dataset.category;
@@ -174,7 +243,7 @@
 
   document.querySelector(".request-form").addEventListener("submit", (event) => {
     event.preventDefault();
-    alert("Заявка сохранена в прототипе. В рабочей версии она будет уходить менеджеру.");
+    alert("Заявка подготовлена. В рабочей версии она будет уходить менеджеру.");
   });
 
   render();
