@@ -6,6 +6,8 @@ import {
   addRequest,
   loadProducts,
   loadRequests,
+  loadSettings,
+  saveSettings,
   saveProductOverride,
   updateRequestStatus,
 } from "./catalog-store.mjs";
@@ -14,6 +16,7 @@ import { applyImport, createImportPreview, loadImportHistory, rollbackImport } f
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const port = Number(process.env.PORT || 4173);
 const adminToken = process.env.ADMIN_TOKEN || "";
+const managerToken = process.env.MANAGER_TOKEN || "";
 
 const mimeTypes = {
   ".css": "text/css; charset=utf-8",
@@ -58,9 +61,33 @@ function readBody(request) {
   });
 }
 
-function isAuthorized(request) {
-  if (!adminToken) return true;
-  return request.headers.authorization === `Bearer ${adminToken}`;
+function getSession(request) {
+  if (!adminToken && !managerToken) {
+    return { authenticated: true, role: "admin" };
+  }
+
+  const authorization = request.headers.authorization || "";
+  if (adminToken && authorization === `Bearer ${adminToken}`) {
+    return { authenticated: true, role: "admin" };
+  }
+  if (managerToken && authorization === `Bearer ${managerToken}`) {
+    return { authenticated: true, role: "manager" };
+  }
+
+  return { authenticated: false, role: "" };
+}
+
+function requireRole(request, response, allowedRoles) {
+  const session = getSession(request);
+  if (!session.authenticated) {
+    sendJson(response, 401, { error: "Authorization required" });
+    return null;
+  }
+  if (!allowedRoles.includes(session.role)) {
+    sendJson(response, 403, { error: "Admin role required" });
+    return null;
+  }
+  return session;
 }
 
 function normalize(value) {
@@ -114,6 +141,24 @@ async function handleApi(request, response, url) {
     return true;
   }
 
+  if (url.pathname === "/api/session" && request.method === "GET") {
+    const session = getSession(request);
+    if (!session.authenticated) {
+      sendJson(response, 401, { error: "Authorization required" });
+      return true;
+    }
+    sendJson(response, 200, {
+      role: session.role,
+      permissions: {
+        products: true,
+        requests: true,
+        imports: session.role === "admin",
+        settings: session.role === "admin",
+      },
+    });
+    return true;
+  }
+
   if (url.pathname === "/api/catalog/summary") {
     sendJson(response, 200, getSummary());
     return true;
@@ -133,10 +178,7 @@ async function handleApi(request, response, url) {
   }
 
   if (productMatch && request.method === "PATCH") {
-    if (!isAuthorized(request)) {
-      sendJson(response, 401, { error: "Authorization required" });
-      return true;
-    }
+    if (!requireRole(request, response, ["manager", "admin"])) return true;
     const code = decodeURIComponent(productMatch[1]);
     const product = saveProductOverride(code, await readBody(request));
     sendJson(response, product ? 200 : 404, product || { error: "Product not found" });
@@ -150,10 +192,7 @@ async function handleApi(request, response, url) {
   }
 
   if (url.pathname === "/api/imports/preview" && request.method === "POST") {
-    if (!isAuthorized(request)) {
-      sendJson(response, 401, { error: "Authorization required" });
-      return true;
-    }
+    if (!requireRole(request, response, ["admin"])) return true;
     const preview = createImportPreview(await readBody(request));
     sendJson(response, 201, {
       id: preview.id,
@@ -167,20 +206,14 @@ async function handleApi(request, response, url) {
   }
 
   if (url.pathname === "/api/imports/history" && request.method === "GET") {
-    if (!isAuthorized(request)) {
-      sendJson(response, 401, { error: "Authorization required" });
-      return true;
-    }
+    if (!requireRole(request, response, ["admin"])) return true;
     sendJson(response, 200, { items: loadImportHistory() });
     return true;
   }
 
   const importMatch = url.pathname.match(/^\/api\/imports\/([^/]+)\/apply$/);
   if (importMatch && request.method === "POST") {
-    if (!isAuthorized(request)) {
-      sendJson(response, 401, { error: "Authorization required" });
-      return true;
-    }
+    if (!requireRole(request, response, ["admin"])) return true;
     const record = applyImport(decodeURIComponent(importMatch[1]));
     sendJson(response, record ? 200 : 404, record || { error: "Import preview not found" });
     return true;
@@ -188,30 +221,21 @@ async function handleApi(request, response, url) {
 
   const rollbackMatch = url.pathname.match(/^\/api\/imports\/([^/]+)\/rollback$/);
   if (rollbackMatch && request.method === "POST") {
-    if (!isAuthorized(request)) {
-      sendJson(response, 401, { error: "Authorization required" });
-      return true;
-    }
+    if (!requireRole(request, response, ["admin"])) return true;
     const record = rollbackImport(decodeURIComponent(rollbackMatch[1]));
     sendJson(response, record ? 200 : 404, record || { error: "Import backup not found" });
     return true;
   }
 
   if (url.pathname === "/api/requests" && request.method === "GET") {
-    if (!isAuthorized(request)) {
-      sendJson(response, 401, { error: "Authorization required" });
-      return true;
-    }
+    if (!requireRole(request, response, ["manager", "admin"])) return true;
     sendJson(response, 200, { items: loadRequests() });
     return true;
   }
 
   const requestMatch = url.pathname.match(/^\/api\/requests\/([^/]+)$/);
   if (requestMatch && request.method === "PATCH") {
-    if (!isAuthorized(request)) {
-      sendJson(response, 401, { error: "Authorization required" });
-      return true;
-    }
+    if (!requireRole(request, response, ["manager", "admin"])) return true;
     const body = await readBody(request);
     const requestRecord = updateRequestStatus(decodeURIComponent(requestMatch[1]), body.status);
     sendJson(response, requestRecord ? 200 : 404, requestRecord || { error: "Request not found" });
@@ -225,6 +249,18 @@ async function handleApi(request, response, url) {
       oneCReady: true,
       message: "Каталог сохраняет исходные коды товаров для будущей синхронизации.",
     });
+    return true;
+  }
+
+  if (url.pathname === "/api/settings" && request.method === "GET") {
+    if (!requireRole(request, response, ["manager", "admin"])) return true;
+    sendJson(response, 200, loadSettings());
+    return true;
+  }
+
+  if (url.pathname === "/api/settings" && request.method === "PATCH") {
+    if (!requireRole(request, response, ["admin"])) return true;
+    sendJson(response, 200, saveSettings(await readBody(request)));
     return true;
   }
 

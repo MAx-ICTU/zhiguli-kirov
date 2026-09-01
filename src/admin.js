@@ -2,6 +2,13 @@
   let products = Array.isArray(window.ZHIGULI_PRODUCTS) ? window.ZHIGULI_PRODUCTS : [];
   let categories = [];
   let apiEnabled = false;
+  let currentRole = "admin";
+  let permissions = {
+    products: true,
+    requests: true,
+    imports: true,
+    settings: true,
+  };
   const draftKey = "zhiguli-admin-draft";
   const tokenKey = "zhiguli-admin-token";
   const draft = JSON.parse(localStorage.getItem(draftKey) || "{}");
@@ -16,6 +23,7 @@
   const adminCategoriesCount = document.getElementById("adminCategoriesCount");
   const adminRequestPriceCount = document.getElementById("adminRequestPriceCount");
   const adminNewRequestsCount = document.getElementById("adminNewRequestsCount");
+  const roleBadge = document.getElementById("roleBadge");
   const adminSearch = document.getElementById("adminSearch");
   const adminCategory = document.getElementById("adminCategory");
   const adminProductRows = document.getElementById("adminProductRows");
@@ -39,6 +47,13 @@
   const editorPublished = document.getElementById("editorPublished");
   const editorPhoto = document.getElementById("editorPhoto");
   const photoPreview = document.getElementById("photoPreview");
+  const settingsForm = document.getElementById("settingsForm");
+  const settingsZeroPriceLabel = document.getElementById("settingsZeroPriceLabel");
+  const settingsRequestScenario = document.getElementById("settingsRequestScenario");
+  const settingsExternalNotifications = document.getElementById("settingsExternalNotifications");
+  const settingsDeliveryEnabled = document.getElementById("settingsDeliveryEnabled");
+  const settingsOnlinePaymentEnabled = document.getElementById("settingsOnlinePaymentEnabled");
+  const settingsResult = document.getElementById("settingsResult");
   let pendingImportId = "";
 
   function normalize(value) {
@@ -101,8 +116,43 @@
         return fetchJson(url, options, false);
       }
     }
+    if (response.status === 403) throw new Error("Недостаточно прав для этого действия.");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.json();
+  }
+
+  function setImportAccess(enabled) {
+    importFile.disabled = !enabled;
+    previewImport.disabled = !enabled;
+    if (!enabled) {
+      applyImport.disabled = true;
+      importResult.innerHTML = '<p class="empty-state">Публикация и откат прайса доступны только администратору.</p>';
+      renderImportHistory([]);
+    }
+  }
+
+  function setSettingsAccess(enabled) {
+    settingsForm.querySelectorAll("input, textarea, button").forEach((element) => {
+      element.disabled = !enabled;
+    });
+    if (!enabled) {
+      settingsResult.textContent = "Изменение настроек доступно только администратору.";
+    }
+  }
+
+  async function loadSession() {
+    if (!apiEnabled) {
+      currentRole = "admin";
+      roleBadge.textContent = "Роль: администратор";
+      return;
+    }
+
+    const session = await fetchJson("/api/session");
+    currentRole = session.role;
+    permissions = { ...permissions, ...(session.permissions || {}) };
+    roleBadge.textContent = currentRole === "admin" ? "Роль: администратор" : "Роль: менеджер";
+    setImportAccess(Boolean(permissions.imports));
+    setSettingsAccess(Boolean(permissions.settings));
   }
 
   function updateCategoryOptions(nextCategories) {
@@ -356,8 +406,51 @@
       renderImportHistory([]);
       return;
     }
+    if (!permissions.imports) {
+      renderImportHistory([]);
+      return;
+    }
     const result = await fetchJson("/api/imports/history");
     renderImportHistory(Array.isArray(result.items) ? result.items : []);
+  }
+
+  function fillSettings(settings) {
+    settingsZeroPriceLabel.value = settings.zeroPriceLabel || "";
+    settingsRequestScenario.value = settings.requestScenario || "";
+    settingsExternalNotifications.checked = settings.externalNotifications === true;
+    settingsDeliveryEnabled.checked = settings.deliveryEnabled === true;
+    settingsOnlinePaymentEnabled.checked = settings.onlinePaymentEnabled === true;
+  }
+
+  async function loadSettings() {
+    if (!apiEnabled) {
+      fillSettings({
+        zeroPriceLabel: "цену уточнить",
+        requestScenario: "Найти товар, добавить в запрос, уточнить наличие, позвонить или приехать.",
+        externalNotifications: false,
+        deliveryEnabled: false,
+        onlinePaymentEnabled: false,
+      });
+      return;
+    }
+
+    const settings = await fetchJson("/api/settings");
+    fillSettings(settings);
+  }
+
+  async function saveSettings() {
+    const settings = await fetchJson("/api/settings", {
+      method: "PATCH",
+      body: JSON.stringify({
+        zeroPriceLabel: settingsZeroPriceLabel.value,
+        requestScenario: settingsRequestScenario.value,
+        externalNotifications: settingsExternalNotifications.checked,
+        deliveryEnabled: settingsDeliveryEnabled.checked,
+        onlinePaymentEnabled: settingsOnlinePaymentEnabled.checked,
+      }),
+    });
+    fillSettings(settings);
+    settingsResult.textContent = "Настройки сохранены.";
   }
 
   async function rollbackImport(id) {
@@ -531,6 +624,14 @@
   refreshRequests.addEventListener("click", loadRequests);
   previewImport.addEventListener("click", previewSelectedImport);
   applyImport.addEventListener("click", applySelectedImport);
+  settingsForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      await saveSettings();
+    } catch (error) {
+      settingsResult.textContent = error.message;
+    }
+  });
   importHistoryList.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-rollback-import]");
     if (!button) return;
@@ -570,8 +671,10 @@
       apiEnabled = false;
     }
 
+    await loadSession();
     await loadSummary();
     await loadRequests();
+    await loadSettings();
     await loadImportHistory();
     await renderRows();
     if (products[0]) {

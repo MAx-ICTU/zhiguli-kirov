@@ -48,6 +48,7 @@
             Здесь будет ручное управление товарами, фотографиями, ценами и
             публикацией позиций до подключения синхронизации с 1С.
           </p>
+          <p class="role-badge" id="roleBadge">Роль: проверяется</p>
         </div>
         <div class="admin-summary" aria-label="Сводка каталога">
           <article>
@@ -198,6 +199,30 @@
             Цена 0 показывается как «цену уточнить». Товары можно скрывать, не
             удаляя их из базы, чтобы сохранить связь с кодом из прайса.
           </p>
+          <form class="settings-form" id="settingsForm">
+            <label>
+              Подпись для цены 0
+              <input id="settingsZeroPriceLabel" type="text" />
+            </label>
+            <label>
+              Основной сценарий покупателя
+              <textarea id="settingsRequestScenario"></textarea>
+            </label>
+            <label class="checkbox-line">
+              <input id="settingsExternalNotifications" type="checkbox" />
+              <span>Отправлять заявки на внешние контакты</span>
+            </label>
+            <label class="checkbox-line">
+              <input id="settingsDeliveryEnabled" type="checkbox" />
+              <span>Включить доставку</span>
+            </label>
+            <label class="checkbox-line">
+              <input id="settingsOnlinePaymentEnabled" type="checkbox" />
+              <span>Включить онлайн-оплату</span>
+            </label>
+            <button class="primary-btn" type="submit">Сохранить настройки</button>
+          </form>
+          <p class="empty-state" id="settingsResult"></p>
         </article>
       </section>
     </main>

@@ -738,6 +738,16 @@ textarea {
   line-height: 1.55;
 }
 
+.role-badge {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: #e8eef6;
+  color: var(--blue-dark);
+  font-weight: 800;
+}
+
 .admin-summary {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -819,7 +829,9 @@ textarea {
 .admin-tools select,
 .editor-form input,
 .editor-form select,
-.editor-form textarea {
+.editor-form textarea,
+.settings-form input,
+.settings-form textarea {
   width: 100%;
   min-height: 44px;
   padding: 0 12px;
@@ -889,7 +901,8 @@ textarea {
   gap: 14px;
 }
 
-.editor-form label {
+.editor-form label,
+.settings-form label {
   display: grid;
   gap: 7px;
   color: var(--muted);
@@ -903,6 +916,7 @@ textarea {
 }
 
 .checkbox-line input {
+  width: auto;
   min-height: auto;
 }
 
@@ -917,6 +931,23 @@ textarea {
   color: var(--muted);
   text-align: center;
   font-weight: 800;
+}
+
+.settings-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.settings-form textarea {
+  min-height: 96px;
+  padding-top: 12px;
+  resize: vertical;
+}
+
+.settings-form :disabled {
+  cursor: not-allowed;
+  opacity: 0.64;
 }
 
 .admin-bottom-grid {

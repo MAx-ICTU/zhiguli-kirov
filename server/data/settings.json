@@ -1,0 +1,7 @@
+{
+  "zeroPriceLabel": "цену уточнить",
+  "requestScenario": "Найти товар, добавить в запрос, уточнить наличие, позвонить или приехать.",
+  "externalNotifications": false,
+  "deliveryEnabled": false,
+  "onlinePaymentEnabled": false
+}

@@ -8,6 +8,15 @@ const productsPath = path.join(rootDir, "src", "products.js");
 const dataDir = path.join(rootDir, "server", "data");
 const overridesPath = path.join(dataDir, "catalog-overrides.json");
 const requestsPath = path.join(dataDir, "requests.json");
+const settingsPath = path.join(dataDir, "settings.json");
+
+const defaultSettings = {
+  zeroPriceLabel: "цену уточнить",
+  requestScenario: "Найти товар, добавить в запрос, уточнить наличие, позвонить или приехать.",
+  externalNotifications: false,
+  deliveryEnabled: false,
+  onlinePaymentEnabled: false,
+};
 
 function ensureDataFiles() {
   fs.mkdirSync(dataDir, { recursive: true });
@@ -16,6 +25,9 @@ function ensureDataFiles() {
   }
   if (!fs.existsSync(requestsPath)) {
     fs.writeFileSync(requestsPath, "[]\n", "utf8");
+  }
+  if (!fs.existsSync(settingsPath)) {
+    fs.writeFileSync(settingsPath, `${JSON.stringify(defaultSettings, null, 2)}\n`, "utf8");
   }
 }
 
@@ -78,6 +90,31 @@ export function saveProductOverride(code, patch) {
 
 export function loadRequests() {
   return readJson(requestsPath, []);
+}
+
+export function loadSettings() {
+  return { ...defaultSettings, ...readJson(settingsPath, {}) };
+}
+
+export function saveSettings(patch) {
+  const current = loadSettings();
+  const next = {
+    ...current,
+    zeroPriceLabel: String(patch.zeroPriceLabel || current.zeroPriceLabel).trim() || defaultSettings.zeroPriceLabel,
+    requestScenario:
+      String(patch.requestScenario || current.requestScenario).trim() || defaultSettings.requestScenario,
+    externalNotifications: Object.hasOwn(patch, "externalNotifications")
+      ? patch.externalNotifications === true
+      : current.externalNotifications,
+    deliveryEnabled: Object.hasOwn(patch, "deliveryEnabled") ? patch.deliveryEnabled === true : current.deliveryEnabled,
+    onlinePaymentEnabled: Object.hasOwn(patch, "onlinePaymentEnabled")
+      ? patch.onlinePaymentEnabled === true
+      : current.onlinePaymentEnabled,
+    updatedAt: new Date().toISOString(),
+  };
+
+  writeJson(settingsPath, next);
+  return next;
 }
 
 export function updateRequestStatus(id, status) {
