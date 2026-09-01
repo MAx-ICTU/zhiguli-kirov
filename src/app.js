@@ -398,6 +398,12 @@
     });
   });
 
+  document.querySelectorAll("[data-model-query]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setQuery(button.dataset.modelQuery);
+    });
+  });
+
   document.querySelector(".request-form").addEventListener("submit", (event) => {
     event.preventDefault();
     alert("Заявка подготовлена. В рабочей версии она будет уходить менеджеру.");

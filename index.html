@@ -127,6 +127,48 @@
         </div>
       </section>
 
+      <section class="section-shell model-section" id="models">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Быстрый подбор по автомобилю</p>
+            <h2>Популярные модели</h2>
+          </div>
+          <p>
+            Кнопки сразу запускают поиск по каталогу. Это помогает покупателю
+            начать с привычного названия автомобиля, а не с точного артикула.
+          </p>
+        </div>
+        <div class="model-grid">
+          <button data-model-query="2101">ВАЗ 2101-2107</button>
+          <button data-model-query="2108">ВАЗ 2108-2115</button>
+          <button data-model-query="2121">Нива 4x4</button>
+          <button data-model-query="1118">Калина</button>
+          <button data-model-query="2170">Приора</button>
+          <button data-model-query="2190">Гранта</button>
+          <button data-model-query="VESTA">Vesta</button>
+          <button data-model-query="LARGUS">Largus</button>
+          <button data-model-query="XRAY">X-Ray</button>
+        </div>
+      </section>
+
+      <section class="section-shell trust-section">
+        <article>
+          <span>01</span>
+          <h3>Каталог вместо файла прайса</h3>
+          <p>Товары можно искать по коду, названию, группе и примерной модели.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Запрос без оплаты на сайте</h3>
+          <p>Покупатель собирает список товаров и уточняет наличие у менеджера.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Два магазина в Кирове</h3>
+          <p>Контакты и режим работы видны до оформления заявки.</p>
+        </article>
+      </section>
+
       <section class="section-shell selection-section" id="selection">
         <div class="selection-copy">
           <p class="eyebrow">Когда артикул неизвестен</p>
@@ -168,14 +210,34 @@
             <h3>Жигули</h3>
             <p>ул. Кольцова, 18</p>
             <p>Пн-Пт: 8:00-20:00, Сб: 8:00-19:00, Вс: 9:00-17:00</p>
-            <a href="tel:+78332620888">620-888</a>
+            <div class="store-actions">
+              <a href="tel:+78332620888">620-888</a>
+              <a href="https://yandex.ru/maps/?text=Киров%2C%20Кольцова%2018" target="_blank" rel="noreferrer">
+                Маршрут
+              </a>
+            </div>
           </article>
           <article class="store-card">
             <h3>Автоунивермаг, отдел Жигули-ВАЗ</h3>
             <p>ул. Сормовская, 42</p>
             <p>Пн-Пт: 8:00-19:00, Сб: 9:00-18:00, Вс: 9:00-16:00</p>
-            <a href="tel:+78332532989">532-989</a>
+            <div class="store-actions">
+              <a href="tel:+78332532989">532-989</a>
+              <a href="https://yandex.ru/maps/?text=Киров%2C%20Сормовская%2042" target="_blank" rel="noreferrer">
+                Маршрут
+              </a>
+            </div>
           </article>
+        </div>
+        <div class="contact-strip">
+          <div>
+            <strong>Email</strong>
+            <a href="mailto:info@zhiguli-kirov.ru">info@zhiguli-kirov.ru</a>
+          </div>
+          <div>
+            <strong>Формат работы</strong>
+            <span>Самовывоз, консультация и уточнение наличия по телефону</span>
+          </div>
         </div>
       </section>
 
@@ -199,8 +261,16 @@
     </main>
 
     <footer class="site-footer">
-      <p>Жигули - автозапчасти ВАЗ и LADA в Кирове</p>
-      <a href="mailto:info@zhiguli-kirov.ru">info@zhiguli-kirov.ru</a>
+      <div>
+        <p>Жигули - автозапчасти ВАЗ и LADA в Кирове</p>
+        <small>Каталог товаров, подбор деталей, самовывоз из магазинов.</small>
+      </div>
+      <div class="footer-links">
+        <a href="#catalog">Каталог</a>
+        <a href="#selection">Подбор</a>
+        <a href="admin.html">Админка</a>
+        <a href="mailto:info@zhiguli-kirov.ru">info@zhiguli-kirov.ru</a>
+      </div>
     </footer>
 
     <div class="modal" id="productModal" aria-hidden="true">
