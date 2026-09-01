@@ -24,6 +24,12 @@
   const adminRequestPriceCount = document.getElementById("adminRequestPriceCount");
   const adminNewRequestsCount = document.getElementById("adminNewRequestsCount");
   const roleBadge = document.getElementById("roleBadge");
+  const authPanel = document.getElementById("authPanel");
+  const authForm = document.getElementById("authForm");
+  const authToken = document.getElementById("authToken");
+  const authError = document.getElementById("authError");
+  const adminMain = document.getElementById("adminMain");
+  const logoutAdmin = document.getElementById("logoutAdmin");
   const adminSearch = document.getElementById("adminSearch");
   const adminCategory = document.getElementById("adminCategory");
   const adminProductRows = document.getElementById("adminProductRows");
@@ -99,7 +105,7 @@
     });
   }
 
-  async function fetchJson(url, options = {}, retry = true) {
+  async function fetchJson(url, options = {}) {
     const token = localStorage.getItem(tokenKey) || "";
     const response = await fetch(url, {
       ...options,
@@ -109,16 +115,25 @@
         ...(options.headers || {}),
       },
     });
-    if (response.status === 401 && retry) {
-      const nextToken = window.prompt("Введите токен администратора");
-      if (nextToken) {
-        localStorage.setItem(tokenKey, nextToken.trim());
-        return fetchJson(url, options, false);
-      }
-    }
+    if (response.status === 401) throw new Error("Требуется вход в кабинет.");
     if (response.status === 403) throw new Error("Недостаточно прав для этого действия.");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.json();
+  }
+
+  function showAuth(message = "") {
+    adminMain.hidden = true;
+    authPanel.hidden = false;
+    logoutAdmin.hidden = true;
+    roleBadge.textContent = "Роль: вход не выполнен";
+    authError.textContent = message;
+    authToken.focus();
+  }
+
+  function showAdmin() {
+    authPanel.hidden = true;
+    adminMain.hidden = false;
+    logoutAdmin.hidden = !apiEnabled;
   }
 
   function setImportAccess(enabled) {
@@ -137,6 +152,8 @@
     });
     if (!enabled) {
       settingsResult.textContent = "Изменение настроек доступно только администратору.";
+    } else {
+      settingsResult.textContent = "";
     }
   }
 
@@ -144,6 +161,7 @@
     if (!apiEnabled) {
       currentRole = "admin";
       roleBadge.textContent = "Роль: администратор";
+      showAdmin();
       return;
     }
 
@@ -153,6 +171,7 @@
     roleBadge.textContent = currentRole === "admin" ? "Роль: администратор" : "Роль: менеджер";
     setImportAccess(Boolean(permissions.imports));
     setSettingsAccess(Boolean(permissions.settings));
+    showAdmin();
   }
 
   function updateCategoryOptions(nextCategories) {
@@ -632,6 +651,23 @@
       settingsResult.textContent = error.message;
     }
   });
+  authForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    authError.textContent = "";
+    localStorage.setItem(tokenKey, authToken.value.trim());
+    try {
+      await loadProtectedAdmin();
+      authToken.value = "";
+    } catch (error) {
+      localStorage.removeItem(tokenKey);
+      showAuth("Токен не подошел. Проверьте и попробуйте еще раз.");
+    }
+  });
+  logoutAdmin.addEventListener("click", () => {
+    localStorage.removeItem(tokenKey);
+    pendingImportId = "";
+    showAuth("Вход завершен.");
+  });
   importHistoryList.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-rollback-import]");
     if (!button) return;
@@ -662,15 +698,7 @@
     });
   });
 
-  async function init() {
-    try {
-      await fetchJson("/api/health");
-      apiEnabled = true;
-      resetAdminDraft.textContent = "Обновить данные";
-    } catch (error) {
-      apiEnabled = false;
-    }
-
+  async function loadProtectedAdmin() {
     await loadSession();
     await loadSummary();
     await loadRequests();
@@ -679,6 +707,27 @@
     await renderRows();
     if (products[0]) {
       await selectProduct(products[0].code);
+    }
+  }
+
+  async function init() {
+    adminMain.hidden = true;
+    try {
+      await fetchJson("/api/health");
+      apiEnabled = true;
+      resetAdminDraft.textContent = "Обновить данные";
+    } catch (error) {
+      apiEnabled = false;
+    }
+
+    try {
+      await loadProtectedAdmin();
+    } catch (error) {
+      if (apiEnabled) {
+        showAuth(localStorage.getItem(tokenKey) ? "Сохраненный токен не подошел." : "");
+        return;
+      }
+      showAdmin();
     }
   }
 

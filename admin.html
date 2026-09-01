@@ -34,12 +34,27 @@
           <a href="#settings">Настройки</a>
         </nav>
         <div class="header-actions">
+          <button class="secondary-btn admin-logout" id="logoutAdmin" type="button" hidden>Выйти</button>
           <a class="primary-btn" href="index.html#catalog">Открыть каталог</a>
         </div>
       </div>
     </header>
 
-    <main class="admin-main">
+    <section class="admin-login" id="authPanel" hidden>
+      <form class="admin-login-form" id="authForm">
+        <p class="eyebrow">Вход в кабинет</p>
+        <h1>Введите рабочий токен</h1>
+        <p>После входа откроются разделы, доступные вашей роли.</p>
+        <label>
+          Токен доступа
+          <input id="authToken" type="password" autocomplete="current-password" required />
+        </label>
+        <button class="primary-btn" type="submit">Войти</button>
+        <p class="empty-state" id="authError"></p>
+      </form>
+    </section>
+
+    <main class="admin-main" id="adminMain">
       <section class="admin-hero">
         <div>
           <p class="eyebrow">Прототип рабочего кабинета</p>

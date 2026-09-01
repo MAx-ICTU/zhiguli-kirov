@@ -718,6 +718,59 @@ textarea {
   padding: 34px 24px 70px;
 }
 
+.admin-login {
+  max-width: 520px;
+  margin: 72px auto;
+  padding: 0 24px;
+}
+
+.admin-login-form {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 34px rgba(16, 32, 56, 0.08);
+}
+
+.admin-login-form h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 30px;
+  line-height: 1.12;
+}
+
+.admin-login-form p:not(.eyebrow) {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.admin-login-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.admin-login-form input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.admin-logout {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
 .admin-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 480px;
