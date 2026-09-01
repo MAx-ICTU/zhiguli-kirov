@@ -9,7 +9,7 @@ import {
   saveProductOverride,
   updateRequestStatus,
 } from "./catalog-store.mjs";
-import { applyImport, createImportPreview, loadImportHistory } from "./import-service.mjs";
+import { applyImport, createImportPreview, loadImportHistory, rollbackImport } from "./import-service.mjs";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const port = Number(process.env.PORT || 4173);
@@ -183,6 +183,17 @@ async function handleApi(request, response, url) {
     }
     const record = applyImport(decodeURIComponent(importMatch[1]));
     sendJson(response, record ? 200 : 404, record || { error: "Import preview not found" });
+    return true;
+  }
+
+  const rollbackMatch = url.pathname.match(/^\/api\/imports\/([^/]+)\/rollback$/);
+  if (rollbackMatch && request.method === "POST") {
+    if (!isAuthorized(request)) {
+      sendJson(response, 401, { error: "Authorization required" });
+      return true;
+    }
+    const record = rollbackImport(decodeURIComponent(rollbackMatch[1]));
+    sendJson(response, record ? 200 : 404, record || { error: "Import backup not found" });
     return true;
   }
 

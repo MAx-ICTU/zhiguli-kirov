@@ -8,11 +8,13 @@ import { parseXlsxRows } from "./xlsx-parser.mjs";
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const productsPath = path.join(rootDir, "src", "products.js");
 const dataDir = path.join(rootDir, "server", "data");
+const snapshotsDir = path.join(dataDir, "catalog-snapshots");
 const pendingImportsPath = path.join(dataDir, "pending-imports.json");
 const importHistoryPath = path.join(dataDir, "import-history.json");
 
 function ensureDataFiles() {
   fs.mkdirSync(dataDir, { recursive: true });
+  fs.mkdirSync(snapshotsDir, { recursive: true });
   if (!fs.existsSync(pendingImportsPath)) {
     fs.writeFileSync(pendingImportsPath, "{}\n", "utf8");
   }
@@ -33,6 +35,14 @@ function readJson(filePath, fallback) {
 function writeJson(filePath, value) {
   ensureDataFiles();
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+}
+
+function snapshotFileName(importId) {
+  return `${importId}.products.js`;
+}
+
+function snapshotPath(importId) {
+  return path.join(snapshotsDir, snapshotFileName(importId));
 }
 
 function parsePrice(value) {
@@ -359,6 +369,8 @@ export function applyImport(importId) {
     throw new Error("Публикация заблокирована проверкой качества прайса.");
   }
 
+  fs.writeFileSync(snapshotPath(preview.id), fs.readFileSync(productsPath, "utf8"), "utf8");
+
   fs.writeFileSync(
     productsPath,
     `window.ZHIGULI_PRODUCTS = ${JSON.stringify(preview.products, null, 2)};\n`,
@@ -374,6 +386,7 @@ export function applyImport(importId) {
     sourceName: preview.sourceName,
     appliedAt: new Date().toISOString(),
     summary: preview.summary,
+    backupFile: snapshotFileName(preview.id),
   };
   history.unshift(record);
   writeJson(importHistoryPath, history.slice(0, 50));
@@ -382,5 +395,30 @@ export function applyImport(importId) {
 }
 
 export function loadImportHistory() {
-  return readJson(importHistoryPath, []);
+  return readJson(importHistoryPath, []).map((record) => ({
+    ...record,
+    canRollback: Boolean(
+      record.backupFile &&
+        !record.rolledBackAt &&
+        fs.existsSync(path.join(snapshotsDir, path.basename(record.backupFile))),
+    ),
+  }));
+}
+
+export function rollbackImport(importId) {
+  const history = readJson(importHistoryPath, []);
+  const record = history.find((item) => item.id === importId);
+  if (!record?.backupFile) return null;
+
+  const backupPath = path.join(snapshotsDir, path.basename(record.backupFile));
+  if (!fs.existsSync(backupPath)) return null;
+
+  fs.writeFileSync(productsPath, fs.readFileSync(backupPath, "utf8"), "utf8");
+  record.rolledBackAt = new Date().toISOString();
+  writeJson(importHistoryPath, history);
+
+  return {
+    ...record,
+    canRollback: false,
+  };
 }

@@ -27,6 +27,7 @@
   const previewImport = document.getElementById("previewImport");
   const applyImport = document.getElementById("applyImport");
   const importResult = document.getElementById("importResult");
+  const importHistoryList = document.getElementById("importHistoryList");
   const resetAdminDraft = document.getElementById("resetAdminDraft");
   const editorTitle = document.getElementById("editorTitle");
   const editorHint = document.getElementById("editorHint");
@@ -315,9 +316,60 @@
       importResult.innerHTML = `<p class="empty-state">Каталог опубликован. В файле ${record.summary.total.toLocaleString("ru-RU")} товаров.</p>`;
       await loadSummary();
       await renderRows();
+      await loadImportHistory();
     } catch (error) {
       importResult.innerHTML = `<p class="empty-state">Не удалось опубликовать каталог: ${escapeHtml(error.message)}</p>`;
     }
+  }
+
+  function renderImportHistory(records) {
+    importHistoryList.innerHTML =
+      records
+        .map(
+          (record) => `
+            <article class="import-history-item" data-import-id="${escapeHtml(record.id)}">
+              <div>
+                <strong>${escapeHtml(record.sourceName || record.id)}</strong>
+                <span>${escapeHtml(formatDate(record.appliedAt))}</span>
+                ${
+                  record.rolledBackAt
+                    ? `<small>Откат выполнен ${escapeHtml(formatDate(record.rolledBackAt))}</small>`
+                    : ""
+                }
+              </div>
+              <p>
+                ${Number(record.summary?.total || 0).toLocaleString("ru-RU")} товаров,
+                +${Number(record.summary?.added || 0).toLocaleString("ru-RU")} новых,
+                ${Number(record.summary?.changed || 0).toLocaleString("ru-RU")} изменено
+              </p>
+              <button class="secondary-btn" type="button" data-rollback-import ${record.canRollback ? "" : "disabled"}>
+                Откатить
+              </button>
+            </article>
+          `,
+        )
+        .join("") || '<p class="empty-state">История появится после первой публикации.</p>';
+  }
+
+  async function loadImportHistory() {
+    if (!apiEnabled) {
+      renderImportHistory([]);
+      return;
+    }
+    const result = await fetchJson("/api/imports/history");
+    renderImportHistory(Array.isArray(result.items) ? result.items : []);
+  }
+
+  async function rollbackImport(id) {
+    if (!window.confirm("Вернуть каталог к состоянию до этой публикации?")) return;
+    await fetchJson(`/api/imports/${encodeURIComponent(id)}/rollback`, {
+      method: "POST",
+      body: JSON.stringify({}),
+    });
+    await loadSummary();
+    await renderRows();
+    await loadImportHistory();
+    importResult.innerHTML = '<p class="empty-state">Каталог восстановлен из резервной копии.</p>';
   }
 
   function filteredProducts() {
@@ -479,6 +531,19 @@
   refreshRequests.addEventListener("click", loadRequests);
   previewImport.addEventListener("click", previewSelectedImport);
   applyImport.addEventListener("click", applySelectedImport);
+  importHistoryList.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-rollback-import]");
+    if (!button) return;
+
+    const item = button.closest("[data-import-id]");
+    if (!item) return;
+
+    try {
+      await rollbackImport(item.dataset.importId);
+    } catch (error) {
+      importResult.innerHTML = `<p class="empty-state">Не удалось откатить публикацию: ${escapeHtml(error.message)}</p>`;
+    }
+  });
 
   document.querySelectorAll(".admin-request-list").forEach((list) => {
     list.addEventListener("click", async (event) => {
@@ -507,6 +572,7 @@
 
     await loadSummary();
     await loadRequests();
+    await loadImportHistory();
     await renderRows();
     if (products[0]) {
       await selectProduct(products[0].code);

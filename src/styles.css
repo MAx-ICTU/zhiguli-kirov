@@ -1192,6 +1192,54 @@ textarea {
   color: var(--muted);
 }
 
+.import-history {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.import-history h3 {
+  margin: 0;
+  color: var(--blue-dark);
+  font-size: 16px;
+}
+
+#importHistoryList {
+  display: grid;
+  gap: 10px;
+}
+
+.import-history-item {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.import-history-item strong,
+.import-history-item span,
+.import-history-item small {
+  display: block;
+}
+
+.import-history-item span,
+.import-history-item small,
+.import-history-item p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.import-history-item p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.import-history-item button {
+  justify-self: start;
+}
+
 .site-footer {
   display: flex;
   justify-content: space-between;

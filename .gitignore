@@ -7,3 +7,4 @@ outputs/
 .env.*
 *.log
 *.err
+server/data/catalog-snapshots/*.products.js
