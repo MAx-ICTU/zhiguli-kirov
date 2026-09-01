@@ -28,6 +28,9 @@
         </nav>
         <div class="header-actions">
           <a class="phone-link" href="tel:+78332620888">+7 (8332) 620-888</a>
+          <button class="request-list-toggle" id="requestListToggle" type="button">
+            Запрос <span id="requestListCount">0</span>
+          </button>
           <a class="primary-btn" href="#selection">Уточнить наличие</a>
         </div>
       </div>
@@ -226,10 +229,32 @@
         </dl>
         <div class="modal-actions">
           <a class="primary-btn" href="tel:+78332620888">Позвонить</a>
+          <button class="secondary-btn" id="addModalProduct" type="button">Добавить в запрос</button>
           <button class="secondary-btn" id="requestProduct" type="button">Запросить этот товар</button>
         </div>
       </article>
     </div>
+
+    <aside class="request-drawer" id="requestDrawer" aria-hidden="true">
+      <div class="request-drawer-head">
+        <div>
+          <p class="eyebrow">Лист запроса</p>
+          <h2>Товары для уточнения</h2>
+        </div>
+        <button class="modal-close" id="requestDrawerClose" type="button" aria-label="Закрыть">×</button>
+      </div>
+      <div class="request-list" id="requestList"></div>
+      <label class="request-comment">
+        Комментарий
+        <textarea id="requestComment" placeholder="Например: нужен самовывоз сегодня, уточнить наличие на Кольцова"></textarea>
+      </label>
+      <div class="request-drawer-actions">
+        <a class="primary-btn" id="requestEmail" href="mailto:info@zhiguli-kirov.ru">Отправить на email</a>
+        <button class="secondary-btn" id="copyRequest" type="button">Скопировать текст</button>
+        <button class="secondary-btn" id="clearRequest" type="button">Очистить</button>
+      </div>
+      <p class="form-note" id="copyStatus"></p>
+    </aside>
 
     <script src="src/products.js"></script>
     <script src="src/app.js"></script>

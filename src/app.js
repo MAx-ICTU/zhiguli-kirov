@@ -29,10 +29,23 @@
   const modalUnit = document.getElementById("modalUnit");
   const modalPrice = document.getElementById("modalPrice");
   const requestProduct = document.getElementById("requestProduct");
+  const addModalProduct = document.getElementById("addModalProduct");
   const requestDetails = document.getElementById("requestDetails");
   const requestNote = document.getElementById("requestNote");
+  const requestListToggle = document.getElementById("requestListToggle");
+  const requestListCount = document.getElementById("requestListCount");
+  const requestDrawer = document.getElementById("requestDrawer");
+  const requestDrawerClose = document.getElementById("requestDrawerClose");
+  const requestList = document.getElementById("requestList");
+  const requestComment = document.getElementById("requestComment");
+  const requestEmail = document.getElementById("requestEmail");
+  const copyRequest = document.getElementById("copyRequest");
+  const clearRequest = document.getElementById("clearRequest");
+  const copyStatus = document.getElementById("copyStatus");
 
   let selectedProduct = null;
+  const requestStorageKey = "zhiguli-request-list";
+  let requestItems = JSON.parse(localStorage.getItem(requestStorageKey) || "[]");
 
   document.getElementById("statProducts").textContent = products.length.toLocaleString("ru-RU");
   document.getElementById("statCategories").textContent = categories.length.toLocaleString("ru-RU");
@@ -117,7 +130,10 @@
               <div class="source-category">${escapeHtml(product.sourceCategory || "")}</div>
               <div class="product-bottom">
                 ${formatPrice(product.price)}
-                <button class="details-btn" type="button" data-product-code="${escapeHtml(product.code)}">
+                <button class="details-btn" type="button" data-add-code="${escapeHtml(product.code)}">
+                  В запрос
+                </button>
+                <button class="details-btn details-btn-muted" type="button" data-product-code="${escapeHtml(product.code)}">
                   Подробнее
                 </button>
               </div>
@@ -149,6 +165,102 @@
     requestNote.textContent = "В заявку добавлен выбранный товар из каталога.";
     closeProduct();
     document.getElementById("selection").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function saveRequestItems() {
+    localStorage.setItem(requestStorageKey, JSON.stringify(requestItems));
+  }
+
+  function addToRequest(product) {
+    const existing = requestItems.find((item) => item.code === product.code);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      requestItems.push({
+        code: product.code,
+        name: product.name,
+        price: product.price,
+        category: product.category,
+        qty: 1,
+      });
+    }
+    saveRequestItems();
+    renderRequestList();
+    openRequestDrawer();
+  }
+
+  function removeFromRequest(code) {
+    requestItems = requestItems.filter((item) => item.code !== code);
+    saveRequestItems();
+    renderRequestList();
+  }
+
+  function changeRequestQty(code, delta) {
+    const item = requestItems.find((entry) => entry.code === code);
+    if (!item) return;
+    item.qty = Math.max(1, item.qty + delta);
+    saveRequestItems();
+    renderRequestList();
+  }
+
+  function buildRequestText() {
+    const lines = [
+      "Здравствуйте. Прошу уточнить наличие и актуальную цену по товарам:",
+      "",
+      ...requestItems.map(
+        (item, index) =>
+          `${index + 1}. ${item.name}\nКод: ${item.code}\nКоличество: ${item.qty}\nЦена на сайте: ${formatPlainPrice(item.price)}`,
+      ),
+    ];
+    const comment = requestComment.value.trim();
+    if (comment) {
+      lines.push("", `Комментарий: ${comment}`);
+    }
+    return lines.join("\n");
+  }
+
+  function updateRequestEmail() {
+    const subject = encodeURIComponent("Запрос по товарам с сайта Жигули");
+    const body = encodeURIComponent(buildRequestText());
+    requestEmail.href = `mailto:info@zhiguli-kirov.ru?subject=${subject}&body=${body}`;
+  }
+
+  function renderRequestList() {
+    const totalQty = requestItems.reduce((sum, item) => sum + item.qty, 0);
+    requestListCount.textContent = totalQty.toLocaleString("ru-RU");
+    requestListToggle.classList.toggle("has-items", totalQty > 0);
+
+    requestList.innerHTML =
+      requestItems
+        .map(
+          (item) => `
+            <article class="request-item">
+              <div>
+                <strong>${escapeHtml(item.name)}</strong>
+                <span>Код ${escapeHtml(item.code)} · ${formatPlainPrice(item.price)}</span>
+              </div>
+              <div class="qty-control" aria-label="Количество">
+                <button type="button" data-qty-minus="${escapeHtml(item.code)}">-</button>
+                <span>${item.qty}</span>
+                <button type="button" data-qty-plus="${escapeHtml(item.code)}">+</button>
+              </div>
+              <button class="remove-item" type="button" data-remove-code="${escapeHtml(item.code)}">Удалить</button>
+            </article>
+          `,
+        )
+        .join("") || '<p class="empty-state">Список пока пуст. Добавьте товары из каталога.</p>';
+
+    updateRequestEmail();
+  }
+
+  function openRequestDrawer() {
+    requestDrawer.classList.add("is-open");
+    requestDrawer.setAttribute("aria-hidden", "false");
+  }
+
+  function closeRequestDrawer() {
+    requestDrawer.classList.remove("is-open");
+    requestDrawer.setAttribute("aria-hidden", "true");
   }
 
   function setQuery(value) {
@@ -206,6 +318,15 @@
   });
 
   productGrid.addEventListener("click", (event) => {
+    const addButton = event.target.closest("[data-add-code]");
+    if (addButton) {
+      const product = products.find((item) => item.code === addButton.dataset.addCode);
+      if (product) {
+        addToRequest(product);
+      }
+      return;
+    }
+
     const button = event.target.closest("[data-product-code]");
     if (!button) return;
 
@@ -231,6 +352,42 @@
     }
   });
 
+  addModalProduct.addEventListener("click", () => {
+    if (selectedProduct) {
+      addToRequest(selectedProduct);
+    }
+  });
+
+  requestListToggle.addEventListener("click", openRequestDrawer);
+  requestDrawerClose.addEventListener("click", closeRequestDrawer);
+  requestComment.addEventListener("input", updateRequestEmail);
+
+  requestList.addEventListener("click", (event) => {
+    const removeButton = event.target.closest("[data-remove-code]");
+    const plusButton = event.target.closest("[data-qty-plus]");
+    const minusButton = event.target.closest("[data-qty-minus]");
+
+    if (removeButton) removeFromRequest(removeButton.dataset.removeCode);
+    if (plusButton) changeRequestQty(plusButton.dataset.qtyPlus, 1);
+    if (minusButton) changeRequestQty(minusButton.dataset.qtyMinus, -1);
+  });
+
+  clearRequest.addEventListener("click", () => {
+    requestItems = [];
+    saveRequestItems();
+    renderRequestList();
+  });
+
+  copyRequest.addEventListener("click", async () => {
+    const text = buildRequestText();
+    try {
+      await navigator.clipboard.writeText(text);
+      copyStatus.textContent = "Текст запроса скопирован.";
+    } catch (error) {
+      copyStatus.textContent = "Не удалось скопировать автоматически. Используйте отправку на email.";
+    }
+  });
+
   document.querySelectorAll(".quick-categories button").forEach((button) => {
     button.addEventListener("click", () => {
       state.category = button.dataset.category;
@@ -247,4 +404,5 @@
   });
 
   render();
+  renderRequestList();
 })();
