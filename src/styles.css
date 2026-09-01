@@ -1041,9 +1041,14 @@ textarea {
 }
 
 .modal-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin-top: 22px;
+}
+
+.modal-actions > * {
+  width: 100%;
 }
 
 .request-drawer {
@@ -1284,7 +1289,7 @@ textarea {
   }
 
   .modal-actions {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
   .product-bottom {

@@ -30,6 +30,8 @@
   const modalPrice = document.getElementById("modalPrice");
   const requestProduct = document.getElementById("requestProduct");
   const addModalProduct = document.getElementById("addModalProduct");
+  const copyProductLink = document.getElementById("copyProductLink");
+  const productLinkStatus = document.getElementById("productLinkStatus");
   const requestDetails = document.getElementById("requestDetails");
   const requestNote = document.getElementById("requestNote");
   const requestListToggle = document.getElementById("requestListToggle");
@@ -44,6 +46,7 @@
   const copyStatus = document.getElementById("copyStatus");
 
   let selectedProduct = null;
+  let shouldSyncUrl = true;
   const requestStorageKey = "zhiguli-request-list";
   let requestItems = JSON.parse(localStorage.getItem(requestStorageKey) || "[]");
 
@@ -77,6 +80,52 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  function getProductUrl(product) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("product", product.code);
+    url.hash = "catalog";
+    return url.toString();
+  }
+
+  function syncUrl() {
+    if (!shouldSyncUrl) return;
+
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+    const values = {
+      q: state.query,
+      category: state.category,
+      price: state.price,
+      sort: state.sort === "relevance" ? "" : state.sort,
+    };
+
+    Object.entries(values).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+    params.delete("product");
+
+    const next = `${url.pathname}${params.toString() ? `?${params.toString()}` : ""}${url.hash}`;
+    window.history.replaceState({}, "", next);
+  }
+
+  function applyUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    state.query = params.get("q") || "";
+    state.category = params.get("category") || "";
+    state.price = params.get("price") || "";
+    state.sort = params.get("sort") || "relevance";
+
+    catalogSearch.value = state.query;
+    heroSearch.value = state.query;
+    categoryFilter.value = state.category;
+    priceFilter.value = state.price;
+    sortSelect.value = state.sort;
   }
 
   function applyFilters() {
@@ -141,6 +190,7 @@
           `,
         )
         .join("") || '<p class="empty-state">Ничего не найдено. Попробуйте изменить запрос.</p>';
+    syncUrl();
   }
 
   function openProduct(product) {
@@ -151,13 +201,19 @@
     modalSource.textContent = product.sourceCategory || "Без группы";
     modalUnit.textContent = product.unit || "шт";
     modalPrice.textContent = formatPlainPrice(product.price);
+    productLinkStatus.textContent = "";
     productModal.classList.add("is-open");
     productModal.setAttribute("aria-hidden", "false");
+    if (shouldSyncUrl) {
+      window.history.replaceState({}, "", getProductUrl(product));
+    }
   }
 
   function closeProduct() {
     productModal.classList.remove("is-open");
     productModal.setAttribute("aria-hidden", "true");
+    selectedProduct = null;
+    syncUrl();
   }
 
   function fillRequestFromProduct(product) {
@@ -267,6 +323,7 @@
     state.query = value;
     state.visible = 18;
     catalogSearch.value = value;
+    heroSearch.value = value;
     render();
     document.getElementById("catalog").scrollIntoView({ behavior: "smooth", block: "start" });
   }
@@ -358,6 +415,18 @@
     }
   });
 
+  copyProductLink.addEventListener("click", async () => {
+    if (!selectedProduct) return;
+
+    const link = getProductUrl(selectedProduct);
+    try {
+      await navigator.clipboard.writeText(link);
+      productLinkStatus.textContent = "Ссылка на товар скопирована.";
+    } catch (error) {
+      productLinkStatus.textContent = link;
+    }
+  });
+
   requestListToggle.addEventListener("click", openRequestDrawer);
   requestDrawerClose.addEventListener("click", closeRequestDrawer);
   requestComment.addEventListener("input", updateRequestEmail);
@@ -409,6 +478,17 @@
     alert("Заявка подготовлена. В рабочей версии она будет уходить менеджеру.");
   });
 
+  const initialProductCode = new URLSearchParams(window.location.search).get("product");
+  shouldSyncUrl = false;
+  applyUrlParams();
+  shouldSyncUrl = true;
   render();
+
+  if (initialProductCode) {
+    const product = products.find((item) => item.code === initialProductCode);
+    if (product) {
+      openProduct(product);
+    }
+  }
   renderRequestList();
 })();
