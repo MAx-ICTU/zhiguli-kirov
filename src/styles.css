@@ -162,7 +162,7 @@ textarea {
   inset: 0;
   background:
     linear-gradient(90deg, rgba(8, 55, 96, 0.92), rgba(8, 55, 96, 0.52), rgba(24, 32, 42, 0.5)),
-    url("../assets/store-front.png") center / cover;
+    url("../assets/store-front-winter.webp") center / cover;
 }
 
 .hero-content {
