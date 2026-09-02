@@ -17,6 +17,7 @@
     <meta property="og:image" content="https://max-ictu.github.io/zhiguli-kirov/assets/store-front.png" />
     <meta property="og:url" content="https://max-ictu.github.io/zhiguli-kirov/" />
     <title>Жигули - автозапчасти ВАЗ и LADA в Кирове</title>
+    <link rel="canonical" href="https://max-ictu.github.io/zhiguli-kirov/" />
     <link rel="manifest" href="site.webmanifest" />
     <link rel="stylesheet" href="src/styles.css" />
     <script type="application/ld+json">
@@ -80,7 +81,6 @@
           <a href="#catalog">Каталог</a>
           <a href="#selection">Подбор</a>
           <a href="#stores">Магазины</a>
-          <a href="admin.html">Админка</a>
         </nav>
         <div class="header-actions">
           <a class="phone-link" href="tel:+78332620888">+7 (8332) 620-888</a>
@@ -99,8 +99,8 @@
           <p class="eyebrow">Киров - Кольцова, 18 и Сормовская, 42</p>
           <h1>Каталог автозапчастей ВАЗ и LADA с быстрым уточнением наличия</h1>
           <p>
-            Более 9 000 позиций из прайса магазина: детали двигателя, подвески,
-            тормозной системы, кузова, стекла, масла, автохимия и инструмент.
+            Найдите товар по коду, названию или модели, добавьте в запрос и
+            уточните наличие перед звонком или визитом в магазин.
           </p>
           <form class="hero-search" role="search" aria-label="Поиск товаров">
             <input
@@ -115,6 +115,16 @@
             <span><strong id="statProducts">9000+</strong> товаров</span>
             <span><strong id="statCategories">12</strong> разделов</span>
             <span><strong>2</strong> магазина</span>
+          </div>
+          <div class="hero-contacts" aria-label="Контакты магазинов">
+            <a href="tel:+78332620888">
+              <strong>Кольцова, 18</strong>
+              <span>620-888 · Пн-Пт 8:00-20:00</span>
+            </a>
+            <a href="tel:+78332532989">
+              <strong>Сормовская, 42</strong>
+              <span>532-989 · отдел Жигули-ВАЗ</span>
+            </a>
           </div>
         </div>
       </section>
@@ -140,6 +150,13 @@
             Цены загружены из текущего прайса. Для товаров с нулевой ценой
             показывается статус «уточнить».
           </p>
+        </div>
+
+        <div class="catalog-promise" aria-label="Как работает запрос">
+          <span>1. Найдите товар</span>
+          <span>2. Добавьте в запрос</span>
+          <span>3. Уточните наличие</span>
+          <span>4. Позвоните или приезжайте</span>
         </div>
 
         <div class="catalog-layout">
@@ -250,7 +267,7 @@
           <p class="form-note" id="requestNote">
             Можно отправить общий запрос или выбрать товар в каталоге.
           </p>
-          <button class="primary-btn" type="submit">Отправить заявку</button>
+          <button class="primary-btn" type="submit">Подготовить запрос</button>
         </form>
       </section>
 
@@ -259,6 +276,13 @@
           <div>
             <p class="eyebrow">Самовывоз и консультация</p>
             <h2>Магазины в Кирове</h2>
+          </div>
+        </div>
+        <div class="store-visual">
+          <img src="assets/store-front.png" alt="Фасад магазина Жигули в Кирове" />
+          <div>
+            <strong>Можно уточнить наличие перед поездкой</strong>
+            <span>Назовите код товара из каталога или отправьте подготовленный список.</span>
           </div>
         </div>
         <div class="store-grid">
@@ -297,23 +321,6 @@
         </div>
       </section>
 
-      <section class="section-shell admin-section" id="admin">
-        <div>
-          <p class="eyebrow">Следующий слой проекта</p>
-          <h2>Админ-панель для прайса и фотографий</h2>
-          <p>
-            В первой версии администратор сможет обновлять прайс вручную,
-            редактировать карточки, загружать фотографии и скрывать неактуальные позиции.
-          </p>
-        </div>
-        <div class="admin-flow">
-          <span>Загрузка прайса</span>
-          <span>Проверка цен</span>
-          <span>Фото товаров</span>
-          <span>Публикация</span>
-        </div>
-        <a class="admin-link" href="admin.html">Открыть прототип админки</a>
-      </section>
     </main>
 
     <footer class="site-footer">
@@ -324,7 +331,6 @@
       <div class="footer-links">
         <a href="#catalog">Каталог</a>
         <a href="#selection">Подбор</a>
-        <a href="admin.html">Админка</a>
         <a href="mailto:info@zhiguli-kirov.ru">info@zhiguli-kirov.ru</a>
       </div>
     </footer>
@@ -354,9 +360,8 @@
           </div>
         </dl>
         <div class="modal-actions">
-          <a class="primary-btn" href="tel:+78332620888">Позвонить</a>
-          <button class="secondary-btn" id="addModalProduct" type="button">Добавить в запрос</button>
-          <button class="secondary-btn" id="requestProduct" type="button">Запросить этот товар</button>
+          <button class="primary-btn" id="addModalProduct" type="button">Добавить в запрос</button>
+          <a class="secondary-btn" href="tel:+78332620888">Позвонить</a>
           <button class="secondary-btn" id="copyProductLink" type="button">Скопировать ссылку</button>
         </div>
         <p class="form-note" id="productLinkStatus"></p>
@@ -377,7 +382,7 @@
         <textarea id="requestComment" placeholder="Например: нужен самовывоз сегодня, уточнить наличие на Кольцова"></textarea>
       </label>
       <div class="request-drawer-actions">
-        <a class="primary-btn" id="requestEmail" href="mailto:info@zhiguli-kirov.ru">Отправить на email</a>
+        <a class="primary-btn" id="requestEmail" href="mailto:info@zhiguli-kirov.ru">Подготовить письмо</a>
         <button class="secondary-btn" id="copyRequest" type="button">Скопировать текст</button>
         <button class="secondary-btn" id="clearRequest" type="button">Очистить</button>
       </div>

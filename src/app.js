@@ -28,7 +28,6 @@
   const modalSource = document.getElementById("modalSource");
   const modalUnit = document.getElementById("modalUnit");
   const modalPrice = document.getElementById("modalPrice");
-  const requestProduct = document.getElementById("requestProduct");
   const addModalProduct = document.getElementById("addModalProduct");
   const copyProductLink = document.getElementById("copyProductLink");
   const productLinkStatus = document.getElementById("productLinkStatus");
@@ -149,6 +148,9 @@
       return matchesQuery && matchesCategory && matchesPrice;
     });
 
+    if (state.sort === "relevance" && query) {
+      result = result.sort((a, b) => relevanceScore(b, query) - relevanceScore(a, query));
+    }
     if (state.sort === "priceAsc") {
       result = result.sort((a, b) => (a.price || Infinity) - (b.price || Infinity));
     }
@@ -160,6 +162,24 @@
     }
 
     return result;
+  }
+
+  function relevanceScore(product, query) {
+    const name = normalize(product.name);
+    const code = normalize(product.code);
+    const sourceCategory = normalize(product.sourceCategory);
+    const category = normalize(product.category);
+    let score = 0;
+
+    if (code === query) score += 120;
+    if (name === query) score += 100;
+    if (name.startsWith(query)) score += 80;
+    if (name.includes(query)) score += 60;
+    if (sourceCategory.includes(query)) score += 25;
+    if (category.includes(query)) score += 15;
+    if (product.price > 0) score += 3;
+
+    return score;
   }
 
   function render() {
@@ -216,13 +236,6 @@
     productModal.setAttribute("aria-hidden", "true");
     selectedProduct = null;
     syncUrl();
-  }
-
-  function fillRequestFromProduct(product) {
-    requestDetails.value = `Интересует товар: ${product.name}\nКод: ${product.code}\nЦена: ${formatPlainPrice(product.price)}`;
-    requestNote.textContent = "В заявку добавлен выбранный товар из каталога.";
-    closeProduct();
-    document.getElementById("selection").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function saveRequestItems() {
@@ -431,12 +444,6 @@
     }
   });
 
-  requestProduct.addEventListener("click", () => {
-    if (selectedProduct) {
-      fillRequestFromProduct(selectedProduct);
-    }
-  });
-
   addModalProduct.addEventListener("click", () => {
     if (selectedProduct) {
       addToRequest(selectedProduct);
@@ -510,7 +517,7 @@
       requestCar.value = "";
       requestPhone.value = "";
     } catch (error) {
-      requestNote.textContent = "Заявка подготовлена. Свяжитесь с магазином по телефону или отправьте список на email.";
+      requestNote.textContent = "Запрос подготовлен. Позвоните в магазин или отправьте подготовленное письмо.";
     }
   });
 
