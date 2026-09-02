@@ -710,12 +710,52 @@ textarea {
 
 .store-actions a {
   display: inline-flex;
+  justify-content: center;
   margin: 0;
   padding: 10px 12px;
   border-radius: 8px;
   background: #edf4fb;
   color: var(--blue-dark);
   text-decoration: none;
+}
+
+.store-map {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 18px;
+}
+
+.map-copy {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.map-copy h3 {
+  margin: 0;
+  color: var(--blue-dark);
+  font-size: 24px;
+  line-height: 1.18;
+}
+
+.map-copy p:not(.eyebrow) {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.store-map iframe {
+  width: 100%;
+  min-height: 360px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #dfe6ef;
 }
 
 .contact-strip {
@@ -1665,7 +1705,7 @@ textarea {
     order: 3;
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     overflow: visible;
   }
 
@@ -1688,6 +1728,7 @@ textarea {
   .catalog-layout,
   .selection-section,
   .admin-section,
+  .store-map,
   .store-visual,
   .admin-hero,
   .admin-workspace,
@@ -1729,12 +1770,12 @@ textarea {
 
   .main-nav {
     gap: 4px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .main-nav a {
     padding: 10px 6px;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .hero {
@@ -1827,6 +1868,10 @@ textarea {
 
   .details-btn {
     width: 100%;
+  }
+
+  .store-map iframe {
+    min-height: 300px;
   }
 
   .request-drawer {
