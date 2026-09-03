@@ -589,6 +589,59 @@ textarea {
   margin-top: 18px;
 }
 
+.popular-section {
+  padding-top: 54px;
+  border-top: 1px solid var(--line);
+}
+
+.popular-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.popular-grid article {
+  display: grid;
+  gap: 14px;
+  min-height: 188px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(16, 32, 56, 0.07);
+}
+
+.popular-grid span {
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.popular-grid h3 {
+  margin: 0;
+  color: var(--blue-dark);
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.popular-grid button {
+  align-self: end;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #edf4fb;
+  color: var(--blue-dark);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.popular-grid button:hover {
+  background: var(--blue);
+  color: #fff;
+}
+
 .model-section {
   padding-top: 54px;
   border-top: 1px solid var(--line);
@@ -666,6 +719,38 @@ textarea {
   border-radius: 8px;
   background: #fff;
   box-shadow: var(--shadow);
+}
+
+.request-guide {
+  display: grid;
+  gap: 10px;
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.request-guide strong {
+  color: var(--blue-dark);
+}
+
+.request-guide span {
+  position: relative;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.request-guide span::before {
+  content: "";
+  position: absolute;
+  top: 0.55em;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
 }
 
 .form-note {
@@ -1860,6 +1945,10 @@ textarea {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .popular-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .catalog-layout,
   .selection-section,
   .admin-section,
@@ -1960,6 +2049,7 @@ textarea {
   }
 
   .quick-categories,
+  .popular-grid,
   .product-grid,
   .store-grid,
   .visit-flow,
