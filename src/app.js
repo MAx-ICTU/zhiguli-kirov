@@ -51,6 +51,39 @@
   let selectedProduct = null;
   let shouldSyncUrl = true;
   const requestStorageKey = "zhiguli-request-list";
+  const modelAliases = {
+    "2101": ["2101", "2103", "2105", "2106", "2107"],
+    "2103": ["2101", "2103", "2105", "2106", "2107"],
+    "2105": ["2101", "2103", "2105", "2106", "2107"],
+    "2106": ["2101", "2103", "2105", "2106", "2107"],
+    "2107": ["2101", "2103", "2105", "2106", "2107"],
+    "2108": ["2108", "2109", "21099", "2113", "2114", "2115"],
+    "2109": ["2108", "2109", "21099", "2113", "2114", "2115"],
+    "21099": ["2108", "2109", "21099", "2113", "2114", "2115"],
+    "2113": ["2108", "2109", "21099", "2113", "2114", "2115"],
+    "2114": ["2108", "2109", "21099", "2113", "2114", "2115"],
+    "2115": ["2108", "2109", "21099", "2113", "2114", "2115"],
+    "2121": ["2121", "21213", "21214"],
+    "21213": ["2121", "21213", "21214"],
+    "21214": ["2121", "21213", "21214"],
+    "1118": ["1118", "1119", "калина"],
+    "1119": ["1118", "1119", "калина"],
+    "2170": ["2170", "2171", "2172", "приора"],
+    "2171": ["2170", "2171", "2172", "приора"],
+    "2172": ["2170", "2171", "2172", "приора"],
+    "2190": ["2190", "2191", "гранта"],
+    "2191": ["2190", "2191", "гранта"],
+    калина: ["1118", "1119", "калина"],
+    приора: ["2170", "2171", "2172", "приора"],
+    гранта: ["2190", "2191", "гранта"],
+    нива: ["2121", "21213", "21214", "нива"],
+  };
+  const categoryIntentTerms = {
+    Двигатель: ["двигател", "ремен", "фильтр", "прокладк", "насос"],
+    Подвеска: ["стойк", "шаров", "сайлентблок", "амортиз", "рычаг"],
+    Тормоза: ["тормоз", "колод", "диск", "цилиндр"],
+    Электрика: ["датчик", "реле", "ламп", "стартер", "генератор"],
+  };
   let requestItems = JSON.parse(localStorage.getItem(requestStorageKey) || "[]");
 
   document.getElementById("statProducts").textContent = products.length.toLocaleString("ru-RU");
@@ -62,6 +95,47 @@
 
   function normalize(value) {
     return String(value || "").toLowerCase().replaceAll("ё", "е").trim();
+  }
+
+  function tokenVariants(token) {
+    const variants = [token];
+    if (modelAliases[token]) {
+      variants.push(...modelAliases[token]);
+    }
+    const softEndings = ["ние", "ний", "няя", "ые", "ие", "ая", "ый", "ий", "ой"];
+    const softEnding = softEndings.find((ending) => token.length > ending.length + 2 && token.endsWith(ending));
+    if (softEnding) {
+      variants.push(token.slice(0, -softEnding.length));
+    }
+    if (token.length > 4 && /[аеиоуыэюя]$/.test(token)) {
+      variants.push(token.slice(0, -1));
+    }
+    return [...new Set(variants.filter((variant) => variant.length >= 2))];
+  }
+
+  function getQueryParts(value) {
+    return normalize(value)
+      .split(/[^0-9a-zа-я]+/g)
+      .filter(Boolean)
+      .map(tokenVariants);
+  }
+
+  function getProductSearchText(product) {
+    return [
+      product.name,
+      product.code,
+      product.category,
+      product.sourceCategory,
+      product.unit,
+    ]
+      .map(normalize)
+      .join(" ");
+  }
+
+  function queryHasIntent(queryParts, intentTerms) {
+    return queryParts.some((variants) =>
+      variants.some((variant) => intentTerms.some((term) => variant.includes(term) || term.includes(variant))),
+    );
   }
 
   function formatPrice(price) {
@@ -137,12 +211,12 @@
 
   function applyFilters() {
     const query = normalize(state.query);
+    const queryParts = getQueryParts(state.query);
     let result = products.filter((product) => {
+      const searchText = getProductSearchText(product);
       const matchesQuery =
         !query ||
-        normalize(product.name).includes(query) ||
-        normalize(product.code).includes(query) ||
-        normalize(product.sourceCategory).includes(query);
+        queryParts.every((variants) => variants.some((variant) => searchText.includes(variant)));
       const matchesCategory = !state.category || product.category === state.category;
       const matchesPrice =
         !state.price ||
@@ -155,7 +229,7 @@
     });
 
     if (state.sort === "relevance" && query) {
-      result = result.sort((a, b) => relevanceScore(b, query) - relevanceScore(a, query));
+      result = result.sort((a, b) => relevanceScore(b, query, queryParts) - relevanceScore(a, query, queryParts));
     }
     if (state.sort === "priceAsc") {
       result = result.sort((a, b) => (a.price || Infinity) - (b.price || Infinity));
@@ -170,7 +244,7 @@
     return result;
   }
 
-  function relevanceScore(product, query) {
+  function relevanceScore(product, query, queryParts) {
     const name = normalize(product.name);
     const code = normalize(product.code);
     const sourceCategory = normalize(product.sourceCategory);
@@ -183,6 +257,18 @@
     if (name.includes(query)) score += 60;
     if (sourceCategory.includes(query)) score += 25;
     if (category.includes(query)) score += 15;
+    queryParts.forEach((variants) => {
+      const token = variants[0];
+      if (code === token) score += 70;
+      if (code.includes(token)) score += 42;
+      if (variants.some((variant) => name.startsWith(variant))) score += 26;
+      if (variants.some((variant) => name.includes(variant))) score += 20;
+      if (variants.some((variant) => sourceCategory.includes(variant))) score += 9;
+      if (variants.some((variant) => category.includes(variant))) score += 8;
+    });
+    if (categoryIntentTerms[product.category] && queryHasIntent(queryParts, categoryIntentTerms[product.category])) {
+      score += 18;
+    }
     if (product.price > 0) score += 3;
 
     return score;
