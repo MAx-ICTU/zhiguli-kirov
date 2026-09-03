@@ -206,6 +206,22 @@
       : "Цена не указана в прайсе. Добавьте товар в запрос, менеджер проверит цену и наличие.";
   }
 
+  function getRequestQty(code) {
+    return requestItems.find((item) => item.code === code)?.qty || 0;
+  }
+
+  function getAddButtonLabel(product) {
+    const qty = getRequestQty(product.code);
+    return qty > 0 ? `В запросе: ${qty}` : "В запрос";
+  }
+
+  function updateModalAction() {
+    if (!selectedProduct) return;
+    const qty = getRequestQty(selectedProduct.code);
+    addModalProduct.textContent = getAddButtonLabel(selectedProduct);
+    addModalProduct.classList.toggle("has-items", qty > 0);
+  }
+
   function escapeHtml(value) {
     return String(value)
       .replaceAll("&", "&amp;")
@@ -453,8 +469,12 @@
               <div class="product-bottom">
                 ${formatPrice(product.price)}
                 <div class="product-actions">
-                  <button class="details-btn" type="button" data-add-code="${escapeHtml(product.code)}">
-                    В запрос
+                  <button
+                    class="details-btn ${getRequestQty(product.code) > 0 ? "has-items" : ""}"
+                    type="button"
+                    data-add-code="${escapeHtml(product.code)}"
+                  >
+                    ${escapeHtml(getAddButtonLabel(product))}
                   </button>
                   <button class="details-btn details-btn-muted" type="button" data-product-code="${escapeHtml(product.code)}">
                     Подробнее
@@ -478,6 +498,7 @@
     modalPrice.textContent = formatPlainPrice(product.price);
     modalPriceNote.textContent = getPriceNote(product);
     productLinkStatus.textContent = "";
+    updateModalAction();
     productModal.classList.add("is-open");
     productModal.setAttribute("aria-hidden", "false");
     if (shouldSyncUrl) {
@@ -511,6 +532,7 @@
     }
     saveRequestItems();
     renderRequestList();
+    render();
     openRequestDrawer();
   }
 
@@ -518,6 +540,7 @@
     requestItems = requestItems.filter((item) => item.code !== code);
     saveRequestItems();
     renderRequestList();
+    render();
   }
 
   function changeRequestQty(code, delta) {
@@ -526,6 +549,7 @@
     item.qty = Math.max(1, item.qty + delta);
     saveRequestItems();
     renderRequestList();
+    render();
   }
 
   function buildRequestText() {
@@ -589,6 +613,7 @@
         )
         .join("") || '<p class="empty-state">Список пока пуст. Добавьте товары из каталога.</p>';
 
+    updateModalAction();
     updateRequestEmail();
   }
 
@@ -828,6 +853,7 @@
     copyStatus.textContent = "";
     saveRequestItems();
     renderRequestList();
+    render();
   });
 
   copyRequest.addEventListener("click", async () => {
