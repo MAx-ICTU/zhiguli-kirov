@@ -29,6 +29,7 @@
   const modalSource = document.getElementById("modalSource");
   const modalUnit = document.getElementById("modalUnit");
   const modalPrice = document.getElementById("modalPrice");
+  const modalPriceNote = document.getElementById("modalPriceNote");
   const addModalProduct = document.getElementById("addModalProduct");
   const copyProductLink = document.getElementById("copyProductLink");
   const productLinkStatus = document.getElementById("productLinkStatus");
@@ -38,6 +39,7 @@
   const requestNote = document.getElementById("requestNote");
   const requestListToggle = document.getElementById("requestListToggle");
   const requestListCount = document.getElementById("requestListCount");
+  const requestCallHint = document.getElementById("requestCallHint");
   const quickRequestToggle = document.getElementById("quickRequestToggle");
   const quickRequestCount = document.getElementById("quickRequestCount");
   const requestDrawer = document.getElementById("requestDrawer");
@@ -174,9 +176,19 @@
 
   function formatPrice(price) {
     if (!price) {
-      return '<span class="request-price">цену уточнить</span>';
+      return `
+        <div class="price-block">
+          <span class="request-price">цену уточнить</span>
+          <small>Добавьте товар в запрос, менеджер проверит наличие и актуальную цену.</small>
+        </div>
+      `;
     }
-    return `<span class="price">${Number(price).toLocaleString("ru-RU")} ₽</span>`;
+    return `
+      <div class="price-block">
+        <span class="price">${Number(price).toLocaleString("ru-RU")} ₽</span>
+        <small>Цена из прайса. Перед поездкой уточните наличие по коду товара.</small>
+      </div>
+    `;
   }
 
   function formatPlainPrice(price) {
@@ -186,6 +198,12 @@
 
   function getPriceStatus(product) {
     return product.price > 0 ? "Цена в прайсе" : "Уточнить у менеджера";
+  }
+
+  function getPriceNote(product) {
+    return product.price > 0
+      ? "Цена взята из прайса. Назовите код товара менеджеру, чтобы уточнить наличие."
+      : "Цена не указана в прайсе. Добавьте товар в запрос, менеджер проверит цену и наличие.";
   }
 
   function escapeHtml(value) {
@@ -458,6 +476,7 @@
     modalSource.textContent = product.sourceCategory || "Без группы";
     modalUnit.textContent = product.unit || "шт";
     modalPrice.textContent = formatPlainPrice(product.price);
+    modalPriceNote.textContent = getPriceNote(product);
     productLinkStatus.textContent = "";
     productModal.classList.add("is-open");
     productModal.setAttribute("aria-hidden", "false");
@@ -529,6 +548,7 @@
     if (comment) {
       lines.push("", `Комментарий: ${comment}`);
     }
+    lines.push("", "Пожалуйста, подскажите, в каком магазине можно забрать подходящие позиции.");
     return lines.join("\n");
   }
 
@@ -544,6 +564,10 @@
     quickRequestCount.textContent = totalQty.toLocaleString("ru-RU");
     requestListToggle.classList.toggle("has-items", totalQty > 0);
     quickRequestToggle.classList.toggle("has-items", totalQty > 0);
+    requestCallHint.textContent =
+      totalQty > 0
+        ? `В запросе ${totalQty.toLocaleString("ru-RU")} поз. При звонке назовите коды товаров из списка.`
+        : "Можно добавить товар из каталога или описать деталь в форме подбора.";
 
     requestList.innerHTML =
       requestItems

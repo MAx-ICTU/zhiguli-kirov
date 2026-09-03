@@ -625,6 +625,11 @@ textarea {
   margin-top: auto;
 }
 
+.price-block {
+  display: grid;
+  gap: 4px;
+}
+
 .price {
   font-size: 22px;
   font-weight: 800;
@@ -634,6 +639,15 @@ textarea {
   color: var(--amber);
   font-size: 15px;
   font-weight: 800;
+}
+
+.price-block small,
+.price-note,
+.request-call-hint {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
 }
 
 .product-actions {
@@ -1907,6 +1921,14 @@ textarea {
   font-weight: 800;
 }
 
+.price-note {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #edf4fb;
+  color: var(--blue-dark);
+}
+
 .modal-actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1960,6 +1982,14 @@ textarea {
   gap: 12px;
   overflow: auto;
   padding-right: 4px;
+}
+
+.request-call-hint {
+  margin: 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: #edf4fb;
+  color: var(--blue-dark);
 }
 
 .request-item {
