@@ -299,6 +299,9 @@ textarea {
 }
 
 .quick-categories button {
+  display: grid;
+  align-content: center;
+  gap: 4px;
   min-height: 76px;
   padding: 10px;
   background: #fff;
@@ -308,6 +311,14 @@ textarea {
 
 .quick-categories button:hover {
   color: var(--red);
+}
+
+.category-count {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .section-shell {
@@ -441,6 +452,10 @@ textarea {
   font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
+}
+
+.catalog-shortcuts .category-count {
+  text-transform: none;
 }
 
 .catalog-summary {
@@ -804,6 +819,9 @@ textarea {
 }
 
 .popular-grid button {
+  display: grid;
+  align-content: center;
+  gap: 3px;
   align-self: end;
   min-height: 44px;
   padding: 10px 12px;

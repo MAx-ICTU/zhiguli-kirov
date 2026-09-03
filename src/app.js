@@ -11,6 +11,10 @@
   const categories = [...new Set(products.map((item) => item.category))].sort((a, b) =>
     a.localeCompare(b, "ru"),
   );
+  const categoryCounts = products.reduce((counts, product) => {
+    counts.set(product.category, (counts.get(product.category) || 0) + 1);
+    return counts;
+  }, new Map());
 
   const productGrid = document.getElementById("productGrid");
   const catalogCount = document.getElementById("catalogCount");
@@ -105,11 +109,34 @@
   document.getElementById("statCategories").textContent = categories.length.toLocaleString("ru-RU");
 
   categoryFilter.innerHTML += categories
-    .map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`)
+    .map(
+      (category) =>
+        `<option value="${escapeHtml(category)}">${escapeHtml(category)} (${formatCount(categoryCounts.get(category))})</option>`,
+    )
     .join("");
+  annotateCategoryButtons();
 
   function normalize(value) {
     return String(value || "").toLowerCase().replaceAll("ё", "е").trim();
+  }
+
+  function formatCount(value) {
+    return Number(value || 0).toLocaleString("ru-RU");
+  }
+
+  function annotateCategoryButtons() {
+    document.querySelectorAll("button[data-category], button[data-catalog-category]").forEach((button) => {
+      const category = button.dataset.category || button.dataset.catalogCategory;
+      const count = categoryCounts.get(category);
+      if (!count || button.querySelector(".category-count")) return;
+
+      const buttonLabel = button.textContent.replace(/\s+/g, " ").trim();
+      const countElement = document.createElement("span");
+      countElement.className = "category-count";
+      countElement.textContent = `${formatCount(count)} поз.`;
+      button.append(countElement);
+      button.setAttribute("aria-label", `${buttonLabel}, ${formatCount(count)} позиций`);
+    });
   }
 
   function tokenVariants(token) {
