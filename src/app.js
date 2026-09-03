@@ -76,6 +76,10 @@
     return `${Number(price).toLocaleString("ru-RU")} ₽`;
   }
 
+  function getPriceStatus(product) {
+    return product.price > 0 ? "Цена в прайсе" : "Уточнить у менеджера";
+  }
+
   function escapeHtml(value) {
     return String(value)
       .replaceAll("&", "&amp;")
@@ -197,18 +201,26 @@
             <article class="product-card" data-code="${escapeHtml(product.code)}">
               <div class="product-top">
                 <span class="product-code">Код ${escapeHtml(product.code)}</span>
-                <span class="product-category">${escapeHtml(product.category)}</span>
+                <span class="product-status ${product.price > 0 ? "is-priced" : "is-request"}">
+                  ${escapeHtml(getPriceStatus(product))}
+                </span>
               </div>
               <h3>${escapeHtml(product.name)}</h3>
-              <div class="source-category">${escapeHtml(product.sourceCategory || "")}</div>
+              <div class="product-meta">
+                <span>${escapeHtml(product.category)}</span>
+                <span>${escapeHtml(product.unit || "шт")}</span>
+              </div>
+              <div class="source-category">${escapeHtml(product.sourceCategory || "Без группы")}</div>
               <div class="product-bottom">
                 ${formatPrice(product.price)}
-                <button class="details-btn" type="button" data-add-code="${escapeHtml(product.code)}">
-                  В запрос
-                </button>
-                <button class="details-btn details-btn-muted" type="button" data-product-code="${escapeHtml(product.code)}">
-                  Подробнее
-                </button>
+                <div class="product-actions">
+                  <button class="details-btn" type="button" data-add-code="${escapeHtml(product.code)}">
+                    В запрос
+                  </button>
+                  <button class="details-btn details-btn-muted" type="button" data-product-code="${escapeHtml(product.code)}">
+                    Подробнее
+                  </button>
+                </div>
               </div>
             </article>
           `,
