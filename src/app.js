@@ -138,6 +138,27 @@
     );
   }
 
+  function renderEmptyState() {
+    const hasFilters = Boolean(state.query || state.category || state.price);
+    return `
+      <article class="empty-results">
+        <span>Ничего не найдено</span>
+        <h3>Попробуйте другой запрос или оставьте подбор менеджеру</h3>
+        <p>
+          Лучше работают короткие запросы: модель, код детали или название узла.
+          Например: стойка 2114, ремень 2108, шаровая нива.
+        </p>
+        <div class="empty-actions" aria-label="Подсказки поиска">
+          <button type="button" data-empty-query="стойка 2114">Стойка 2114</button>
+          <button type="button" data-empty-query="ремень 2108">Ремень 2108</button>
+          <button type="button" data-empty-category="Тормоза">Тормоза</button>
+          ${hasFilters ? '<button type="button" data-empty-reset>Сбросить фильтры</button>' : ""}
+          <a href="#selection">Подбор по автомобилю</a>
+        </div>
+      </article>
+    `;
+  }
+
   function formatPrice(price) {
     if (!price) {
       return '<span class="request-price">цену уточнить</span>';
@@ -311,7 +332,7 @@
             </article>
           `,
         )
-        .join("") || '<p class="empty-state">Ничего не найдено. Попробуйте изменить запрос.</p>';
+        .join("") || renderEmptyState();
     syncUrl();
   }
 
@@ -452,6 +473,20 @@
     document.getElementById("catalog").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  function resetCatalogFilters() {
+    state.query = "";
+    state.category = "";
+    state.price = "";
+    state.sort = "relevance";
+    state.visible = 18;
+    catalogSearch.value = "";
+    heroSearch.value = "";
+    categoryFilter.value = "";
+    priceFilter.value = "";
+    sortSelect.value = "relevance";
+    render();
+  }
+
   document.querySelector(".hero-search").addEventListener("submit", (event) => {
     event.preventDefault();
     setQuery(heroSearch.value);
@@ -481,16 +516,7 @@
   });
 
   resetFilters.addEventListener("click", () => {
-    state.query = "";
-    state.category = "";
-    state.price = "";
-    state.sort = "relevance";
-    state.visible = 18;
-    catalogSearch.value = "";
-    categoryFilter.value = "";
-    priceFilter.value = "";
-    sortSelect.value = "relevance";
-    render();
+    resetCatalogFilters();
   });
 
   loadMore.addEventListener("click", () => {
@@ -505,6 +531,36 @@
       if (product) {
         addToRequest(product);
       }
+      return;
+    }
+
+    const emptyQueryButton = event.target.closest("[data-empty-query]");
+    if (emptyQueryButton) {
+      state.category = "";
+      state.price = "";
+      categoryFilter.value = "";
+      priceFilter.value = "";
+      setQuery(emptyQueryButton.dataset.emptyQuery);
+      return;
+    }
+
+    const emptyCategoryButton = event.target.closest("[data-empty-category]");
+    if (emptyCategoryButton) {
+      state.query = "";
+      state.category = emptyCategoryButton.dataset.emptyCategory;
+      state.price = "";
+      state.visible = 18;
+      catalogSearch.value = "";
+      heroSearch.value = "";
+      categoryFilter.value = state.category;
+      priceFilter.value = "";
+      render();
+      return;
+    }
+
+    const emptyResetButton = event.target.closest("[data-empty-reset]");
+    if (emptyResetButton) {
+      resetCatalogFilters();
       return;
     }
 
