@@ -1853,7 +1853,7 @@ textarea {
   bottom: 18px;
   z-index: 45;
   display: none;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto auto auto;
   gap: 8px;
   padding: 8px;
   border: 1px solid rgba(221, 227, 236, 0.9);
@@ -2364,13 +2364,13 @@ textarea {
     right: 12px;
     bottom: 12px;
     left: 12px;
-    grid-template-columns: 1.1fr 0.9fr 0.8fr;
+    grid-template-columns: 0.92fr 1.16fr 0.92fr 0.82fr;
   }
 
   .quick-action {
     min-width: 0;
-    padding: 0 8px;
-    font-size: 14px;
+    padding: 0 6px;
+    font-size: 13px;
   }
 
   .section-shell,
