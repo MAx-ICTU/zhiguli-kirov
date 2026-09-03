@@ -7,6 +7,7 @@
       name="description"
       content="Прототип админ-панели каталога автозапчастей Жигули в Кирове."
     />
+    <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#083760" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Админ-панель - Жигули" />
@@ -224,16 +225,16 @@
               <textarea id="settingsRequestScenario"></textarea>
             </label>
             <label class="checkbox-line">
-              <input id="settingsExternalNotifications" type="checkbox" />
-              <span>Отправлять заявки на внешние контакты</span>
+              <input id="settingsExternalNotifications" type="checkbox" disabled />
+              <span>Автоматическая внешняя отправка</span>
             </label>
             <label class="checkbox-line">
-              <input id="settingsDeliveryEnabled" type="checkbox" />
-              <span>Включить доставку</span>
+              <input id="settingsDeliveryEnabled" type="checkbox" disabled />
+              <span>Дополнительные способы получения</span>
             </label>
             <label class="checkbox-line">
-              <input id="settingsOnlinePaymentEnabled" type="checkbox" />
-              <span>Включить онлайн-оплату</span>
+              <input id="settingsOnlinePaymentEnabled" type="checkbox" disabled />
+              <span>Оплата на сайте</span>
             </label>
             <button class="primary-btn" type="submit">Сохранить настройки</button>
           </form>

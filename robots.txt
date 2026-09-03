@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /zhiguli-kirov/admin.html
 
 Sitemap: https://max-ictu.github.io/zhiguli-kirov/sitemap.xml

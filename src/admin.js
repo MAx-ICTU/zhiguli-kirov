@@ -436,9 +436,9 @@
   function fillSettings(settings) {
     settingsZeroPriceLabel.value = settings.zeroPriceLabel || "";
     settingsRequestScenario.value = settings.requestScenario || "";
-    settingsExternalNotifications.checked = settings.externalNotifications === true;
-    settingsDeliveryEnabled.checked = settings.deliveryEnabled === true;
-    settingsOnlinePaymentEnabled.checked = settings.onlinePaymentEnabled === true;
+    settingsExternalNotifications.checked = false;
+    settingsDeliveryEnabled.checked = false;
+    settingsOnlinePaymentEnabled.checked = false;
   }
 
   async function loadSettings() {
@@ -463,9 +463,9 @@
       body: JSON.stringify({
         zeroPriceLabel: settingsZeroPriceLabel.value,
         requestScenario: settingsRequestScenario.value,
-        externalNotifications: settingsExternalNotifications.checked,
-        deliveryEnabled: settingsDeliveryEnabled.checked,
-        onlinePaymentEnabled: settingsOnlinePaymentEnabled.checked,
+        externalNotifications: false,
+        deliveryEnabled: false,
+        onlinePaymentEnabled: false,
       }),
     });
     fillSettings(settings);

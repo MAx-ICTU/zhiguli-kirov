@@ -1,7 +1,9 @@
 {
   "name": "Жигули - автозапчасти",
   "short_name": "Жигули",
+  "description": "Каталог автозапчастей ВАЗ и LADA в Кирове.",
   "start_url": "/zhiguli-kirov/",
+  "scope": "/zhiguli-kirov/",
   "display": "standalone",
   "background_color": "#eef2f6",
   "theme_color": "#083760",
