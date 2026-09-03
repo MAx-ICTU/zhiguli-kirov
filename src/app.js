@@ -358,6 +358,22 @@
     `;
   }
 
+  function updateShortcutState() {
+    document.querySelectorAll("[data-category], [data-catalog-category]").forEach((button) => {
+      const category = button.dataset.category || button.dataset.catalogCategory;
+      button.classList.toggle("is-active", Boolean(category && category === state.category));
+    });
+
+    document.querySelectorAll("[data-model-query], [data-catalog-query]").forEach((button) => {
+      const query = button.dataset.modelQuery || button.dataset.catalogQuery;
+      button.classList.toggle("is-active", Boolean(query && normalize(query) === normalize(state.query)));
+    });
+
+    document.querySelectorAll("[data-catalog-price]").forEach((button) => {
+      button.classList.toggle("is-active", button.dataset.catalogPrice === state.price);
+    });
+  }
+
   function updateLoadMore(resultLength) {
     const remaining = Math.max(resultLength - state.visible, 0);
     loadMore.hidden = remaining <= 0;
@@ -485,6 +501,7 @@
     catalogCount.textContent = `Найдено: ${result.length.toLocaleString("ru-RU")}`;
     renderCatalogSummary(result.length);
     updateLoadMore(result.length);
+    updateShortcutState();
 
     productGrid.innerHTML =
       visibleItems

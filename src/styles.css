@@ -313,6 +313,15 @@ textarea {
   color: var(--red);
 }
 
+.quick-categories button.is-active,
+.catalog-shortcuts button.is-active,
+.popular-grid button.is-active,
+.model-grid button.is-active {
+  border-color: var(--red);
+  background: #fff6f4;
+  color: var(--red);
+}
+
 .category-count {
   display: block;
   color: var(--muted);
