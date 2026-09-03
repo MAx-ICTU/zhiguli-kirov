@@ -22,7 +22,6 @@ body {
   color: var(--ink);
   background: #eef2f6;
   overflow-x: hidden;
-  padding-bottom: 82px;
 }
 
 a {
@@ -1528,7 +1527,7 @@ textarea {
   right: max(18px, calc((100vw - 1220px) / 2 + 24px));
   bottom: 18px;
   z-index: 45;
-  display: grid;
+  display: none;
   grid-template-columns: auto auto auto;
   gap: 8px;
   padding: 8px;
@@ -1849,6 +1848,10 @@ textarea {
 }
 
 @media (max-width: 640px) {
+  body {
+    padding-bottom: 82px;
+  }
+
   .header-actions {
     width: 100%;
     display: grid;
@@ -1980,6 +1983,7 @@ textarea {
   }
 
   .quick-actions-bar {
+    display: grid;
     right: 12px;
     bottom: 12px;
     left: 12px;
