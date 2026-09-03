@@ -358,6 +358,16 @@
     `;
   }
 
+  function updateLoadMore(resultLength) {
+    const remaining = Math.max(resultLength - state.visible, 0);
+    loadMore.hidden = remaining <= 0;
+    if (remaining > 0) {
+      const nextCount = Math.min(18, remaining).toLocaleString("ru-RU");
+      const remainingCount = remaining.toLocaleString("ru-RU");
+      loadMore.textContent = `Показать еще ${nextCount} из ${remainingCount}`;
+    }
+  }
+
   function getProductUrl(product) {
     const url = new URL(window.location.href);
     url.searchParams.set("product", product.code);
@@ -474,7 +484,7 @@
     const visibleItems = result.slice(0, state.visible);
     catalogCount.textContent = `Найдено: ${result.length.toLocaleString("ru-RU")}`;
     renderCatalogSummary(result.length);
-    loadMore.hidden = result.length <= state.visible;
+    updateLoadMore(result.length);
 
     productGrid.innerHTML =
       visibleItems
