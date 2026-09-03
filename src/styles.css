@@ -718,6 +718,41 @@ textarea {
   line-height: 1.5;
 }
 
+.visit-flow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.visit-flow article {
+  min-height: 146px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.visit-flow span {
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.visit-flow h3 {
+  margin: 14px 0 8px;
+  color: var(--blue-dark);
+  font-size: 18px;
+  line-height: 1.18;
+}
+
+.visit-flow p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
 .store-card {
   padding: 22px;
   border: 1px solid var(--line);
@@ -802,8 +837,8 @@ textarea {
 
 .contact-strip {
   display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: 18px;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 0.78fr) minmax(0, 1.2fr);
+  gap: 12px;
   margin-top: 18px;
 }
 
@@ -1927,6 +1962,7 @@ textarea {
   .quick-categories,
   .product-grid,
   .store-grid,
+  .visit-flow,
   .trust-section,
   .admin-flow,
   .admin-summary,
