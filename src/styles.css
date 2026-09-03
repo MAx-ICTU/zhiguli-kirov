@@ -405,6 +405,44 @@ textarea {
   width: 210px;
 }
 
+.catalog-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.catalog-shortcuts button {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-height: 64px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--blue-dark);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: left;
+  box-shadow: 0 10px 26px rgba(16, 32, 56, 0.06);
+}
+
+.catalog-shortcuts button:hover {
+  border-color: var(--blue);
+  color: var(--red);
+}
+
+.catalog-shortcuts span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 .catalog-summary {
   display: grid;
   gap: 10px;
@@ -2130,6 +2168,10 @@ textarea {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .catalog-shortcuts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 640px) {
@@ -2239,6 +2281,10 @@ textarea {
   }
 
   .empty-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .catalog-shortcuts {
     grid-template-columns: 1fr;
   }
 

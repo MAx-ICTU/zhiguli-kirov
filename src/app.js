@@ -604,9 +604,41 @@
 
   function setQuery(value) {
     state.query = value;
+    state.category = "";
+    state.price = "";
     state.visible = 18;
     catalogSearch.value = value;
     heroSearch.value = value;
+    categoryFilter.value = "";
+    priceFilter.value = "";
+    render();
+    document.getElementById("catalog").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function setCatalogCategory(value) {
+    state.category = value;
+    state.query = "";
+    state.price = "";
+    state.visible = 18;
+    catalogSearch.value = "";
+    heroSearch.value = "";
+    categoryFilter.value = value;
+    priceFilter.value = "";
+    render();
+    document.getElementById("catalog").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function setCatalogPrice(value, shouldResetContext = false) {
+    if (shouldResetContext) {
+      state.query = "";
+      state.category = "";
+      catalogSearch.value = "";
+      heroSearch.value = "";
+      categoryFilter.value = "";
+    }
+    state.price = value;
+    state.visible = 18;
+    priceFilter.value = value;
     render();
     document.getElementById("catalog").scrollIntoView({ behavior: "smooth", block: "start" });
   }
@@ -679,6 +711,25 @@
     resetCatalogFilters();
   });
 
+  document.querySelector(".catalog-shortcuts").addEventListener("click", (event) => {
+    const queryButton = event.target.closest("[data-catalog-query]");
+    if (queryButton) {
+      setQuery(queryButton.dataset.catalogQuery);
+      return;
+    }
+
+    const categoryButton = event.target.closest("[data-catalog-category]");
+    if (categoryButton) {
+      setCatalogCategory(categoryButton.dataset.catalogCategory);
+      return;
+    }
+
+    const priceButton = event.target.closest("[data-catalog-price]");
+    if (priceButton) {
+      setCatalogPrice(priceButton.dataset.catalogPrice, true);
+    }
+  });
+
   catalogSummary.addEventListener("click", (event) => {
     const button = event.target.closest("[data-clear-filter]");
     if (button) {
@@ -703,25 +754,13 @@
 
     const emptyQueryButton = event.target.closest("[data-empty-query]");
     if (emptyQueryButton) {
-      state.category = "";
-      state.price = "";
-      categoryFilter.value = "";
-      priceFilter.value = "";
       setQuery(emptyQueryButton.dataset.emptyQuery);
       return;
     }
 
     const emptyCategoryButton = event.target.closest("[data-empty-category]");
     if (emptyCategoryButton) {
-      state.query = "";
-      state.category = emptyCategoryButton.dataset.emptyCategory;
-      state.price = "";
-      state.visible = 18;
-      catalogSearch.value = "";
-      heroSearch.value = "";
-      categoryFilter.value = state.category;
-      priceFilter.value = "";
-      render();
+      setCatalogCategory(emptyCategoryButton.dataset.emptyCategory);
       return;
     }
 
@@ -803,14 +842,7 @@
 
   document.querySelectorAll("button[data-category]").forEach((button) => {
     button.addEventListener("click", () => {
-      state.category = button.dataset.category;
-      state.query = "";
-      state.visible = 18;
-      catalogSearch.value = "";
-      heroSearch.value = "";
-      categoryFilter.value = state.category;
-      render();
-      document.getElementById("catalog").scrollIntoView({ behavior: "smooth", block: "start" });
+      setCatalogCategory(button.dataset.category);
     });
   });
 
