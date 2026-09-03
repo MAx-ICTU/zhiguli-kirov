@@ -37,6 +37,8 @@
   const requestNote = document.getElementById("requestNote");
   const requestListToggle = document.getElementById("requestListToggle");
   const requestListCount = document.getElementById("requestListCount");
+  const quickRequestToggle = document.getElementById("quickRequestToggle");
+  const quickRequestCount = document.getElementById("quickRequestCount");
   const requestDrawer = document.getElementById("requestDrawer");
   const requestDrawerClose = document.getElementById("requestDrawerClose");
   const requestList = document.getElementById("requestList");
@@ -325,7 +327,9 @@
   function renderRequestList() {
     const totalQty = requestItems.reduce((sum, item) => sum + item.qty, 0);
     requestListCount.textContent = totalQty.toLocaleString("ru-RU");
+    quickRequestCount.textContent = totalQty.toLocaleString("ru-RU");
     requestListToggle.classList.toggle("has-items", totalQty > 0);
+    quickRequestToggle.classList.toggle("has-items", totalQty > 0);
 
     requestList.innerHTML =
       requestItems
@@ -463,6 +467,7 @@
   });
 
   requestListToggle.addEventListener("click", openRequestDrawer);
+  quickRequestToggle.addEventListener("click", openRequestDrawer);
   requestDrawerClose.addEventListener("click", closeRequestDrawer);
   requestComment.addEventListener("input", updateRequestEmail);
 

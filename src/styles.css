@@ -22,6 +22,7 @@ body {
   color: var(--ink);
   background: #eef2f6;
   overflow-x: hidden;
+  padding-bottom: 82px;
 }
 
 a {
@@ -1480,6 +1481,64 @@ textarea {
   gap: 14px;
 }
 
+.quick-actions-bar {
+  position: fixed;
+  right: max(18px, calc((100vw - 1220px) / 2 + 24px));
+  bottom: 18px;
+  z-index: 45;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid rgba(221, 227, 236, 0.9);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 50px rgba(8, 20, 35, 0.18);
+}
+
+.quick-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #edf4fb;
+  color: var(--blue-dark);
+  cursor: pointer;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.quick-action-request {
+  gap: 8px;
+  background: var(--blue);
+  color: #fff;
+}
+
+.quick-action-phone {
+  background: var(--red);
+  color: #fff;
+}
+
+.quick-action.has-items {
+  background: var(--blue-dark);
+  color: #fff;
+}
+
+.quick-action span {
+  display: grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-size: 12px;
+}
+
 .modal {
   position: fixed;
   inset: 0;
@@ -1876,6 +1935,19 @@ textarea {
 
   .request-drawer {
     width: 100%;
+  }
+
+  .quick-actions-bar {
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    grid-template-columns: 1.1fr 0.9fr 0.8fr;
+  }
+
+  .quick-action {
+    min-width: 0;
+    padding: 0 8px;
+    font-size: 14px;
   }
 
   .section-shell,
