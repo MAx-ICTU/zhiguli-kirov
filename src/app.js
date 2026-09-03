@@ -289,45 +289,26 @@
   }
 
   function buildRequestText() {
+    const hasItems = requestItems.length > 0;
     const lines = [
-      "Здравствуйте. Прошу уточнить наличие и актуальную цену по товарам:",
-      "",
-      ...requestItems.map(
-        (item, index) =>
-          `${index + 1}. ${item.name}\nКод: ${item.code}\nКоличество: ${item.qty}\nЦена на сайте: ${formatPlainPrice(item.price)}`,
-      ),
+      hasItems
+        ? "Здравствуйте. Прошу уточнить наличие и актуальную цену по товарам:"
+        : "Здравствуйте. Прошу помочь с подбором детали.",
     ];
+    if (hasItems) {
+      lines.push(
+        "",
+        ...requestItems.map(
+          (item, index) =>
+            `${index + 1}. ${item.name}\nКод: ${item.code}\nКоличество: ${item.qty}\nЦена на сайте: ${formatPlainPrice(item.price)}`,
+        ),
+      );
+    }
     const comment = requestComment.value.trim();
     if (comment) {
       lines.push("", `Комментарий: ${comment}`);
     }
     return lines.join("\n");
-  }
-
-  async function submitRequestToBackend() {
-    const details = requestDetails.value.trim();
-    const car = requestCar.value.trim();
-    const phone = requestPhone.value.trim();
-    const commentLines = [];
-
-    if (car) commentLines.push(`Автомобиль: ${car}`);
-    if (details) commentLines.push(`Запрос: ${details}`);
-
-    const response = await fetch("/api/requests", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        customer: { phone },
-        comment: commentLines.join("\n"),
-        items: requestItems,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    return response.json();
   }
 
   function updateRequestEmail() {
@@ -495,6 +476,8 @@
 
   clearRequest.addEventListener("click", () => {
     requestItems = [];
+    requestComment.value = "";
+    copyStatus.textContent = "";
     saveRequestItems();
     renderRequestList();
   });
@@ -509,10 +492,13 @@
     }
   });
 
-  document.querySelectorAll(".quick-categories button").forEach((button) => {
+  document.querySelectorAll("button[data-category]").forEach((button) => {
     button.addEventListener("click", () => {
       state.category = button.dataset.category;
+      state.query = "";
       state.visible = 18;
+      catalogSearch.value = "";
+      heroSearch.value = "";
       categoryFilter.value = state.category;
       render();
       document.getElementById("catalog").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -525,17 +511,22 @@
     });
   });
 
-  document.querySelector(".request-form").addEventListener("submit", async (event) => {
+  document.querySelector(".request-form").addEventListener("submit", (event) => {
     event.preventDefault();
-    try {
-      await submitRequestToBackend();
-      requestNote.textContent = "Заявка отправлена менеджеру. Он проверит наличие и перезвонит.";
-      requestDetails.value = "";
-      requestCar.value = "";
-      requestPhone.value = "";
-    } catch (error) {
-      requestNote.textContent = "Запрос подготовлен. Позвоните в магазин или отправьте подготовленное письмо.";
+    const commentLines = [];
+    const car = requestCar.value.trim();
+    const details = requestDetails.value.trim();
+    const phone = requestPhone.value.trim();
+
+    if (car) commentLines.push(`Автомобиль: ${car}`);
+    if (details) commentLines.push(`Что нужно найти: ${details}`);
+    if (phone) commentLines.push(`Телефон для связи: ${phone}`);
+    if (commentLines.length) {
+      requestComment.value = commentLines.join("\n");
+      updateRequestEmail();
     }
+    requestNote.textContent = "Запрос подготовлен. Позвоните в магазин или используйте подготовленное письмо.";
+    openRequestDrawer();
   });
 
   const initialProductCode = new URLSearchParams(window.location.search).get("product");
