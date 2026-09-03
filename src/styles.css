@@ -405,6 +405,60 @@ textarea {
   width: 210px;
 }
 
+.catalog-summary {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.catalog-summary p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chips button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: #edf4fb;
+  color: var(--blue-dark);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+.filter-chips button:hover {
+  background: var(--blue-dark);
+  color: #fff;
+}
+
+.filter-chips span {
+  flex: 0 0 auto;
+  font-size: 16px;
+  line-height: 1;
+}
+
 .product-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -532,6 +586,13 @@ textarea {
   color: var(--ink);
   font-size: 18px;
   line-height: 1.28;
+}
+
+.product-card mark {
+  padding: 0 2px;
+  border-radius: 4px;
+  background: #fff0b8;
+  color: inherit;
 }
 
 .product-meta {
@@ -2227,6 +2288,16 @@ textarea {
   }
 
   .catalog-toolbar select {
+    width: 100%;
+  }
+
+  .filter-chips {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .filter-chips button {
+    justify-content: space-between;
     width: 100%;
   }
 }

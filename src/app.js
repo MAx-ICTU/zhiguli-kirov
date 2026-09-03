@@ -19,6 +19,7 @@
   const heroSearch = document.getElementById("heroSearch");
   const priceFilter = document.getElementById("priceFilter");
   const sortSelect = document.getElementById("sortSelect");
+  const catalogSummary = document.getElementById("catalogSummary");
   const resetFilters = document.getElementById("resetFilters");
   const loadMore = document.getElementById("loadMore");
   const productModal = document.getElementById("productModal");
@@ -83,6 +84,18 @@
     Подвеска: ["стойк", "шаров", "сайлентблок", "амортиз", "рычаг"],
     Тормоза: ["тормоз", "колод", "диск", "цилиндр"],
     Электрика: ["датчик", "реле", "ламп", "стартер", "генератор"],
+  };
+  const priceLabels = {
+    priced: "с указанной ценой",
+    request: "цену уточнить",
+    under1000: "до 1 000 ₽",
+    over5000: "от 5 000 ₽",
+  };
+  const sortLabels = {
+    relevance: "по релевантности",
+    priceAsc: "сначала дешевле",
+    priceDesc: "сначала дороже",
+    nameAsc: "по названию",
   };
   let requestItems = JSON.parse(localStorage.getItem(requestStorageKey) || "[]");
 
@@ -182,6 +195,106 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  function getHighlightTerms() {
+    return [
+      ...new Set(
+        getQueryParts(state.query)
+          .flat()
+          .map(normalize)
+          .filter((term) => term.length >= 2),
+      ),
+    ].sort((a, b) => b.length - a.length);
+  }
+
+  function highlightMatches(value) {
+    const text = String(value || "");
+    const terms = getHighlightTerms();
+    if (!terms.length) return escapeHtml(text);
+
+    const normalizedText = normalize(text);
+    const ranges = [];
+    terms.forEach((term) => {
+      let index = normalizedText.indexOf(term);
+      while (index !== -1) {
+        const end = index + term.length;
+        if (!ranges.some((range) => index < range.end && end > range.start)) {
+          ranges.push({ start: index, end });
+        }
+        index = normalizedText.indexOf(term, index + term.length);
+      }
+    });
+
+    if (!ranges.length) return escapeHtml(text);
+
+    ranges.sort((a, b) => a.start - b.start);
+    let cursor = 0;
+    let html = "";
+    ranges.forEach((range) => {
+      html += escapeHtml(text.slice(cursor, range.start));
+      html += `<mark>${escapeHtml(text.slice(range.start, range.end))}</mark>`;
+      cursor = range.end;
+    });
+    html += escapeHtml(text.slice(cursor));
+    return html;
+  }
+
+  function getActiveFilters() {
+    const filters = [];
+    if (state.query) {
+      filters.push({ key: "query", label: `Поиск: ${state.query}` });
+    }
+    if (state.category) {
+      filters.push({ key: "category", label: `Раздел: ${state.category}` });
+    }
+    if (state.price) {
+      filters.push({ key: "price", label: `Цена: ${priceLabels[state.price] || state.price}` });
+    }
+    if (state.sort !== "relevance") {
+      filters.push({ key: "sort", label: `Сортировка: ${sortLabels[state.sort] || state.sort}` });
+    }
+    return filters;
+  }
+
+  function getResultMessage(resultLength) {
+    const active = getActiveFilters();
+    if (!active.length) {
+      return `Показаны все товары каталога: ${resultLength.toLocaleString("ru-RU")}.`;
+    }
+
+    const parts = [];
+    if (state.query) parts.push(`по запросу «${state.query}»`);
+    if (state.category) parts.push(`в разделе «${state.category}»`);
+    if (state.price) parts.push(`с фильтром «${priceLabels[state.price] || state.price}»`);
+
+    const prefix = resultLength === 0 ? "Нет товаров" : `Найдено ${resultLength.toLocaleString("ru-RU")}`;
+    const detail = parts.length ? ` ${parts.join(", ")}` : " товаров";
+    const sortNote = state.sort !== "relevance" ? ` Сортировка: ${sortLabels[state.sort] || state.sort}.` : "";
+    return `${prefix}${detail}.${sortNote}`;
+  }
+
+  function renderCatalogSummary(resultLength) {
+    const active = getActiveFilters();
+    catalogSummary.innerHTML = `
+      <p>${escapeHtml(getResultMessage(resultLength))}</p>
+      ${
+        active.length
+          ? `<div class="filter-chips" aria-label="Активные фильтры">
+              ${active
+                .map(
+                  (filter) => `
+                    <button type="button" data-clear-filter="${escapeHtml(filter.key)}">
+                      ${escapeHtml(filter.label)}
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  `,
+                )
+                .join("")}
+            </div>`
+          : ""
+      }
+    `;
   }
 
   function getProductUrl(product) {
@@ -299,6 +412,7 @@
     const result = applyFilters();
     const visibleItems = result.slice(0, state.visible);
     catalogCount.textContent = `Найдено: ${result.length.toLocaleString("ru-RU")}`;
+    renderCatalogSummary(result.length);
     loadMore.hidden = result.length <= state.visible;
 
     productGrid.innerHTML =
@@ -307,17 +421,17 @@
           (product) => `
             <article class="product-card" data-code="${escapeHtml(product.code)}">
               <div class="product-top">
-                <span class="product-code">Код ${escapeHtml(product.code)}</span>
+                <span class="product-code">Код ${highlightMatches(product.code)}</span>
                 <span class="product-status ${product.price > 0 ? "is-priced" : "is-request"}">
                   ${escapeHtml(getPriceStatus(product))}
                 </span>
               </div>
-              <h3>${escapeHtml(product.name)}</h3>
+              <h3>${highlightMatches(product.name)}</h3>
               <div class="product-meta">
-                <span>${escapeHtml(product.category)}</span>
+                <span>${highlightMatches(product.category)}</span>
                 <span>${escapeHtml(product.unit || "шт")}</span>
               </div>
-              <div class="source-category">${escapeHtml(product.sourceCategory || "Без группы")}</div>
+              <div class="source-category">${highlightMatches(product.sourceCategory || "Без группы")}</div>
               <div class="product-bottom">
                 ${formatPrice(product.price)}
                 <div class="product-actions">
@@ -487,6 +601,28 @@
     render();
   }
 
+  function clearFilter(key) {
+    if (key === "query") {
+      state.query = "";
+      catalogSearch.value = "";
+      heroSearch.value = "";
+    }
+    if (key === "category") {
+      state.category = "";
+      categoryFilter.value = "";
+    }
+    if (key === "price") {
+      state.price = "";
+      priceFilter.value = "";
+    }
+    if (key === "sort") {
+      state.sort = "relevance";
+      sortSelect.value = "relevance";
+    }
+    state.visible = 18;
+    render();
+  }
+
   document.querySelector(".hero-search").addEventListener("submit", (event) => {
     event.preventDefault();
     setQuery(heroSearch.value);
@@ -517,6 +653,13 @@
 
   resetFilters.addEventListener("click", () => {
     resetCatalogFilters();
+  });
+
+  catalogSummary.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-clear-filter]");
+    if (button) {
+      clearFilter(button.dataset.clearFilter);
+    }
   });
 
   loadMore.addEventListener("click", () => {
