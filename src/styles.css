@@ -926,6 +926,26 @@ textarea {
   box-shadow: var(--shadow);
 }
 
+.request-form-head {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #edf4fb;
+}
+
+.request-form-head strong {
+  color: var(--blue-dark);
+  font-size: 16px;
+}
+
+.request-form-head span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
 .request-guide {
   display: grid;
   gap: 10px;
@@ -2331,6 +2351,60 @@ textarea {
 
   .quick-categories {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .selection-section {
+    gap: 18px;
+    padding-top: 34px;
+  }
+
+  .selection-copy p:not(.eyebrow) {
+    line-height: 1.45;
+  }
+
+  .request-guide {
+    gap: 8px;
+    margin-top: 16px;
+    padding: 14px;
+  }
+
+  .request-guide span {
+    padding-left: 16px;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .request-form {
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .request-form-head {
+    padding: 10px;
+  }
+
+  .request-form label {
+    gap: 7px;
+    font-size: 13px;
+  }
+
+  .request-form input,
+  .request-form textarea {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+
+  .request-form textarea {
+    min-height: 92px;
+  }
+
+  .request-form .primary-btn {
+    min-height: 46px;
+    padding: 12px;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.15;
   }
 
   .model-grid {

@@ -387,8 +387,8 @@
           <p class="eyebrow">Когда артикул неизвестен</p>
           <h2>Подбор детали по автомобилю</h2>
           <p>
-            Клиент оставляет модель, год, нужную деталь и телефон. Менеджер
-            проверяет наличие и перезванивает.
+            Укажите автомобиль и деталь, сайт подготовит текст запроса. Потом
+            можно позвонить в магазин или скопировать данные.
           </p>
           <div class="request-guide" aria-label="Что назвать менеджеру">
             <strong>Что поможет быстрее подобрать деталь</strong>
@@ -398,6 +398,10 @@
           </div>
         </div>
         <form class="request-form" id="requestForm">
+          <div class="request-form-head">
+            <strong>Быстрый запрос</strong>
+            <span>Ничего не отправляется автоматически</span>
+          </div>
           <label>
             Автомобиль
             <input id="requestCar" type="text" placeholder="Например: ВАЗ 2114, 2011" />
@@ -411,9 +415,9 @@
             <input id="requestPhone" type="tel" placeholder="+7 ___ ___-__-__" />
           </label>
           <p class="form-note" id="requestNote">
-            Можно отправить общий запрос или выбрать товар в каталоге.
+            Заполните поля и нажмите кнопку: список откроется для звонка или копирования.
           </p>
-          <button class="primary-btn" type="submit">Подготовить запрос</button>
+          <button class="primary-btn" type="submit">Подготовить текст запроса</button>
         </form>
       </section>
 
