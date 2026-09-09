@@ -1972,6 +1972,11 @@ textarea {
   background: var(--soft);
 }
 
+.product-details .product-detail-code,
+.product-details .product-detail-price {
+  background: #fff;
+}
+
 .product-details dt {
   margin-bottom: 6px;
   color: var(--muted);
@@ -1984,6 +1989,13 @@ textarea {
   margin: 0;
   color: var(--ink);
   font-weight: 800;
+}
+
+.product-detail-code dd,
+.product-detail-price dd {
+  color: var(--blue-dark);
+  font-size: 20px;
+  line-height: 1.15;
 }
 
 .price-note {
@@ -2315,15 +2327,96 @@ textarea {
   .modal-panel {
     max-height: 88vh;
     overflow: auto;
-    padding: 22px;
+    padding: 18px;
   }
 
   .modal-panel h2 {
-    font-size: 22px;
+    margin-bottom: 14px;
+    padding-right: 36px;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .modal-close {
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .modal-panel .eyebrow {
+    margin-bottom: 8px;
+    padding-right: 42px;
+  }
+
+  .product-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .product-details div {
+    padding: 10px;
+  }
+
+  .product-details dt {
+    margin-bottom: 5px;
+    font-size: 10px;
+    line-height: 1.15;
+  }
+
+  .product-details dd {
+    overflow-wrap: anywhere;
+    font-size: 13px;
+    line-height: 1.25;
+  }
+
+  .product-detail-code dd,
+  .product-detail-price dd {
+    font-size: 18px;
+  }
+
+  .product-detail-source dd {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .price-note {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 12px;
   }
 
   .modal-actions {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .modal-actions #addModalProduct {
+    grid-column: 1 / -1;
+  }
+
+  .modal-actions #copyProductLink {
+    grid-column: auto;
+  }
+
+  .modal-actions .primary-btn,
+  .modal-actions .secondary-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 8px;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.15;
+  }
+
+  #productLinkStatus {
+    margin-top: 8px;
+    font-size: 12px;
   }
 
   .product-bottom {
