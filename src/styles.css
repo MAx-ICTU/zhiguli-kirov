@@ -2079,19 +2079,37 @@ textarea {
   background: var(--soft);
 }
 
-.request-item strong,
-.request-item span {
+.request-item-main strong,
+.request-item-main span {
   display: block;
 }
 
-.request-item strong {
+.request-item-main strong {
   line-height: 1.28;
 }
 
-.request-item span {
+.request-item-main span {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   margin-top: 7px;
   color: var(--muted);
   font-size: 13px;
+  line-height: 1.25;
+}
+
+.request-item-main b,
+.request-item-main em {
+  font-style: normal;
+  font-weight: 800;
+}
+
+.request-item-main b {
+  color: var(--blue-dark);
+}
+
+.request-item-main em {
+  color: var(--green);
 }
 
 .qty-control {
@@ -2520,7 +2538,99 @@ textarea {
   }
 
   .request-drawer {
+    grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+    gap: 10px;
+    padding: 16px;
     width: 100%;
+  }
+
+  .request-drawer-head {
+    align-items: flex-start;
+    gap: 10px;
+    padding-right: 36px;
+  }
+
+  .request-drawer-head h2 {
+    font-size: 21px;
+    line-height: 1.15;
+  }
+
+  .request-list {
+    gap: 8px;
+    padding-right: 0;
+  }
+
+  .request-item {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .request-item-main strong {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 14px;
+    line-height: 1.25;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .request-item-main span {
+    gap: 5px 8px;
+    margin-top: 6px;
+    font-size: 12px;
+  }
+
+  .qty-control {
+    grid-template-columns: 34px 28px 34px;
+  }
+
+  .qty-control button {
+    width: 34px;
+    height: 34px;
+  }
+
+  .remove-item {
+    justify-self: start;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .request-call-hint {
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .request-comment {
+    gap: 6px;
+    font-size: 12px;
+  }
+
+  .request-comment textarea {
+    min-height: 62px;
+    padding: 10px;
+  }
+
+  .request-drawer-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .request-drawer-actions .primary-btn {
+    grid-column: 1 / -1;
+  }
+
+  .request-drawer-actions .primary-btn,
+  .request-drawer-actions .secondary-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 8px;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.15;
   }
 
   .quick-actions-bar {

@@ -652,9 +652,12 @@
         .map(
           (item) => `
             <article class="request-item">
-              <div>
+              <div class="request-item-main">
                 <strong>${escapeHtml(item.name)}</strong>
-                <span>Код ${escapeHtml(item.code)} · ${formatPlainPrice(item.price)}</span>
+                <span>
+                  <b>Код ${escapeHtml(item.code)}</b>
+                  <em>${formatPlainPrice(item.price)}</em>
+                </span>
               </div>
               <div class="qty-control" aria-label="Количество">
                 <button type="button" data-qty-minus="${escapeHtml(item.code)}">-</button>
