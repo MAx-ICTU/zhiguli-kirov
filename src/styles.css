@@ -1081,6 +1081,16 @@ textarea {
   line-height: 1.45;
 }
 
+.store-card .store-address {
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.store-card .store-hours {
+  font-size: 14px;
+}
+
 .store-card a {
   display: inline-flex;
   margin-top: 10px;
@@ -1097,6 +1107,7 @@ textarea {
 
 .store-actions a {
   display: inline-flex;
+  align-items: center;
   justify-content: center;
   margin: 0;
   padding: 10px 12px;
@@ -2407,6 +2418,132 @@ textarea {
     line-height: 1.15;
   }
 
+  .stores-section .section-heading {
+    gap: 10px;
+  }
+
+  .stores-section .section-heading p:not(.eyebrow) {
+    line-height: 1.4;
+  }
+
+  .store-visual {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .store-visual img {
+    min-height: 180px;
+    max-height: 220px;
+  }
+
+  .store-visual div {
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .store-visual strong {
+    font-size: 20px;
+  }
+
+  .store-visual span {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .visit-flow {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .visit-flow article {
+    min-height: 0;
+    padding: 12px;
+  }
+
+  .visit-flow h3 {
+    margin: 8px 0 5px;
+    font-size: 16px;
+  }
+
+  .visit-flow p {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .store-grid {
+    gap: 10px;
+  }
+
+  .store-card {
+    padding: 14px;
+  }
+
+  .store-card h3 {
+    margin-bottom: 8px;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  .store-card p {
+    margin: 6px 0;
+  }
+
+  .store-card .store-address {
+    font-size: 16px;
+  }
+
+  .store-card .store-hours {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .store-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .store-actions a {
+    min-height: 44px;
+    padding: 10px 8px;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.15;
+  }
+
+  .store-map {
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .map-copy {
+    gap: 8px;
+    padding: 14px;
+  }
+
+  .map-copy h3 {
+    font-size: 19px;
+  }
+
+  .map-copy p:not(.eyebrow) {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .store-map iframe {
+    min-height: 260px;
+  }
+
+  .contact-strip {
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .contact-strip div {
+    padding: 12px;
+  }
+
   .model-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -2608,7 +2745,7 @@ textarea {
   }
 
   .store-map iframe {
-    min-height: 300px;
+    min-height: 260px;
   }
 
   .request-drawer {
