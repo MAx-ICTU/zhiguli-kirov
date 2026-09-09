@@ -134,6 +134,7 @@ textarea {
 
 .primary-btn {
   display: inline-flex;
+  align-items: center;
   justify-content: center;
   padding: 12px 16px;
   background: var(--red);
@@ -143,16 +144,20 @@ textarea {
 
 .secondary-btn,
 .load-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 11px 14px;
   background: #e8eef6;
   color: var(--blue-dark);
+  text-decoration: none;
 }
 
 .hero {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  min-height: 560px;
+  min-height: 500px;
   overflow: hidden;
   background: var(--blue-dark);
 }
@@ -161,7 +166,7 @@ textarea {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(8, 55, 96, 0.92), rgba(8, 55, 96, 0.52), rgba(24, 32, 42, 0.5)),
+    linear-gradient(90deg, rgba(8, 55, 96, 0.94), rgba(8, 55, 96, 0.72), rgba(24, 32, 42, 0.42)),
     url("../assets/store-front-winter.webp") center / cover;
 }
 
@@ -170,7 +175,7 @@ textarea {
   max-width: 1220px;
   width: 100%;
   margin: 0 auto;
-  padding: 92px 24px 70px;
+  padding: 70px 24px 58px;
   color: #fff;
 }
 
@@ -184,28 +189,28 @@ textarea {
 }
 
 .hero h1 {
-  max-width: 760px;
+  max-width: 720px;
   margin: 0;
-  font-size: clamp(34px, 5vw, 62px);
-  line-height: 1.02;
+  font-size: clamp(34px, 4.35vw, 54px);
+  line-height: 1.05;
   letter-spacing: 0;
 }
 
 .hero p:not(.eyebrow) {
-  max-width: 700px;
-  margin: 22px 0 0;
+  max-width: 650px;
+  margin: 18px 0 0;
   color: #e2edf8;
-  font-size: 18px;
-  line-height: 1.55;
+  font-size: 17px;
+  line-height: 1.5;
 }
 
 .hero-search {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 132px;
   gap: 10px;
-  max-width: 760px;
-  margin-top: 32px;
-  padding: 8px;
+  max-width: 720px;
+  margin-top: 26px;
+  padding: 6px;
   border-radius: 10px;
   background: #fff;
   box-shadow: var(--shadow);
@@ -240,39 +245,39 @@ textarea {
 .hero-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 28px;
+  gap: 10px;
+  margin-top: 22px;
 }
 
 .hero-stats span {
-  min-width: 150px;
-  padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  min-width: 132px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(8, 55, 96, 0.48);
 }
 
 .hero-stats strong {
   display: block;
-  font-size: 28px;
+  font-size: 25px;
 }
 
 .hero-contacts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  max-width: 760px;
-  margin-top: 18px;
+  gap: 10px;
+  max-width: 720px;
+  margin-top: 14px;
 }
 
 .hero-contacts a {
   display: grid;
   gap: 5px;
-  min-height: 72px;
-  padding: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  min-height: 64px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(8, 55, 96, 0.48);
   color: #fff;
   text-decoration: none;
 }
@@ -290,9 +295,9 @@ textarea {
 .quick-categories {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: 1px;
+  gap: 8px;
   max-width: 1220px;
-  margin: -36px auto 0;
+  margin: 18px auto 0;
   padding: 0 24px;
   position: relative;
   z-index: 5;
@@ -302,11 +307,13 @@ textarea {
   display: grid;
   align-content: center;
   gap: 4px;
-  min-height: 76px;
-  padding: 10px;
+  min-height: 72px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
   background: #fff;
   color: var(--blue-dark);
-  box-shadow: 0 10px 30px rgba(10, 35, 64, 0.08);
+  box-shadow: 0 10px 24px rgba(10, 35, 64, 0.06);
+  text-align: left;
 }
 
 .quick-categories button:hover {
@@ -2282,21 +2289,22 @@ textarea {
   }
 
   .hero {
-    min-height: 650px;
+    min-height: 0;
   }
 
   .hero-content {
-    padding: 46px 18px 118px;
+    padding: 30px 18px 32px;
   }
 
   .hero p:not(.eyebrow) {
-    margin-top: 16px;
-    font-size: 16px;
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.45;
   }
 
   .hero h1 {
-    font-size: 30px;
-    line-height: 1.08;
+    font-size: 28px;
+    line-height: 1.1;
   }
 
   .hero-search {
@@ -2304,32 +2312,49 @@ textarea {
     margin-top: 20px;
   }
 
+  .hero-search input {
+    min-height: 46px;
+  }
+
+  .hero-search button {
+    min-height: 44px;
+  }
+
   .hero-stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
-    margin-top: 18px;
+    margin-top: 14px;
   }
 
   .hero-stats span {
     min-width: 0;
-    padding: 12px;
-    font-size: 12px;
+    padding: 10px 8px;
+    font-size: 11px;
   }
 
   .hero-stats strong {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .hero-contacts {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    margin-top: 12px;
+    margin-top: 10px;
   }
 
   .hero-contacts a {
-    min-height: 0;
-    padding: 12px;
+    min-height: 70px;
+    padding: 10px;
+  }
+
+  .hero-contacts strong {
+    font-size: 14px;
+  }
+
+  .hero-contacts span {
+    font-size: 11px;
+    line-height: 1.25;
   }
 
   .quick-categories,
@@ -2362,6 +2387,18 @@ textarea {
 
   .quick-categories {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .quick-categories button {
+    min-height: 60px;
+    padding: 9px 10px;
+    font-size: 13px;
+  }
+
+  .section-shell {
+    margin-top: 46px;
   }
 
   .selection-section {
