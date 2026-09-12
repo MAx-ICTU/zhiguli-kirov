@@ -193,6 +193,11 @@
             />
             <button type="submit">Найти</button>
           </form>
+          <div class="hero-actions" aria-label="Быстрые действия">
+            <a href="catalog.html">Открыть весь каталог</a>
+            <a href="#selection">Подбор без артикула</a>
+            <a href="tel:+78332620888">Позвонить в магазин</a>
+          </div>
           <div class="hero-stats" aria-label="Ключевые показатели">
             <span><strong id="statProducts">9000+</strong> товаров</span>
             <span><strong id="statCategories">12</strong> разделов</span>
@@ -208,6 +213,30 @@
               <span>532-989 · отдел Жигули-ВАЗ</span>
             </a>
           </div>
+        </div>
+      </section>
+
+      <section class="section-shell buy-steps" aria-label="Как купить">
+        <div class="buy-steps-head">
+          <p class="eyebrow">Как купить без лишних шагов</p>
+          <h2>Нашли деталь, уточнили наличие, забрали в удобном магазине</h2>
+        </div>
+        <div class="buy-step-grid">
+          <article>
+            <span>01</span>
+            <h3>Найдите товар</h3>
+            <p>Ищите по коду, названию, модели или разделу. В карточке видны цена и код для разговора с менеджером.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Соберите запрос</h3>
+            <p>Добавьте несколько позиций, укажите комментарий и скопируйте список или подготовьте письмо.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Позвоните и приезжайте</h3>
+            <p>Уточните остаток по коду и выберите самовывоз: Кольцова, 18 или Сормовская, 42.</p>
+          </article>
         </div>
       </section>
 
@@ -627,6 +656,11 @@
       </div>
       <div class="request-list" id="requestList"></div>
       <p class="request-call-hint" id="requestCallHint"></p>
+      <div class="request-fast-actions" aria-label="Быстрые действия с запросом">
+        <a href="tel:+78332620888">Позвонить</a>
+        <a href="#stores">Адреса</a>
+        <button id="copyRequestQuick" type="button">Скопировать</button>
+      </div>
       <label class="request-comment">
         Комментарий
         <textarea id="requestComment" placeholder="Например: нужен самовывоз сегодня, уточнить наличие на Кольцова"></textarea>

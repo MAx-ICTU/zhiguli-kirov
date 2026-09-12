@@ -56,6 +56,7 @@
   const requestComment = document.getElementById("requestComment");
   const requestEmail = document.getElementById("requestEmail");
   const copyRequest = document.getElementById("copyRequest");
+  const copyRequestQuick = document.getElementById("copyRequestQuick");
   const clearRequest = document.getElementById("clearRequest");
   const copyStatus = document.getElementById("copyStatus");
 
@@ -738,7 +739,7 @@
     quickRequestToggle.classList.toggle("has-items", totalQty > 0);
     requestCallHint.textContent =
       totalQty > 0
-        ? `В запросе ${totalQty.toLocaleString("ru-RU")} поз. При звонке назовите коды товаров из списка.`
+        ? `В запросе ${totalQty.toLocaleString("ru-RU")} поз. Скопируйте список или позвоните: менеджеру достаточно кодов товаров.`
         : "Можно добавить товар из каталога или описать деталь в форме подбора.";
 
     requestList.innerHTML =
@@ -1000,15 +1001,18 @@
     render();
   });
 
-  copyRequest.addEventListener("click", async () => {
+  async function copyRequestToClipboard() {
     const text = buildRequestText();
     try {
       await navigator.clipboard.writeText(text);
-      copyStatus.textContent = "Текст запроса скопирован.";
+      copyStatus.textContent = "Текст запроса скопирован. Можно отправить его в письмо или назвать позиции по телефону.";
     } catch (error) {
-      copyStatus.textContent = "Не удалось скопировать автоматически. Используйте отправку на email.";
+      copyStatus.textContent = "Не удалось скопировать автоматически. Используйте подготовленное письмо.";
     }
-  });
+  }
+
+  copyRequest.addEventListener("click", copyRequestToClipboard);
+  copyRequestQuick.addEventListener("click", copyRequestToClipboard);
 
   document.querySelectorAll("button[data-category]").forEach((button) => {
     button.addEventListener("click", () => {
