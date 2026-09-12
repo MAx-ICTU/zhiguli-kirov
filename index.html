@@ -541,8 +541,15 @@
       <div class="modal-backdrop" data-close-modal></div>
       <article class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <button class="modal-close" type="button" data-close-modal aria-label="Закрыть">×</button>
-        <p class="eyebrow" id="modalCategory">Категория</p>
-        <h2 id="modalTitle">Товар</h2>
+        <div class="modal-product-head">
+          <div class="modal-product-visual" id="modalVisual" aria-hidden="true">
+            <span id="modalVisualCode">ВАЗ</span>
+          </div>
+          <div>
+            <p class="eyebrow" id="modalCategory">Категория</p>
+            <h2 id="modalTitle">Товар</h2>
+          </div>
+        </div>
         <dl class="product-details">
           <div class="product-detail-code">
             <dt>Код</dt>
@@ -562,6 +569,7 @@
           </div>
         </dl>
         <p class="price-note" id="modalPriceNote"></p>
+        <div class="product-fitment" id="modalFitment"></div>
         <div class="modal-actions">
           <button class="primary-btn" id="addModalProduct" type="button">Добавить в запрос</button>
           <a class="secondary-btn" href="tel:+78332620888">Позвонить</a>

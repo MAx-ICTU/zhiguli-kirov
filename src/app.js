@@ -29,11 +29,14 @@
   const productModal = document.getElementById("productModal");
   const modalCategory = document.getElementById("modalCategory");
   const modalTitle = document.getElementById("modalTitle");
+  const modalVisual = document.getElementById("modalVisual");
+  const modalVisualCode = document.getElementById("modalVisualCode");
   const modalCode = document.getElementById("modalCode");
   const modalSource = document.getElementById("modalSource");
   const modalUnit = document.getElementById("modalUnit");
   const modalPrice = document.getElementById("modalPrice");
   const modalPriceNote = document.getElementById("modalPriceNote");
+  const modalFitment = document.getElementById("modalFitment");
   const addModalProduct = document.getElementById("addModalProduct");
   const copyProductLink = document.getElementById("copyProductLink");
   const productLinkStatus = document.getElementById("productLinkStatus");
@@ -90,6 +93,16 @@
     Подвеска: ["стойк", "шаров", "сайлентблок", "амортиз", "рычаг"],
     Тормоза: ["тормоз", "колод", "диск", "цилиндр"],
     Электрика: ["датчик", "реле", "ламп", "стартер", "генератор"],
+  };
+  const categoryVisuals = {
+    Двигатель: { code: "ДВ", label: "Двигатель и навесное" },
+    Подвеска: { code: "ХД", label: "Ходовая часть" },
+    Тормоза: { code: "ТМ", label: "Тормозная система" },
+    Электрика: { code: "ЭЛ", label: "Электрика" },
+    Кузов: { code: "КЗ", label: "Кузовные детали" },
+    "Масла и жидкости": { code: "МЖ", label: "Масла и жидкости" },
+    Автохимия: { code: "АХ", label: "Автохимия" },
+    Инструменты: { code: "ИН", label: "Инструменты" },
   };
   const priceLabels = {
     priced: "с указанной ценой",
@@ -231,6 +244,72 @@
     return product.price > 0
       ? "Цена взята из прайса. Назовите код товара менеджеру, чтобы уточнить наличие."
       : "Цена не указана в прайсе. Добавьте товар в запрос, менеджер проверит цену и наличие.";
+  }
+
+  function getCategoryVisual(product) {
+    return categoryVisuals[product.category] || { code: "ВАЗ", label: "Автозапчасть" };
+  }
+
+  function getDetectedModels(product) {
+    const text = normalize(`${product.name} ${product.sourceCategory || ""}`);
+    const detected = [];
+    [
+      ["2101-2107", ["2101", "2103", "2105", "2106", "2107"]],
+      ["2108-2115", ["2108", "2109", "21099", "2113", "2114", "2115"]],
+      ["Нива", ["2121", "21213", "21214", "нива"]],
+      ["Калина", ["1118", "1119", "калина"]],
+      ["Приора", ["2170", "2171", "2172", "приора"]],
+      ["Гранта", ["2190", "2191", "гранта"]],
+      ["Vesta", ["vesta", "веста"]],
+      ["Largus", ["largus", "ларгус"]],
+      ["XRAY", ["xray", "x-ray", "иксрей"]],
+    ].forEach(([label, terms]) => {
+      if (terms.some((term) => text.includes(normalize(term)))) detected.push(label);
+    });
+    return detected;
+  }
+
+  function getProductHint(product) {
+    const hints = {
+      Двигатель: "Проверьте модель двигателя, год выпуска и старый артикул.",
+      Подвеска: "Сверьте сторону установки, кузов и год выпуска автомобиля.",
+      Тормоза: "Проверьте диаметр диска, тип суппорта и ось установки.",
+      Электрика: "Сверьте разъем, напряжение и маркировку старой детали.",
+      Кузов: "Уточните сторону, цвет, кузов и наличие крепежа.",
+      "Масла и жидкости": "Проверьте допуск, вязкость и нужный объем.",
+      Автохимия: "Уточните назначение, объем и совместимость с материалом.",
+      Инструменты: "Сверьте размер, посадку и назначение инструмента.",
+    };
+    return hints[product.category] || "Назовите код товара менеджеру, чтобы быстрее проверить наличие.";
+  }
+
+  function getProductTags(product) {
+    const tags = [product.category, product.unit || "шт", product.sourceCategory, ...getDetectedModels(product)];
+    return [...new Set(tags.filter(Boolean))].slice(0, 5);
+  }
+
+  function getProductVisualClass(product) {
+    return normalize(product.category).replace(/[^a-zа-я0-9]+/g, "-");
+  }
+
+  function renderFitment(product) {
+    const models = getDetectedModels(product);
+    const modelText = models.length ? models.join(", ") : "модель не определена по названию";
+    const tags = getProductTags(product)
+      .map((tag) => `<span>${escapeHtml(tag)}</span>`)
+      .join("");
+
+    return `
+      <div class="fitment-block">
+        <strong>Применяемость</strong>
+        <p>${escapeHtml(modelText)}. Перед покупкой лучше сверить по коду товара или старому артикулу.</p>
+      </div>
+      <div class="fitment-block">
+        <strong>Что проверить</strong>
+        <p>${escapeHtml(getProductHint(product))}</p>
+      </div>
+      <div class="fitment-tags" aria-label="Характеристики товара">${tags}</div>
+    `;
   }
 
   function getRequestQty(code) {
@@ -508,6 +587,10 @@
         .map(
           (product) => `
             <article class="product-card" data-code="${escapeHtml(product.code)}">
+              <div class="product-visual product-visual-${escapeHtml(getProductVisualClass(product))}" aria-hidden="true">
+                <span>${escapeHtml(getCategoryVisual(product).code)}</span>
+                <small>${escapeHtml(getCategoryVisual(product).label)}</small>
+              </div>
               <div class="product-top">
                 <span class="product-code">Код ${highlightMatches(product.code)}</span>
                 <span class="product-status ${product.price > 0 ? "is-priced" : "is-request"}">
@@ -544,13 +627,17 @@
 
   function openProduct(product) {
     selectedProduct = product;
+    const visual = getCategoryVisual(product);
     modalCategory.textContent = product.category;
     modalTitle.textContent = product.name;
+    modalVisualCode.textContent = visual.code;
+    modalVisual.dataset.category = product.category;
     modalCode.textContent = product.code;
     modalSource.textContent = product.sourceCategory || "Без группы";
     modalUnit.textContent = product.unit || "шт";
     modalPrice.textContent = formatPlainPrice(product.price);
     modalPriceNote.textContent = getPriceNote(product);
+    modalFitment.innerHTML = renderFitment(product);
     productLinkStatus.textContent = "";
     updateModalAction();
     productModal.classList.add("is-open");

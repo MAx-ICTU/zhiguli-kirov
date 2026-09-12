@@ -628,12 +628,13 @@ textarea {
 .product-card {
   display: grid;
   gap: 10px;
-  min-height: 268px;
+  min-height: 344px;
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
   box-shadow: 0 6px 20px rgba(16, 32, 56, 0.045);
+  animation: card-in 0.24s ease both;
   transition:
     border-color 0.18s ease,
     box-shadow 0.18s ease,
@@ -644,6 +645,81 @@ textarea {
   border-color: #c8d4e2;
   box-shadow: 0 12px 30px rgba(16, 32, 56, 0.08);
   transform: translateY(-1px);
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-visual {
+  position: relative;
+  display: grid;
+  min-height: 76px;
+  padding: 12px;
+  overflow: hidden;
+  border: 1px solid #d8e2ed;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(8, 55, 96, 0.94), rgba(11, 78, 138, 0.72)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0 2px, transparent 2px 12px);
+  color: #fff;
+}
+
+.product-visual::after {
+  content: "";
+  position: absolute;
+  right: -22px;
+  bottom: -34px;
+  width: 112px;
+  height: 112px;
+  border: 18px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+}
+
+.product-visual span {
+  position: relative;
+  z-index: 1;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.product-visual small {
+  position: relative;
+  z-index: 1;
+  align-self: end;
+  max-width: 150px;
+  color: #dcecfb;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.product-visual-кузов {
+  background:
+    linear-gradient(135deg, rgba(199, 53, 46, 0.92), rgba(8, 55, 96, 0.72)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 12px);
+}
+
+.product-visual-тормоза {
+  background:
+    linear-gradient(135deg, rgba(199, 53, 46, 0.96), rgba(167, 105, 18, 0.76)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 12px);
+}
+
+.product-visual-электрика {
+  background:
+    linear-gradient(135deg, rgba(11, 78, 138, 0.96), rgba(25, 120, 93, 0.76)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 12px);
 }
 
 .product-top {
@@ -816,13 +892,15 @@ textarea {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 14px;
+  min-height: 42px;
+  padding: 8px 10px 8px 12px;
   border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 8px;
+  border-radius: 999px;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   cursor: pointer;
   font-weight: 800;
+  line-height: 1;
 }
 
 .request-list-toggle.has-items {
@@ -833,8 +911,8 @@ textarea {
 .request-list-toggle span {
   display: grid;
   place-items: center;
-  min-width: 24px;
-  height: 24px;
+  min-width: 22px;
+  height: 22px;
   border-radius: 999px;
   background: var(--red);
   color: #fff;
@@ -2048,7 +2126,7 @@ textarea {
 
 .modal-panel {
   position: relative;
-  width: min(620px, 100%);
+  width: min(720px, 100%);
   padding: 28px;
   border-radius: 8px;
   background: #fff;
@@ -2074,9 +2152,34 @@ textarea {
 
 .modal-panel h2 {
   max-width: 520px;
-  margin: 0 0 20px;
+  margin: 0;
   font-size: 28px;
   line-height: 1.18;
+}
+
+.modal-product-head {
+  display: grid;
+  grid-template-columns: 122px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 20px;
+  padding-right: 44px;
+}
+
+.modal-product-visual {
+  display: grid;
+  place-items: center;
+  min-height: 112px;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(8, 55, 96, 0.96), rgba(11, 78, 138, 0.72)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0 2px, transparent 2px 12px);
+  color: #fff;
+}
+
+.modal-product-visual span {
+  font-size: 34px;
+  font-weight: 900;
 }
 
 .product-details {
@@ -2125,6 +2228,50 @@ textarea {
   border-radius: 8px;
   background: #edf4fb;
   color: var(--blue-dark);
+}
+
+.product-fitment {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.fitment-block {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.fitment-block strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--blue-dark);
+}
+
+.fitment-block p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.fitment-tags {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  gap: 6px;
+}
+
+.fitment-tags span {
+  padding: 6px 8px;
+  border: 1px solid #d8e2ed;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: var(--blue-dark);
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .modal-actions {
@@ -2722,9 +2869,24 @@ textarea {
     padding: 18px;
   }
 
-  .modal-panel h2 {
+  .modal-product-head {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 10px;
     margin-bottom: 14px;
-    padding-right: 36px;
+    padding-right: 34px;
+  }
+
+  .modal-product-visual {
+    min-height: 76px;
+  }
+
+  .modal-product-visual span {
+    font-size: 24px;
+  }
+
+  .modal-panel h2 {
+    margin-bottom: 0;
+    padding-right: 0;
     font-size: 20px;
     line-height: 1.2;
   }
@@ -2744,6 +2906,14 @@ textarea {
   .product-details {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
+  }
+
+  .product-fitment {
+    grid-template-columns: 1fr;
+  }
+
+  .fitment-tags {
+    grid-column: auto;
   }
 
   .product-details div {
@@ -3055,5 +3225,16 @@ textarea {
   .filter-chips button {
     justify-content: space-between;
     width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card {
+    animation: none;
+    transition: none;
+  }
+
+  .product-card:hover {
+    transform: none;
   }
 }
