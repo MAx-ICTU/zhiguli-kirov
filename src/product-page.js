@@ -113,10 +113,28 @@
     updateRequestCount();
   }
 
+  function getSimilarScore(productItem, candidate) {
+    let score = 0;
+    if (candidate.category === productItem.category) score += 8;
+    if (candidate.sourceCategory && candidate.sourceCategory === productItem.sourceCategory) score += 6;
+
+    const productModels = getDetectedModels(productItem);
+    const candidateModels = getDetectedModels(candidate);
+    score += candidateModels.filter((model) => productModels.includes(model)).length * 3;
+
+    const productWords = new Set(normalize(productItem.name).split(/[^0-9a-zа-я]+/g).filter((word) => word.length > 3));
+    const candidateWords = normalize(candidate.name).split(/[^0-9a-zа-я]+/g).filter((word) => word.length > 3);
+    score += candidateWords.filter((word) => productWords.has(word)).length;
+    return score;
+  }
+
   function getSimilarProducts(productItem) {
     return products
       .filter((item) => item.code !== productItem.code && item.category === productItem.category)
-      .slice(0, 4);
+      .map((item) => ({ item, score: getSimilarScore(productItem, item) }))
+      .sort((a, b) => b.score - a.score || a.item.name.localeCompare(b.item.name, "ru"))
+      .slice(0, 4)
+      .map(({ item }) => item);
   }
 
   function renderProduct(productItem) {
@@ -143,6 +161,7 @@
           </div>
           <div class="product-page-actions">
             <button class="primary-btn" id="productAddRequest" type="button">Добавить в запрос</button>
+            <button class="secondary-btn" id="productCopyCode" type="button">Скопировать код</button>
             <a class="secondary-btn" href="tel:+78332620888">Позвонить</a>
             <a class="secondary-btn" href="catalog.html">Назад в каталог</a>
           </div>
@@ -188,9 +207,9 @@
           <p>${escapeHtml(productItem.name)}</p>
         </div>
         <div class="product-call-steps">
-          <span>1. Добавьте товар в запрос</span>
-          <span>2. Позвоните или приезжайте</span>
-          <span>3. Уточните остаток и магазин самовывоза</span>
+          <span>Код товара: ${escapeHtml(productItem.code)}</span>
+          <span>Цена: ${formatPrice(productItem.price)}</span>
+          <span>${escapeHtml(getProductHint(productItem))}</span>
         </div>
       </section>
 
@@ -249,6 +268,15 @@
       addToRequest(productItem);
       document.getElementById("productPageStatus").textContent =
         "Товар добавлен в запрос. Можно открыть запрос на главной странице или позвонить в магазин.";
+    });
+
+    document.getElementById("productCopyCode").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(productItem.code);
+        document.getElementById("productPageStatus").textContent = `Код ${productItem.code} скопирован. Назовите его менеджеру.`;
+      } catch (error) {
+        document.getElementById("productPageStatus").textContent = `Код товара: ${productItem.code}.`;
+      }
     });
   }
 

@@ -344,6 +344,64 @@ textarea {
   padding: 0 24px;
 }
 
+.category-showcase {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.category-showcase-card {
+  display: grid;
+  align-content: space-between;
+  gap: 14px;
+  min-height: 230px;
+  padding: 18px;
+  overflow: hidden;
+  border-radius: 8px;
+  color: #fff;
+}
+
+.category-showcase-card svg {
+  width: 42px;
+  height: 42px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.category-showcase-card span {
+  color: #dcecfb;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.category-showcase-card h2 {
+  margin: 0;
+  font-size: 23px;
+  line-height: 1.12;
+}
+
+.category-showcase-card button {
+  justify-self: start;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.category-showcase-card button:hover {
+  background: #fff;
+  color: var(--blue-dark);
+}
+
 .page-main {
   max-width: 1220px;
   margin: 0 auto;
@@ -2720,7 +2778,7 @@ textarea {
 
 .product-page-actions {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.75fr) minmax(0, 0.9fr);
+  grid-template-columns: minmax(0, 1fr) repeat(3, minmax(0, 0.74fr));
   gap: 10px;
 }
 
@@ -3026,6 +3084,10 @@ textarea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .category-showcase {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .catalog-layout,
   .selection-section,
   .admin-section,
@@ -3151,6 +3213,7 @@ textarea {
   }
 
   .quick-categories,
+  .category-showcase,
   .popular-grid,
   .product-grid,
   .store-grid,
@@ -3220,6 +3283,20 @@ textarea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
     margin-top: 14px;
+  }
+
+  .category-showcase {
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .category-showcase-card {
+    min-height: 176px;
+    padding: 14px;
+  }
+
+  .category-showcase-card h2 {
+    font-size: 19px;
   }
 
   .quick-categories button {
