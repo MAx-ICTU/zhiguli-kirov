@@ -30,6 +30,7 @@
   const modalCategory = document.getElementById("modalCategory");
   const modalTitle = document.getElementById("modalTitle");
   const modalVisual = document.getElementById("modalVisual");
+  const modalVisualIcon = document.getElementById("modalVisualIcon");
   const modalVisualCode = document.getElementById("modalVisualCode");
   const modalCode = document.getElementById("modalCode");
   const modalSource = document.getElementById("modalSource");
@@ -95,14 +96,14 @@
     Электрика: ["датчик", "реле", "ламп", "стартер", "генератор"],
   };
   const categoryVisuals = {
-    Двигатель: { code: "ДВ", label: "Двигатель и навесное" },
-    Подвеска: { code: "ХД", label: "Ходовая часть" },
-    Тормоза: { code: "ТМ", label: "Тормозная система" },
-    Электрика: { code: "ЭЛ", label: "Электрика" },
-    Кузов: { code: "КЗ", label: "Кузовные детали" },
-    "Масла и жидкости": { code: "МЖ", label: "Масла и жидкости" },
-    Автохимия: { code: "АХ", label: "Автохимия" },
-    Инструменты: { code: "ИН", label: "Инструменты" },
+    Двигатель: { code: "ДВ", icon: "icon-engine", label: "Двигатель и навесное" },
+    Подвеска: { code: "ХД", icon: "icon-suspension", label: "Ходовая часть" },
+    Тормоза: { code: "ТМ", icon: "icon-brake", label: "Тормозная система" },
+    Электрика: { code: "ЭЛ", icon: "icon-electric", label: "Электрика" },
+    Кузов: { code: "КЗ", icon: "icon-body", label: "Кузовные детали" },
+    "Масла и жидкости": { code: "МЖ", icon: "icon-oil", label: "Масла и жидкости" },
+    Автохимия: { code: "АХ", icon: "icon-chemistry", label: "Автохимия" },
+    Инструменты: { code: "ИН", icon: "icon-tools", label: "Инструменты" },
   };
   const priceLabels = {
     priced: "с указанной ценой",
@@ -247,7 +248,15 @@
   }
 
   function getCategoryVisual(product) {
-    return categoryVisuals[product.category] || { code: "ВАЗ", label: "Автозапчасть" };
+    return categoryVisuals[product.category] || { code: "ВАЗ", icon: "icon-parts", label: "Автозапчасть" };
+  }
+
+  function renderCategoryIcon(visual) {
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <use href="assets/category-icons.svg#${escapeHtml(visual.icon)}"></use>
+      </svg>
+    `;
   }
 
   function getDetectedModels(product) {
@@ -587,6 +596,7 @@
           (product) => `
             <article class="product-card" data-code="${escapeHtml(product.code)}">
               <div class="product-visual product-visual-${escapeHtml(getProductVisualClass(product))}" aria-hidden="true">
+                ${renderCategoryIcon(getCategoryVisual(product))}
                 <span>${escapeHtml(getCategoryVisual(product).code)}</span>
                 <small>${escapeHtml(getCategoryVisual(product).label)}</small>
               </div>
@@ -630,6 +640,7 @@
     modalCategory.textContent = product.category;
     modalTitle.textContent = product.name;
     modalVisualCode.textContent = visual.code;
+    modalVisualIcon.querySelector("use").setAttribute("href", `assets/category-icons.svg#${visual.icon}`);
     modalVisual.dataset.category = product.category;
     modalCode.textContent = product.code;
     modalSource.textContent = product.sourceCategory || "Без группы";

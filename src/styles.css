@@ -596,6 +596,26 @@ textarea {
   font-weight: 900;
 }
 
+.catalog-card-visual svg,
+.product-visual svg,
+.modal-product-visual svg,
+.product-page-visual svg {
+  width: 38px;
+  height: 38px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.catalog-card-visual svg,
+.product-visual svg {
+  position: relative;
+  z-index: 1;
+  opacity: 0.92;
+}
+
 .catalog-card-visual small {
   color: #dcecfb;
   font-size: 11px;
@@ -2383,7 +2403,9 @@ textarea {
 
 .modal-product-visual {
   display: grid;
+  align-content: center;
   place-items: center;
+  gap: 6px;
   min-height: 112px;
   border-radius: 8px;
   background:
@@ -2395,6 +2417,11 @@ textarea {
 .modal-product-visual span {
   font-size: 34px;
   font-weight: 900;
+}
+
+.modal-product-visual svg {
+  width: 42px;
+  height: 42px;
 }
 
 .product-details {
@@ -2520,6 +2547,11 @@ textarea {
   line-height: 1;
 }
 
+.product-page-visual svg {
+  width: 72px;
+  height: 72px;
+}
+
 .product-page-visual small {
   max-width: 220px;
   color: #dcecfb;
@@ -2583,6 +2615,44 @@ textarea {
 .product-page-details {
   display: grid;
   gap: 12px;
+}
+
+.product-store-panel {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.42fr) minmax(0, 0.58fr);
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.product-store-panel img {
+  display: block;
+  width: 100%;
+  min-height: 220px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product-store-panel > div {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  padding: 12px;
+}
+
+.product-store-panel h2 {
+  margin: 0;
+  color: var(--blue-dark);
+  font-size: 26px;
+  line-height: 1.14;
+}
+
+.product-store-panel p:not(.eyebrow) {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 .product-related {
@@ -3610,6 +3680,10 @@ textarea {
 
   .product-page-card {
     gap: 12px;
+  }
+
+  .product-store-panel {
+    grid-template-columns: 1fr;
   }
 
   .product-page-visual {

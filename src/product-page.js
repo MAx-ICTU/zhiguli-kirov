@@ -28,16 +28,25 @@
 
   function getCategoryVisual(productItem) {
     const visuals = {
-      Двигатель: { code: "ДВ", label: "Двигатель и навесное" },
-      Подвеска: { code: "ХД", label: "Ходовая часть" },
-      Тормоза: { code: "ТМ", label: "Тормозная система" },
-      Электрика: { code: "ЭЛ", label: "Электрика" },
-      Кузов: { code: "КЗ", label: "Кузовные детали" },
-      "Масла и жидкости": { code: "МЖ", label: "Масла и жидкости" },
-      Автохимия: { code: "АХ", label: "Автохимия" },
-      Инструменты: { code: "ИН", label: "Инструменты" },
+      Двигатель: { code: "ДВ", icon: "icon-engine", label: "Двигатель и навесное" },
+      Подвеска: { code: "ХД", icon: "icon-suspension", label: "Ходовая часть" },
+      Тормоза: { code: "ТМ", icon: "icon-brake", label: "Тормозная система" },
+      Электрика: { code: "ЭЛ", icon: "icon-electric", label: "Электрика" },
+      Кузов: { code: "КЗ", icon: "icon-body", label: "Кузовные детали" },
+      "Масла и жидкости": { code: "МЖ", icon: "icon-oil", label: "Масла и жидкости" },
+      Автохимия: { code: "АХ", icon: "icon-chemistry", label: "Автохимия" },
+      Инструменты: { code: "ИН", icon: "icon-tools", label: "Инструменты" },
     };
-    return visuals[productItem.category] || { code: "ВАЗ", label: "Автозапчасть" };
+    return visuals[productItem.category] || { code: "ВАЗ", icon: "icon-parts", label: "Автозапчасть" };
+  }
+
+  function renderCategoryIcon(productItem) {
+    const visual = getCategoryVisual(productItem);
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <use href="assets/category-icons.svg#${escapeHtml(visual.icon)}"></use>
+      </svg>
+    `;
   }
 
   function getDetectedModels(productItem) {
@@ -117,6 +126,7 @@
     page.innerHTML = `
       <article class="product-page-card">
         <div class="product-page-visual">
+          ${renderCategoryIcon(productItem)}
           <span>${escapeHtml(visual.code)}</span>
           <small>${escapeHtml(visual.label)}</small>
         </div>
@@ -167,6 +177,22 @@
         </div>
       </section>
 
+      <section class="product-store-panel" aria-label="Как уточнить наличие">
+        <img src="assets/store-front-winter.webp" alt="Фасад магазина Жигули в Кирове" />
+        <div>
+          <p class="eyebrow">Перед поездкой</p>
+          <h2>Уточните наличие по коду ${escapeHtml(productItem.code)}</h2>
+          <p>
+            Назовите код товара менеджеру. Так проще проверить актуальную цену,
+            остаток и удобный магазин для самовывоза.
+          </p>
+          <div class="store-actions">
+            <a href="tel:+78332620888">Позвонить</a>
+            <a href="index.html#stores">Адреса магазинов</a>
+          </div>
+        </div>
+      </section>
+
       <section class="section-shell product-related">
         <div class="section-heading">
           <div>
@@ -181,6 +207,7 @@
               (item) => `
                 <article class="catalog-page-card">
                   <a class="catalog-card-visual" href="product.html?code=${encodeURIComponent(item.code)}">
+                    ${renderCategoryIcon(item)}
                     <span>${escapeHtml(getCategoryVisual(item).code)}</span>
                     <small>${escapeHtml(item.category)}</small>
                   </a>

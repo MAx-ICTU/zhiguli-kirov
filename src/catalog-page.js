@@ -55,18 +55,28 @@
     return `product.html?code=${encodeURIComponent(product.code)}`;
   }
 
-  function getCategoryCode(category) {
-    const codes = {
-      Двигатель: "ДВ",
-      Подвеска: "ХД",
-      Тормоза: "ТМ",
-      Электрика: "ЭЛ",
-      Кузов: "КЗ",
-      "Масла и жидкости": "МЖ",
-      Автохимия: "АХ",
-      Инструменты: "ИН",
+  function getCategoryVisual(category) {
+    const visuals = {
+      Двигатель: { code: "ДВ", icon: "icon-engine" },
+      Подвеска: { code: "ХД", icon: "icon-suspension" },
+      Тормоза: { code: "ТМ", icon: "icon-brake" },
+      Электрика: { code: "ЭЛ", icon: "icon-electric" },
+      Кузов: { code: "КЗ", icon: "icon-body" },
+      "Масла и жидкости": { code: "МЖ", icon: "icon-oil" },
+      Автохимия: { code: "АХ", icon: "icon-chemistry" },
+      Инструменты: { code: "ИН", icon: "icon-tools" },
     };
-    return codes[category] || "ВАЗ";
+    return visuals[category] || { code: "ВАЗ", icon: "icon-parts" };
+  }
+
+  function renderCategoryIcon(category) {
+    const visual = getCategoryVisual(category);
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <use href="assets/category-icons.svg#${escapeHtml(visual.icon)}"></use>
+      </svg>
+      <span>${escapeHtml(visual.code)}</span>
+    `;
   }
 
   function applyFilters() {
@@ -109,7 +119,7 @@
           (product) => `
             <article class="catalog-page-card">
               <a class="catalog-card-visual" href="${getProductUrl(product)}" aria-label="${escapeHtml(product.name)}">
-                <span>${escapeHtml(getCategoryCode(product.category))}</span>
+                ${renderCategoryIcon(product.category)}
                 <small>${escapeHtml(product.category)}</small>
               </a>
               <div class="catalog-card-body">

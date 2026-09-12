@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="icon-engine" viewBox="0 0 24 24">
+    <path d="M7 8h9l3 3v6H7z" />
+    <path d="M10 8V5h4v3" />
+    <path d="M4 12h3" />
+    <path d="M19 13h2v3h-2" />
+    <path d="M9 16h6" />
+  </symbol>
+  <symbol id="icon-suspension" viewBox="0 0 24 24">
+    <path d="M7 4v16" />
+    <path d="M17 4v16" />
+    <path d="M7 8h10" />
+    <path d="M7 16h10" />
+    <path d="M10 6l4 4-4 4 4 4" />
+  </symbol>
+  <symbol id="icon-brake" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="7" />
+    <circle cx="12" cy="12" r="2" />
+    <path d="M17 5l3-2" />
+    <path d="M19 7l2-1" />
+    <path d="M8 12h8" />
+  </symbol>
+  <symbol id="icon-electric" viewBox="0 0 24 24">
+    <path d="M13 2L6 13h6l-1 9 7-12h-6z" />
+  </symbol>
+  <symbol id="icon-body" viewBox="0 0 24 24">
+    <path d="M4 14l2-5h12l2 5" />
+    <path d="M5 14h14v4H5z" />
+    <circle cx="8" cy="18" r="1.5" />
+    <circle cx="16" cy="18" r="1.5" />
+    <path d="M8 9l2-3h4l2 3" />
+  </symbol>
+  <symbol id="icon-oil" viewBox="0 0 24 24">
+    <path d="M9 4h6l1 5 3 3-4 7H9l-4-7 3-3z" />
+    <path d="M10 9h4" />
+    <path d="M12 13v3" />
+  </symbol>
+  <symbol id="icon-chemistry" viewBox="0 0 24 24">
+    <path d="M10 3h4" />
+    <path d="M11 3v5l-5 9a3 3 0 0 0 3 4h6a3 3 0 0 0 3-4l-5-9V3" />
+    <path d="M8 15h8" />
+  </symbol>
+  <symbol id="icon-tools" viewBox="0 0 24 24">
+    <path d="M14 6l4 4" />
+    <path d="M16 4l4 4-9 9-4-4z" />
+    <path d="M5 19l4-4" />
+    <path d="M4 20h5" />
+  </symbol>
+  <symbol id="icon-parts" viewBox="0 0 24 24">
+    <path d="M12 3l7 4v10l-7 4-7-4V7z" />
+    <path d="M12 3v8" />
+    <path d="M5 7l7 4 7-4" />
+    <path d="M12 11v10" />
+  </symbol>
+</svg>
