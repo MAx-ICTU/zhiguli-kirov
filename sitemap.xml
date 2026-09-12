@@ -2,8 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://max-ictu.github.io/zhiguli-kirov/</loc>
-    <lastmod>2026-09-03</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://max-ictu.github.io/zhiguli-kirov/catalog.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://max-ictu.github.io/zhiguli-kirov/product.html?code=5481</loc>
+    <lastmod>2026-09-12</lastmod>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://max-ictu.github.io/zhiguli-kirov/?q=2101#catalog</loc>

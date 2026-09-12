@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Отдельный каталог автозапчастей ВАЗ и LADA магазина Жигули в Кирове: поиск по коду, названию, разделу и модели."
+    />
+    <meta name="theme-color" content="#083760" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Жигули" />
+    <meta property="og:title" content="Каталог автозапчастей ВАЗ и LADA - Жигули" />
+    <meta
+      property="og:description"
+      content="Найдите товар, откройте карточку по коду и уточните наличие в магазинах Жигули в Кирове."
+    />
+    <meta property="og:image" content="https://max-ictu.github.io/zhiguli-kirov/assets/store-front-winter.webp" />
+    <meta property="og:url" content="https://max-ictu.github.io/zhiguli-kirov/catalog.html" />
+    <title>Каталог автозапчастей ВАЗ и LADA - Жигули</title>
+    <link rel="canonical" href="https://max-ictu.github.io/zhiguli-kirov/catalog.html" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="topbar">
+        <a class="brand" href="index.html#top" aria-label="Жигули">
+          <span class="brand-mark">Ж</span>
+          <span>
+            <strong>Жигули</strong>
+            <small>автозапчасти ВАЗ и LADA</small>
+          </span>
+        </a>
+        <nav class="main-nav" aria-label="Основная навигация">
+          <a href="catalog.html">Каталог</a>
+          <a href="index.html#selection">Подбор</a>
+          <a href="index.html#stores">Магазины</a>
+          <a href="index.html#map">Карта</a>
+        </nav>
+        <div class="header-actions">
+          <a class="phone-link" href="tel:+78332620888">+7 (8332) 620-888</a>
+          <a class="primary-btn" href="index.html#selection">Уточнить наличие</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-main">
+      <section class="page-hero catalog-page-hero">
+        <div>
+          <p class="eyebrow">Отдельная витрина каталога</p>
+          <h1>Каталог автозапчастей ВАЗ и LADA</h1>
+          <p>
+            Ищите по коду, названию, модели или разделу. Откройте товар, добавьте
+            его в запрос и уточните наличие перед звонком или визитом.
+          </p>
+        </div>
+        <div class="page-hero-card page-hero-photo" aria-label="Магазин Жигули">
+          <img src="assets/store-front-winter.webp" alt="Фасад магазина Жигули в Кирове" />
+          <div>
+            <strong id="catalogPageProducts">9 427</strong>
+            <span>товаров в каталоге</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-shell catalog-page-section">
+        <aside class="catalog-page-filters" aria-label="Фильтры каталога">
+          <label>
+            Поиск
+            <input id="pageCatalogSearch" type="search" placeholder="Код, название или модель" />
+          </label>
+          <label>
+            Раздел
+            <select id="pageCategoryFilter">
+              <option value="">Все разделы</option>
+            </select>
+          </label>
+          <label>
+            Цена
+            <select id="pagePriceFilter">
+              <option value="">Любая</option>
+              <option value="priced">С указанной ценой</option>
+              <option value="request">Цену уточнить</option>
+            </select>
+          </label>
+          <button class="secondary-btn" id="pageResetFilters" type="button">Сбросить</button>
+        </aside>
+
+        <div class="catalog-page-content">
+          <div class="catalog-toolbar">
+            <p id="pageCatalogCount">Загрузка каталога...</p>
+            <select id="pageSortSelect" aria-label="Сортировка">
+              <option value="nameAsc">По названию</option>
+              <option value="priceAsc">Сначала дешевле</option>
+              <option value="priceDesc">Сначала дороже</option>
+            </select>
+          </div>
+          <div class="catalog-page-grid" id="pageProductGrid"></div>
+          <button class="load-more" id="pageLoadMore" type="button">Показать еще</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <p>Жигули - автозапчасти ВАЗ и LADA в Кирове</p>
+        <small>Каталог товаров, подбор деталей, самовывоз из магазинов.</small>
+      </div>
+      <div class="footer-links">
+        <a href="index.html#top">Главная</a>
+        <a href="catalog.html">Каталог</a>
+        <a href="index.html#selection">Подбор</a>
+        <a href="tel:+78332620888">620-888</a>
+      </div>
+    </footer>
+
+    <script src="src/products.js"></script>
+    <script src="src/catalog-page.js"></script>
+  </body>
+</html>

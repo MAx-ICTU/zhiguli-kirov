@@ -464,9 +464,8 @@
   }
 
   function getProductUrl(product) {
-    const url = new URL(window.location.href);
-    url.searchParams.set("product", product.code);
-    url.hash = "catalog";
+    const url = new URL("product.html", window.location.href);
+    url.searchParams.set("code", product.code);
     return url.toString();
   }
 
@@ -613,9 +612,9 @@
                   >
                     ${escapeHtml(getAddButtonLabel(product))}
                   </button>
-                  <button class="details-btn details-btn-muted" type="button" data-product-code="${escapeHtml(product.code)}">
+                  <a class="details-btn details-btn-muted" href="${escapeHtml(getProductUrl(product))}">
                     Подробнее
-                  </button>
+                  </a>
                 </div>
               </div>
             </article>
@@ -642,9 +641,6 @@
     updateModalAction();
     productModal.classList.add("is-open");
     productModal.setAttribute("aria-hidden", "false");
-    if (shouldSyncUrl) {
-      window.history.replaceState({}, "", getProductUrl(product));
-    }
   }
 
   function closeProduct() {
@@ -939,13 +935,6 @@
       return;
     }
 
-    const button = event.target.closest("[data-product-code]");
-    if (!button) return;
-
-    const product = products.find((item) => item.code === button.dataset.productCode);
-    if (product) {
-      openProduct(product);
-    }
   });
 
   document.querySelectorAll("[data-close-modal]").forEach((element) => {
