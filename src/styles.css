@@ -965,19 +965,20 @@ textarea {
 .admin-section {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
-  gap: 36px;
+  gap: 28px;
   align-items: start;
-  padding-top: 54px;
+  padding-top: 48px;
   border-top: 1px solid var(--line);
 }
 
 .request-form {
   display: grid;
-  gap: 16px;
-  padding: 22px;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
-  box-shadow: var(--shadow);
+  box-shadow: 0 12px 34px rgba(16, 32, 56, 0.08);
 }
 
 .request-form-head {
@@ -1002,12 +1003,12 @@ textarea {
 
 .request-guide {
   display: grid;
-  gap: 10px;
-  margin-top: 24px;
-  padding: 18px;
+  gap: 9px;
+  margin-top: 20px;
+  padding: 16px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: #f8fafc;
 }
 
 .request-guide strong {
@@ -1048,9 +1049,13 @@ textarea {
 .store-visual {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-  gap: 18px;
+  gap: 12px;
   align-items: stretch;
   margin-bottom: 18px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
 }
 
 .store-visual img {
@@ -1066,19 +1071,21 @@ textarea {
   display: grid;
   align-content: center;
   gap: 10px;
-  padding: 24px;
+  padding: 22px;
+  border: 1px solid #d8e2ed;
   border-radius: 8px;
-  background: var(--blue-dark);
-  color: #fff;
+  background: #f8fafc;
+  color: var(--ink);
 }
 
 .store-visual strong {
+  color: var(--blue-dark);
   font-size: 24px;
   line-height: 1.18;
 }
 
 .store-visual span {
-  color: #dcecfb;
+  color: var(--muted);
   line-height: 1.5;
 }
 
@@ -1094,7 +1101,7 @@ textarea {
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: #f8fafc;
 }
 
 .visit-flow span {
@@ -1118,6 +1125,9 @@ textarea {
 }
 
 .store-card {
+  display: grid;
+  align-content: start;
+  gap: 8px;
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -1130,7 +1140,7 @@ textarea {
 }
 
 .store-card p {
-  margin: 8px 0;
+  margin: 0;
   color: var(--muted);
   line-height: 1.45;
 }
@@ -1165,10 +1175,18 @@ textarea {
   justify-content: center;
   margin: 0;
   padding: 10px 12px;
+  border: 1px solid #d8e2ed;
   border-radius: 8px;
-  background: #edf4fb;
+  background: #fff;
   color: var(--blue-dark);
   text-decoration: none;
+}
+
+.store-card .store-actions a:first-child,
+.map-copy .store-actions a:first-child {
+  border-color: var(--blue-dark);
+  background: var(--blue-dark);
+  color: #fff;
 }
 
 .store-map {
@@ -1221,19 +1239,24 @@ textarea {
   display: grid;
   gap: 6px;
   padding: 18px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--red);
   border-radius: 8px;
-  background: var(--blue-dark);
-  color: #fff;
+  background: #fff;
+  color: var(--ink);
 }
 
 .contact-strip strong {
+  color: var(--muted);
   font-size: 13px;
   text-transform: uppercase;
 }
 
 .contact-strip a,
 .contact-strip span {
-  color: #dcecfb;
+  color: var(--blue-dark);
+  font-weight: 800;
+  line-height: 1.35;
 }
 
 .admin-section {
@@ -1906,7 +1929,8 @@ textarea {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  padding: 28px max(24px, calc((100vw - 1220px) / 2 + 24px));
+  padding: 26px max(24px, calc((100vw - 1220px) / 2 + 24px));
+  border-top: 4px solid var(--red);
   background: var(--blue-dark);
   color: #dcecfb;
 }
@@ -1922,7 +1946,14 @@ textarea {
 }
 
 .site-footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
   color: #fff;
+  text-decoration: none;
 }
 
 .footer-links {
