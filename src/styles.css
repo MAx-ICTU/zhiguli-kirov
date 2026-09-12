@@ -417,6 +417,79 @@ textarea {
   padding: 10px;
 }
 
+.catalog-category-stage {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid #d8e2ed;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, #ffffff 0%, #f8fafc 52%, #edf4fb 100%);
+}
+
+.catalog-category-stage h2 {
+  margin: 0;
+  color: var(--blue-dark);
+  font-size: 24px;
+  line-height: 1.15;
+}
+
+.catalog-category-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.catalog-category-tile {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px 9px;
+  align-items: center;
+  min-height: 74px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--blue-dark);
+  cursor: pointer;
+  text-align: left;
+}
+
+.catalog-category-tile:hover,
+.catalog-category-tile.is-active {
+  border-color: var(--red);
+  background: #fff6f4;
+  color: var(--red);
+}
+
+.catalog-category-tile svg {
+  grid-row: 1 / span 2;
+  width: 30px;
+  height: 30px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.catalog-category-tile span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.catalog-category-tile small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
 .breadcrumbs {
   display: flex;
   flex-wrap: wrap;
@@ -935,21 +1008,59 @@ textarea {
   text-transform: uppercase;
 }
 
-.product-visual-кузов {
+.product-visual-кузов,
+.product-page-visual.product-visual-кузов {
   background:
     linear-gradient(135deg, rgba(199, 53, 46, 0.92), rgba(8, 55, 96, 0.72)),
     repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 12px);
 }
 
-.product-visual-тормоза {
+.product-visual-тормоза,
+.product-page-visual.product-visual-тормоза {
   background:
     linear-gradient(135deg, rgba(199, 53, 46, 0.96), rgba(167, 105, 18, 0.76)),
     repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 12px);
 }
 
-.product-visual-электрика {
+.product-visual-электрика,
+.product-page-visual.product-visual-электрика {
   background:
     linear-gradient(135deg, rgba(11, 78, 138, 0.96), rgba(25, 120, 93, 0.76)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 12px);
+}
+
+.product-visual-двигатель,
+.product-page-visual.product-visual-двигатель {
+  background:
+    linear-gradient(135deg, rgba(8, 55, 96, 0.98), rgba(25, 120, 93, 0.76)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 12px);
+}
+
+.product-visual-подвеска,
+.product-page-visual.product-visual-подвеска {
+  background:
+    linear-gradient(135deg, rgba(8, 55, 96, 0.96), rgba(104, 115, 133, 0.78)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 12px);
+}
+
+.product-visual-масла-и-жидкости,
+.product-page-visual.product-visual-масла-и-жидкости {
+  background:
+    linear-gradient(135deg, rgba(25, 120, 93, 0.96), rgba(167, 105, 18, 0.74)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 12px);
+}
+
+.product-visual-автохимия,
+.product-page-visual.product-visual-автохимия {
+  background:
+    linear-gradient(135deg, rgba(11, 78, 138, 0.95), rgba(199, 53, 46, 0.72)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 12px);
+}
+
+.product-visual-инструменты,
+.product-page-visual.product-visual-инструменты {
+  background:
+    linear-gradient(135deg, rgba(24, 32, 42, 0.98), rgba(167, 105, 18, 0.78)),
     repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 12px);
 }
 
@@ -2625,6 +2736,55 @@ textarea {
   gap: 12px;
 }
 
+.product-call-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(280px, 1.08fr);
+  gap: 14px;
+  padding: 18px;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(8, 55, 96, 0.98), rgba(11, 78, 138, 0.86)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 12px);
+  color: #fff;
+}
+
+.product-call-card .eyebrow {
+  color: #cbe0f3;
+}
+
+.product-call-card h2 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.12;
+}
+
+.product-call-card p {
+  max-width: 640px;
+  margin: 8px 0 0;
+  color: #e5f0fa;
+  line-height: 1.45;
+}
+
+.product-call-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.product-call-steps span {
+  display: grid;
+  align-content: center;
+  min-height: 78px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
 .product-store-panel {
   display: grid;
   grid-template-columns: minmax(260px, 0.42fr) minmax(0, 0.58fr);
@@ -3654,6 +3814,15 @@ textarea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .catalog-category-stage,
+  .product-call-card {
+    grid-template-columns: 1fr;
+  }
+
+  .catalog-category-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .product-store-panel img {
     max-height: 280px;
   }
@@ -3682,6 +3851,25 @@ textarea {
 
   .page-hero-card {
     padding: 12px;
+  }
+
+  .catalog-category-stage {
+    gap: 12px;
+    margin-top: 14px;
+    padding: 12px;
+  }
+
+  .catalog-category-stage h2 {
+    font-size: 21px;
+  }
+
+  .catalog-category-rail {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .catalog-category-tile {
+    min-height: 58px;
   }
 
   .page-hero-photo img {
@@ -3764,6 +3952,23 @@ textarea {
 
   .product-page-actions {
     grid-template-columns: 1fr;
+  }
+
+  .product-call-card {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .product-call-card h2 {
+    font-size: 24px;
+  }
+
+  .product-call-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .product-call-steps span {
+    min-height: 48px;
   }
 
   .product-store-panel img {

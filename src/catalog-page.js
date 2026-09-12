@@ -22,6 +22,7 @@
   const productsNode = document.getElementById("pageProductGrid");
   const loadMore = document.getElementById("pageLoadMore");
   const statsNode = document.getElementById("catalogPageProducts");
+  const categoryRail = document.getElementById("pageCategoryRail");
 
   statsNode.textContent = products.length.toLocaleString("ru-RU");
   categoryFilter.innerHTML += categories
@@ -55,6 +56,10 @@
     return `product.html?code=${encodeURIComponent(product.code)}`;
   }
 
+  function getProductVisualClass(product) {
+    return normalize(product.category).replace(/[^a-zа-я0-9]+/g, "-");
+  }
+
   function getCategoryVisual(category) {
     const visuals = {
       Двигатель: { code: "ДВ", icon: "icon-engine" },
@@ -77,6 +82,30 @@
       </svg>
       <span>${escapeHtml(visual.code)}</span>
     `;
+  }
+
+  function renderCategoryRail() {
+    if (!categoryRail) return;
+    const topCategories = categories
+      .map((category) => ({ category, count: categoryCounts.get(category) || 0 }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 8);
+
+    categoryRail.innerHTML = topCategories
+      .map(({ category, count }) => {
+        const visual = getCategoryVisual(category);
+        const activeClass = category === state.category ? " is-active" : "";
+        return `
+          <button class="catalog-category-tile${activeClass}" type="button" data-page-category="${escapeHtml(category)}">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <use href="assets/category-icons.svg#${escapeHtml(visual.icon)}"></use>
+            </svg>
+            <span>${escapeHtml(category)}</span>
+            <small>${formatCount(count)} поз.</small>
+          </button>
+        `;
+      })
+      .join("");
   }
 
   function applyFilters() {
@@ -118,7 +147,7 @@
         .map(
           (product) => `
             <article class="catalog-page-card">
-              <a class="catalog-card-visual" href="${getProductUrl(product)}" aria-label="${escapeHtml(product.name)}">
+              <a class="catalog-card-visual product-visual-${escapeHtml(getProductVisualClass(product))}" href="${getProductUrl(product)}" aria-label="${escapeHtml(product.name)}">
                 ${renderCategoryIcon(product.category)}
                 <small>${escapeHtml(product.category)}</small>
               </a>
@@ -136,6 +165,7 @@
         )
         .join("") || `<article class="empty-results"><span>Ничего не найдено</span><h3>Попробуйте другой запрос</h3><p>Введите код, модель или короткое название детали.</p></article>`;
     loadMore.hidden = result.length <= state.visible;
+    renderCategoryRail();
     syncUrl();
   }
 
@@ -175,6 +205,15 @@
 
   loadMore.addEventListener("click", () => {
     state.visible += 36;
+    render();
+  });
+
+  categoryRail?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-page-category]");
+    if (!button) return;
+    state.category = state.category === button.dataset.pageCategory ? "" : button.dataset.pageCategory;
+    state.visible = 36;
+    categoryFilter.value = state.category;
     render();
   });
 

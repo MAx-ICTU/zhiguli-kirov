@@ -26,6 +26,10 @@
     return price ? `${Number(price).toLocaleString("ru-RU")} ₽` : "цену уточнить";
   }
 
+  function getProductVisualClass(productItem) {
+    return normalize(productItem.category).replace(/[^a-zа-я0-9]+/g, "-");
+  }
+
   function getCategoryVisual(productItem) {
     const visuals = {
       Двигатель: { code: "ДВ", icon: "icon-engine", label: "Двигатель и навесное" },
@@ -125,7 +129,7 @@
 
     page.innerHTML = `
       <article class="product-page-card">
-        <div class="product-page-visual">
+        <div class="product-page-visual product-visual-${escapeHtml(getProductVisualClass(productItem))}">
           ${renderCategoryIcon(productItem)}
           <span>${escapeHtml(visual.code)}</span>
           <small>${escapeHtml(visual.label)}</small>
@@ -174,6 +178,19 @@
             <strong>Что проверить</strong>
             <p>${escapeHtml(getProductHint(productItem))}</p>
           </div>
+        </div>
+      </section>
+
+      <section class="product-call-card" aria-label="Что сказать менеджеру">
+        <div>
+          <p class="eyebrow">Быстрая проверка</p>
+          <h2>Назовите код ${escapeHtml(productItem.code)}</h2>
+          <p>${escapeHtml(productItem.name)}</p>
+        </div>
+        <div class="product-call-steps">
+          <span>1. Добавьте товар в запрос</span>
+          <span>2. Позвоните или приезжайте</span>
+          <span>3. Уточните остаток и магазин самовывоза</span>
         </div>
       </section>
 
