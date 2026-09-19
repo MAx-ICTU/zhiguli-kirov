@@ -1510,6 +1510,79 @@ textarea {
   color: var(--blue-dark);
 }
 
+.seo-links-section {
+  padding-top: 54px;
+  border-top: 1px solid var(--line);
+}
+
+.seo-link-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.seo-link-grid a {
+  display: grid;
+  gap: 10px;
+  min-height: 138px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+}
+
+.seo-link-grid a:hover {
+  border-color: #b9c8d9;
+  box-shadow: 0 12px 30px rgba(16, 32, 56, 0.08);
+}
+
+.seo-link-grid strong {
+  color: var(--blue-dark);
+  font-size: 18px;
+  line-height: 1.18;
+}
+
+.seo-link-grid span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.seo-landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.seo-topic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.seo-topic-grid article {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.seo-topic-grid h2 {
+  margin: 0 0 8px;
+  color: var(--blue-dark);
+  font-size: 21px;
+}
+
+.seo-topic-grid p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .trust-section {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3205,6 +3278,11 @@ textarea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .seo-link-grid,
+  .seo-topic-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .category-showcase {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -3355,6 +3433,8 @@ textarea {
   .category-showcase,
   .popular-grid,
   .product-grid,
+  .seo-link-grid,
+  .seo-topic-grid,
   .store-grid,
   .visit-flow,
   .trust-section,
@@ -3652,6 +3732,21 @@ textarea {
 
   .model-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .seo-links-section {
+    padding-top: 34px;
+  }
+
+  .seo-link-grid,
+  .seo-topic-grid {
+    gap: 8px;
+  }
+
+  .seo-link-grid a,
+  .seo-topic-grid article {
+    min-height: 0;
+    padding: 14px;
   }
 
   .modal {
