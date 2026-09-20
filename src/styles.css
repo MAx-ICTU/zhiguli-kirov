@@ -157,7 +157,7 @@ textarea {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  min-height: 500px;
+  min-height: 520px;
   overflow: hidden;
   background: var(--blue-dark);
 }
@@ -166,20 +166,21 @@ textarea {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(8, 55, 96, 0.94), rgba(8, 55, 96, 0.72), rgba(24, 32, 42, 0.42)),
+    linear-gradient(90deg, rgba(8, 55, 96, 0.96) 0%, rgba(8, 55, 96, 0.78) 48%, rgba(24, 32, 42, 0.3) 100%),
+    linear-gradient(0deg, rgba(8, 55, 96, 0.58), rgba(8, 55, 96, 0.08)),
     url("../assets/store-front-winter.webp") center / cover;
 }
 
 .hero-content {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 0.68fr) minmax(320px, 0.32fr);
-  gap: 28px;
+  grid-template-columns: minmax(0, 760px) minmax(260px, 330px);
+  gap: 48px;
   align-items: center;
   max-width: 1220px;
   width: 100%;
   margin: 0 auto;
-  padding: 70px 24px 58px;
+  padding: 76px 24px 64px;
   color: #fff;
 }
 
@@ -197,31 +198,31 @@ textarea {
 }
 
 .hero h1 {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0;
-  font-size: clamp(34px, 4.35vw, 54px);
-  line-height: 1.05;
+  font-size: clamp(34px, 4vw, 52px);
+  line-height: 1.06;
   letter-spacing: 0;
 }
 
 .hero p:not(.eyebrow) {
-  max-width: 650px;
-  margin: 18px 0 0;
+  max-width: 590px;
+  margin: 16px 0 0;
   color: #e2edf8;
-  font-size: 17px;
-  line-height: 1.5;
+  font-size: 16px;
+  line-height: 1.48;
 }
 
 .hero-search {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 132px;
   gap: 10px;
-  max-width: 720px;
-  margin-top: 26px;
+  max-width: 700px;
+  margin-top: 28px;
   padding: 6px;
   border-radius: 10px;
   background: #fff;
-  box-shadow: var(--shadow);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
 }
 
 .hero-search input,
@@ -253,20 +254,28 @@ textarea {
 .hero-suggestions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   max-width: 720px;
-  margin-top: 10px;
+  margin-top: 12px;
+}
+
+.hero-suggestions > span {
+  color: #cfe0f0;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .hero-suggestions button {
-  min-height: 34px;
-  padding: 7px 10px;
+  min-height: 32px;
+  padding: 6px 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
   color: #eaf3fc;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
 }
 
@@ -279,20 +288,20 @@ textarea {
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
   max-width: 720px;
-  margin-top: 12px;
+  margin-top: 18px;
 }
 
 .hero-actions a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
-  padding: 9px 12px;
+  min-height: 42px;
+  padding: 10px 14px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
   color: #fff;
   font-size: 13px;
   font-weight: 800;
@@ -305,19 +314,21 @@ textarea {
 }
 
 .hero-assist {
+  justify-self: end;
   display: grid;
-  gap: 14px;
-  padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  gap: 12px;
+  max-width: 330px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.13);
+  background: rgba(8, 55, 96, 0.48);
   backdrop-filter: blur(10px);
 }
 
 .hero-assist h2 {
   margin: 0;
-  font-size: 26px;
-  line-height: 1.12;
+  font-size: 22px;
+  line-height: 1.14;
 }
 
 .hero-assist ol {
@@ -330,10 +341,9 @@ textarea {
 
 .hero-assist li {
   display: grid;
-  gap: 4px;
-  padding: 12px;
-  border-radius: 8px;
-  background: rgba(8, 55, 96, 0.44);
+  gap: 2px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .hero-assist strong,
@@ -351,78 +361,75 @@ textarea {
   line-height: 1.35;
 }
 
-.hero-assist-actions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.hero-assist-actions a {
+.hero-assist-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  padding: 9px 10px;
+  min-height: 40px;
+  margin-top: 2px;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 8px;
-  background: #fff;
-  color: var(--blue-dark);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
   font-weight: 800;
   text-align: center;
   text-decoration: none;
 }
 
-.hero-assist-actions a:last-child {
-  background: var(--red);
-  color: #fff;
+.hero-assist-link:hover {
+  background: rgba(255, 255, 255, 0.18);
 }
 
-.hero-stats {
+.hero-proof {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 22px;
 }
 
-.hero-stats span {
-  min-width: 132px;
-  padding: 12px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 8px;
-  background: rgba(8, 55, 96, 0.48);
+.hero-proof span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 0;
+  color: #dcecfb;
+  font-size: 13px;
+  font-weight: 800;
 }
 
-.hero-stats strong {
-  display: block;
-  font-size: 25px;
+.hero-proof strong {
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
 }
 
 .hero-contacts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   max-width: 720px;
-  margin-top: 14px;
+  margin-top: 6px;
 }
 
 .hero-contacts a {
-  display: grid;
-  gap: 5px;
-  min-height: 64px;
-  padding: 12px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 8px;
-  background: rgba(8, 55, 96, 0.48);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 6px 0;
   color: #fff;
   text-decoration: none;
 }
 
 .hero-contacts strong {
-  font-size: 16px;
+  font-size: 13px;
 }
 
 .hero-contacts span {
   color: #dcecfb;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.35;
 }
 
@@ -3502,6 +3509,7 @@ textarea {
   }
 
   .hero-assist {
+    justify-self: start;
     max-width: 720px;
   }
 
@@ -3621,9 +3629,13 @@ textarea {
 
   .hero-suggestions {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
     margin-top: 8px;
+  }
+
+  .hero-suggestions > span {
+    grid-column: 1 / -1;
   }
 
   .hero-suggestions button {
@@ -3646,32 +3658,31 @@ textarea {
     text-align: center;
   }
 
-  .hero-stats {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .hero-proof {
     gap: 8px;
     margin-top: 14px;
   }
 
-  .hero-stats span {
-    min-width: 0;
-    padding: 10px 8px;
-    font-size: 11px;
+  .hero-proof span {
+    min-height: 0;
+    padding: 0;
+    font-size: 12px;
   }
 
-  .hero-stats strong {
-    font-size: 20px;
+  .hero-proof strong {
+    font-size: 18px;
   }
 
   .hero-contacts {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2px;
+    margin-top: 8px;
   }
 
   .hero-contacts a {
-    min-height: 70px;
-    padding: 10px;
+    min-height: 0;
+    padding: 2px 0;
   }
 
   .hero-contacts strong {
@@ -3684,20 +3695,7 @@ textarea {
   }
 
   .hero-assist {
-    gap: 10px;
-    padding: 14px;
-  }
-
-  .hero-assist h2 {
-    font-size: 20px;
-  }
-
-  .hero-assist li {
-    padding: 10px;
-  }
-
-  .hero-assist-actions {
-    grid-template-columns: 1fr;
+    display: none;
   }
 
   .quick-categories,
