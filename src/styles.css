@@ -545,49 +545,64 @@ textarea {
 
 .buy-steps {
   display: grid;
-  grid-template-columns: minmax(260px, 0.35fr) minmax(0, 0.65fr);
-  gap: 18px;
-  align-items: stretch;
-  margin-top: 28px;
+  grid-template-columns: minmax(250px, 0.28fr) minmax(0, 0.72fr);
+  gap: 22px;
+  align-items: start;
+  margin-top: 34px;
+  padding-top: 28px;
+  border-top: 1px solid #dfe6ef;
 }
 
 .buy-steps-head {
   display: grid;
-  align-content: center;
-  padding: 22px;
-  border-radius: 8px;
-  background: var(--blue-dark);
-  color: #fff;
+  align-content: start;
+  padding: 0;
+  color: var(--ink);
 }
 
 .buy-steps-head .eyebrow {
-  color: #cbe0f3;
+  color: var(--red);
 }
 
 .buy-steps-head h2 {
   margin: 0;
-  font-size: 28px;
-  line-height: 1.12;
+  color: var(--blue-dark);
+  font-size: 24px;
+  line-height: 1.14;
+}
+
+.buy-steps-head p:not(.eyebrow) {
+  max-width: 340px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 .buy-step-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
 }
 
 .buy-step-grid article {
   display: grid;
   align-content: start;
-  gap: 10px;
-  min-height: 190px;
-  padding: 16px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #fff;
+  gap: 8px;
+  min-height: 0;
+  padding: 0 16px 0 14px;
+  border-left: 2px solid #d8e2ed;
+  background: transparent;
 }
 
 .buy-step-grid span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: #fff1ef;
   color: var(--red);
   font-size: 13px;
   font-weight: 900;
@@ -596,15 +611,15 @@ textarea {
 .buy-step-grid h3 {
   margin: 0;
   color: var(--blue-dark);
-  font-size: 20px;
-  line-height: 1.16;
+  font-size: 17px;
+  line-height: 1.2;
 }
 
 .buy-step-grid p {
   margin: 0;
   color: var(--muted);
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .page-main {
@@ -3534,9 +3549,13 @@ textarea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .buy-steps,
-  .buy-step-grid {
+  .buy-steps {
     grid-template-columns: 1fr;
+  }
+
+  .buy-step-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 18px;
   }
 
   .catalog-layout,
@@ -3795,11 +3814,12 @@ textarea {
 
   .buy-steps {
     gap: 10px;
-    margin-top: 18px;
+    margin-top: 22px;
+    padding-top: 20px;
   }
 
   .buy-steps-head {
-    padding: 16px;
+    padding: 0;
   }
 
   .buy-steps-head h2 {
@@ -3807,12 +3827,13 @@ textarea {
   }
 
   .buy-step-grid {
-    gap: 8px;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .buy-step-grid article {
     min-height: 0;
-    padding: 14px;
+    padding: 0 0 0 12px;
   }
 
   .category-showcase-card {
