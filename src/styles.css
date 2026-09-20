@@ -834,6 +834,13 @@ textarea {
   background: #fff;
 }
 
+.filter-note {
+  color: #6f7f92;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .filters .secondary-btn {
   min-height: 42px;
   margin-top: 2px;
@@ -904,6 +911,16 @@ textarea {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.catalog-page-card:hover {
+  border-color: #c8d4e2;
+  box-shadow: 0 12px 30px rgba(16, 32, 56, 0.08);
+  transform: translateY(-1px);
 }
 
 .catalog-card-visual {
@@ -970,12 +987,23 @@ textarea {
   text-decoration: none;
 }
 
+.catalog-card-body h2 a:hover {
+  color: var(--blue);
+}
+
 .catalog-card-body p {
   margin: 0;
   color: var(--muted);
   font-size: 12px;
   line-height: 1.35;
   overflow-wrap: anywhere;
+}
+
+.catalog-card-hint {
+  color: #6f7f92;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.35;
 }
 
 .catalog-card-bottom {
@@ -1010,6 +1038,45 @@ textarea {
 .catalog-toolbar select {
   width: 200px;
   border-color: #d5deea;
+}
+
+.catalog-workbench-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border: 1px solid #d5deea;
+  border-left: 4px solid var(--red);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(16, 32, 56, 0.055);
+}
+
+.catalog-workbench-note strong {
+  color: var(--blue-dark);
+  font-size: 14px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.catalog-workbench-note span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.catalog-workbench-note small {
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #eef8f3;
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .catalog-shortcuts {
@@ -1152,6 +1219,38 @@ textarea {
   line-height: 1.55;
 }
 
+.empty-search-guide {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  padding: 10px;
+  border: 1px solid #d8e2ed;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.empty-search-guide strong,
+.empty-search-guide span {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.empty-search-guide strong {
+  color: var(--blue-dark);
+  font-weight: 900;
+}
+
+.empty-search-guide span {
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--muted);
+  font-weight: 800;
+}
+
 .empty-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1205,6 +1304,16 @@ textarea {
   border-color: #c8d4e2;
   box-shadow: 0 12px 30px rgba(16, 32, 56, 0.08);
   transform: translateY(-1px);
+}
+
+.product-card.is-in-request {
+  border-color: rgba(199, 53, 46, 0.42);
+  background: linear-gradient(180deg, #fff 0%, #fff8f7 100%);
+  box-shadow: 0 12px 32px rgba(199, 53, 46, 0.11);
+}
+
+.product-card.is-in-request .product-visual {
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 @keyframes card-in {
@@ -1359,6 +1468,22 @@ textarea {
 .product-status.is-request {
   background: #fff6e8;
   color: var(--amber);
+}
+
+.request-inline-badge {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 28px;
+  padding: 6px 8px;
+  border: 1px solid rgba(199, 53, 46, 0.18);
+  border-radius: 6px;
+  background: #fff1ef;
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.2;
 }
 
 .product-card h3 {
@@ -3598,6 +3723,10 @@ textarea {
     padding: 20px;
   }
 
+  .empty-search-guide {
+    width: 100%;
+  }
+
   .empty-actions {
     grid-template-columns: 1fr;
   }
@@ -3634,6 +3763,17 @@ textarea {
 
   .catalog-toolbar p {
     font-size: 13px;
+  }
+
+  .catalog-workbench-note {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .catalog-workbench-note strong,
+  .catalog-workbench-note small {
+    white-space: normal;
   }
 
   .catalog-summary {
@@ -4274,11 +4414,13 @@ textarea {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .catalog-page-card,
   .product-card {
     animation: none;
     transition: none;
   }
 
+  .catalog-page-card:hover,
   .product-card:hover {
     transform: none;
   }

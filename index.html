@@ -328,8 +328,9 @@
         <div class="catalog-layout">
           <aside class="filters" aria-label="Фильтры каталога">
             <label>
-              Поиск
-              <input id="catalogSearch" type="search" placeholder="Код, деталь или модель" />
+              Поиск по коду, модели или детали
+              <input id="catalogSearch" type="search" placeholder="5481, стойка 2114, нива тормоза" />
+              <span class="filter-note">Если есть код из прайса или старой детали, вводите его первым.</span>
             </label>
             <label>
               Раздел
@@ -359,6 +360,11 @@
                 <option value="priceDesc">Сначала дороже</option>
                 <option value="nameAsc">По названию</option>
               </select>
+            </div>
+            <div class="catalog-workbench-note">
+              <strong>По коду быстрее</strong>
+              <span>Введите артикул или код товара полностью. Если кода нет, ищите связкой: модель + узел.</span>
+              <small>пример: 2114 стойка</small>
             </div>
             <div class="catalog-shortcuts" aria-label="Быстрый старт в каталоге">
               <button type="button" data-catalog-query="стойка 2114">

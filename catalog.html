@@ -76,8 +76,9 @@
       <section class="section-shell catalog-page-section">
         <aside class="catalog-page-filters" aria-label="Фильтры каталога">
           <label>
-            Поиск
-            <input id="pageCatalogSearch" type="search" placeholder="Код, название или модель" />
+            Поиск по коду, модели или детали
+            <input id="pageCatalogSearch" type="search" placeholder="5481, стойка 2114, нива тормоза" />
+            <span class="filter-note">Код или артикул с детали сужает выдачу быстрее всего.</span>
           </label>
           <label>
             Раздел
@@ -100,10 +101,16 @@
           <div class="catalog-toolbar">
             <p id="pageCatalogCount">Загрузка каталога...</p>
             <select id="pageSortSelect" aria-label="Сортировка">
+              <option value="relevance">По умолчанию</option>
               <option value="nameAsc">По названию</option>
               <option value="priceAsc">Сначала дешевле</option>
               <option value="priceDesc">Сначала дороже</option>
             </select>
+          </div>
+          <div class="catalog-workbench-note">
+            <strong>По коду быстрее</strong>
+            <span>Откройте карточку товара, добавьте позицию в запрос и уточните наличие перед поездкой.</span>
+            <small>звонок: 620-888</small>
           </div>
           <div class="catalog-page-grid" id="pageProductGrid"></div>
           <button class="load-more" id="pageLoadMore" type="button">Показать еще</button>

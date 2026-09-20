@@ -200,17 +200,25 @@
     return `
       <article class="empty-results">
         <span>Ничего не найдено</span>
-        <h3>Попробуйте другой запрос или оставьте подбор менеджеру</h3>
+        <h3>Сузим запрос и быстро найдем нужную деталь</h3>
         <p>
-          Лучше работают короткие запросы: модель, код детали или название узла.
-          Например: стойка 2114, ремень 2108, шаровая нива.
+          Лучше всего работают короткие связки: код товара, модель автомобиля и название узла.
+          Если точного артикула нет, начните с модели и раздела.
         </p>
+        <div class="empty-search-guide">
+          <strong>Попробуйте так:</strong>
+          <span>код полностью</span>
+          <span>модель + узел</span>
+          <span>раздел + деталь</span>
+        </div>
         <div class="empty-actions" aria-label="Подсказки поиска">
+          <button type="button" data-empty-query="5481">Код 5481</button>
           <button type="button" data-empty-query="стойка 2114">Стойка 2114</button>
-          <button type="button" data-empty-query="ремень 2108">Ремень 2108</button>
+          <button type="button" data-empty-query="тормоза нива">Тормоза Нива</button>
           <button type="button" data-empty-category="Тормоза">Тормоза</button>
           ${hasFilters ? '<button type="button" data-empty-reset>Сбросить фильтры</button>' : ""}
           <a href="#selection">Подбор по автомобилю</a>
+          <a href="tel:+78332620888">Позвонить 620-888</a>
         </div>
       </article>
     `;
@@ -593,9 +601,11 @@
 
     productGrid.innerHTML =
       visibleItems
-        .map(
-          (product) => `
-            <article class="product-card" data-code="${escapeHtml(product.code)}">
+        .map((product) => {
+          const requestQty = getRequestQty(product.code);
+          const inRequestClass = requestQty > 0 ? " is-in-request" : "";
+          return `
+            <article class="product-card${inRequestClass}" data-code="${escapeHtml(product.code)}">
               <div class="product-visual product-visual-${escapeHtml(getProductVisualClass(product))}" aria-hidden="true">
                 ${renderCategoryIcon(getCategoryVisual(product))}
                 <span>${escapeHtml(getCategoryVisual(product).code)}</span>
@@ -607,6 +617,11 @@
                   ${escapeHtml(getPriceStatus(product))}
                 </span>
               </div>
+              ${
+                requestQty > 0
+                  ? `<div class="request-inline-badge">Уже в запросе: ${requestQty} ${escapeHtml(product.unit || "шт")}</div>`
+                  : ""
+              }
               <h3>${highlightMatches(product.name)}</h3>
               <div class="product-meta">
                 <span>${highlightMatches(product.category)}</span>
@@ -617,7 +632,7 @@
                 ${formatPrice(product.price)}
                 <div class="product-actions">
                   <button
-                    class="details-btn ${getRequestQty(product.code) > 0 ? "has-items" : ""}"
+                    class="details-btn ${requestQty > 0 ? "has-items" : ""}"
                     type="button"
                     data-add-code="${escapeHtml(product.code)}"
                   >
@@ -629,8 +644,8 @@
                 </div>
               </div>
             </article>
-          `,
-        )
+          `;
+        })
         .join("") || renderEmptyState();
     syncUrl();
   }
