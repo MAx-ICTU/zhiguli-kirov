@@ -172,11 +172,19 @@ textarea {
 
 .hero-content {
   position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.68fr) minmax(320px, 0.32fr);
+  gap: 28px;
+  align-items: center;
   max-width: 1220px;
   width: 100%;
   margin: 0 auto;
   padding: 70px 24px 58px;
   color: #fff;
+}
+
+.hero-copy {
+  min-width: 0;
 }
 
 .eyebrow {
@@ -242,6 +250,32 @@ textarea {
   color: #fff;
 }
 
+.hero-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 720px;
+  margin-top: 10px;
+}
+
+.hero-suggestions button {
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #eaf3fc;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.hero-suggestions button:hover,
+.hero-suggestions button.is-active {
+  background: #fff;
+  color: var(--blue-dark);
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -268,6 +302,78 @@ textarea {
 .hero-actions a:first-child {
   background: #fff;
   color: var(--blue-dark);
+}
+
+.hero-assist {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(10px);
+}
+
+.hero-assist h2 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.12;
+}
+
+.hero-assist ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-assist li {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(8, 55, 96, 0.44);
+}
+
+.hero-assist strong,
+.hero-assist span {
+  display: block;
+}
+
+.hero-assist strong {
+  font-size: 14px;
+}
+
+.hero-assist span {
+  color: #dcecfb;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.hero-assist-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.hero-assist-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--blue-dark);
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+}
+
+.hero-assist-actions a:last-child {
+  background: var(--red);
+  color: #fff;
 }
 
 .hero-stats {
@@ -3266,6 +3372,14 @@ textarea {
     margin-left: auto;
   }
 
+  .hero-content {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-assist {
+    max-width: 720px;
+  }
+
   .quick-categories {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -3352,6 +3466,7 @@ textarea {
   }
 
   .hero-content {
+    gap: 14px;
     padding: 30px 18px 32px;
   }
 
@@ -3377,6 +3492,20 @@ textarea {
 
   .hero-search button {
     min-height: 44px;
+  }
+
+  .hero-suggestions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .hero-suggestions button {
+    min-width: 0;
+    padding: 7px 6px;
+    font-size: 12px;
+    line-height: 1.15;
   }
 
   .hero-actions {
@@ -3427,6 +3556,23 @@ textarea {
   .hero-contacts span {
     font-size: 11px;
     line-height: 1.25;
+  }
+
+  .hero-assist {
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .hero-assist h2 {
+    font-size: 20px;
+  }
+
+  .hero-assist li {
+    padding: 10px;
+  }
+
+  .hero-assist-actions {
+    grid-template-columns: 1fr;
   }
 
   .quick-categories,
