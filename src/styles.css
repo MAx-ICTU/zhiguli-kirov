@@ -434,27 +434,39 @@ textarea {
 }
 
 .quick-categories {
-  display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
   max-width: 1220px;
   margin: 18px auto 0;
-  padding: 0 24px;
+  padding: 10px 24px 0;
   position: relative;
   z-index: 5;
 }
 
+.quick-categories-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 .quick-categories button {
-  display: grid;
-  align-content: center;
-  gap: 4px;
-  min-height: 64px;
-  padding: 10px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  min-width: 0;
+  padding: 7px 10px;
   border: 1px solid var(--line);
+  border-radius: 999px;
   background: #fff;
   color: var(--blue-dark);
   box-shadow: none;
   text-align: left;
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .quick-categories button:hover {
@@ -479,6 +491,13 @@ textarea {
   line-height: 1.2;
 }
 
+.quick-categories .category-count {
+  display: inline;
+  color: #7a8899;
+  font-size: 11px;
+  font-weight: 800;
+}
+
 .section-shell {
   max-width: 1220px;
   margin: 64px auto 0;
@@ -488,24 +507,53 @@ textarea {
 .category-showcase {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 22px;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .category-showcase-card {
+  --category-accent: var(--blue);
   display: grid;
   align-content: space-between;
-  gap: 14px;
-  min-height: 230px;
-  padding: 18px;
+  gap: 12px;
+  min-height: 198px;
+  padding: 16px;
   overflow: hidden;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--category-accent);
   border-radius: 8px;
-  color: #fff;
+  background: #fff;
+  color: var(--blue-dark);
+  box-shadow: 0 8px 22px rgba(16, 32, 56, 0.045);
+}
+
+.category-showcase-card.product-visual-двигатель {
+  --category-accent: var(--green);
+  background: #fff;
+}
+
+.category-showcase-card.product-visual-подвеска {
+  --category-accent: #687385;
+  background: #fff;
+}
+
+.category-showcase-card.product-visual-тормоза {
+  --category-accent: var(--red);
+  background: #fff;
+}
+
+.category-showcase-card.product-visual-электрика {
+  --category-accent: var(--blue);
+  background: #fff;
 }
 
 .category-showcase-card svg {
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
+  padding: 8px;
+  border-radius: 8px;
+  background: #f2f6fa;
+  color: var(--category-accent);
   stroke: currentColor;
   stroke-width: 1.8;
   fill: none;
@@ -514,7 +562,7 @@ textarea {
 }
 
 .category-showcase-card span {
-  color: #dcecfb;
+  color: var(--muted);
   font-size: 12px;
   font-weight: 900;
   text-transform: uppercase;
@@ -522,24 +570,26 @@ textarea {
 
 .category-showcase-card h2 {
   margin: 0;
-  font-size: 23px;
-  line-height: 1.12;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1.16;
 }
 
 .category-showcase-card button {
   justify-self: start;
-  min-height: 42px;
-  padding: 10px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  min-height: 38px;
+  padding: 9px 11px;
+  border: 1px solid #d8e2ed;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.14);
-  color: #fff;
+  background: #f6f9fc;
+  color: var(--blue-dark);
   cursor: pointer;
   font-weight: 800;
 }
 
 .category-showcase-card button:hover {
-  background: #fff;
+  border-color: var(--category-accent);
+  background: #edf4fb;
   color: var(--blue-dark);
 }
 
@@ -3528,10 +3578,6 @@ textarea {
     max-width: 720px;
   }
 
-  .quick-categories {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
   .model-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -3717,7 +3763,6 @@ textarea {
     display: none;
   }
 
-  .quick-categories,
   .category-showcase,
   .popular-grid,
   .product-grid,
@@ -3802,9 +3847,13 @@ textarea {
   }
 
   .quick-categories {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    gap: 6px;
     margin-top: 14px;
+    padding-top: 8px;
+  }
+
+  .quick-categories-label {
+    flex: 0 0 100%;
   }
 
   .category-showcase {
@@ -3846,9 +3895,9 @@ textarea {
   }
 
   .quick-categories button {
-    min-height: 60px;
-    padding: 9px 10px;
-    font-size: 13px;
+    min-height: 34px;
+    padding: 7px 9px;
+    font-size: 12px;
   }
 
   .section-shell {
