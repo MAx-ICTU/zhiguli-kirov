@@ -157,7 +157,7 @@ textarea {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  min-height: 520px;
+  min-height: 500px;
   overflow: hidden;
   background: var(--blue-dark);
 }
@@ -174,13 +174,13 @@ textarea {
 .hero-content {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 760px) minmax(260px, 330px);
-  gap: 48px;
+  grid-template-columns: minmax(0, 720px) minmax(250px, 310px);
+  gap: 44px;
   align-items: center;
   max-width: 1220px;
   width: 100%;
   margin: 0 auto;
-  padding: 76px 24px 64px;
+  padding: 68px 24px 56px;
   color: #fff;
 }
 
@@ -198,9 +198,9 @@ textarea {
 }
 
 .hero h1 {
-  max-width: 760px;
+  max-width: 680px;
   margin: 0;
-  font-size: clamp(34px, 4vw, 52px);
+  font-size: 50px;
   line-height: 1.06;
   letter-spacing: 0;
 }
@@ -217,12 +217,12 @@ textarea {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 132px;
   gap: 10px;
-  max-width: 700px;
-  margin-top: 28px;
+  max-width: 680px;
+  margin-top: 24px;
   padding: 6px;
   border-radius: 10px;
   background: #fff;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.24);
 }
 
 .hero-search input,
@@ -249,15 +249,16 @@ textarea {
   min-height: 48px;
   background: var(--blue);
   color: #fff;
+  font-weight: 900;
 }
 
 .hero-suggestions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   max-width: 720px;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .hero-suggestions > span {
@@ -288,17 +289,17 @@ textarea {
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   max-width: 720px;
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .hero-actions a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  padding: 10px 14px;
+  min-height: 40px;
+  padding: 9px 13px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.08);
@@ -316,18 +317,18 @@ textarea {
 .hero-assist {
   justify-self: end;
   display: grid;
-  gap: 12px;
-  max-width: 330px;
-  padding: 18px;
+  gap: 10px;
+  max-width: 310px;
+  padding: 16px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
-  background: rgba(8, 55, 96, 0.48);
+  background: rgba(8, 55, 96, 0.38);
   backdrop-filter: blur(10px);
 }
 
 .hero-assist h2 {
   margin: 0;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.14;
 }
 
@@ -342,7 +343,7 @@ textarea {
 .hero-assist li {
   display: grid;
   gap: 2px;
-  padding: 10px 0;
+  padding: 9px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
@@ -365,7 +366,7 @@ textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
+  min-height: 38px;
   margin-top: 2px;
   padding: 9px 12px;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -384,8 +385,8 @@ textarea {
 .hero-proof {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 22px;
+  gap: 9px;
+  margin-top: 14px;
 }
 
 .hero-proof span {
@@ -394,37 +395,37 @@ textarea {
   gap: 6px;
   min-height: 32px;
   padding: 6px 0;
-  color: #dcecfb;
-  font-size: 13px;
+  color: #d6e8f8;
+  font-size: 12px;
   font-weight: 800;
 }
 
 .hero-proof strong {
   color: #fff;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1;
 }
 
 .hero-contacts {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
   max-width: 720px;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .hero-contacts a {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 34px;
-  padding: 6px 0;
+  min-height: 30px;
+  padding: 4px 0;
   color: #fff;
   text-decoration: none;
 }
 
 .hero-contacts strong {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .hero-contacts span {
@@ -3573,6 +3574,10 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .hero h1 {
+    font-size: 42px;
+  }
+
   .hero-assist {
     justify-self: start;
     max-width: 720px;
@@ -3664,99 +3669,107 @@ textarea {
   }
 
   .hero-content {
-    gap: 14px;
-    padding: 30px 18px 32px;
+    gap: 12px;
+    padding: 24px 18px 26px;
   }
 
   .hero p:not(.eyebrow) {
-    margin-top: 12px;
-    font-size: 15px;
-    line-height: 1.45;
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.42;
   }
 
   .hero h1 {
-    font-size: 28px;
+    font-size: 30px;
     line-height: 1.1;
   }
 
   .hero-search {
     grid-template-columns: 1fr;
-    margin-top: 20px;
+    gap: 6px;
+    margin-top: 18px;
+    padding: 5px;
   }
 
   .hero-search input {
-    min-height: 46px;
+    min-height: 44px;
+    padding: 0 12px;
   }
 
   .hero-search button {
-    min-height: 44px;
+    min-height: 42px;
   }
 
   .hero-suggestions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: nowrap;
     gap: 6px;
+    overflow-x: auto;
     margin-top: 8px;
+    padding-bottom: 2px;
+    scrollbar-width: none;
   }
 
   .hero-suggestions > span {
-    grid-column: 1 / -1;
+    display: none;
   }
 
   .hero-suggestions button {
+    flex: 0 0 auto;
     min-width: 0;
-    padding: 7px 6px;
+    min-height: 30px;
+    padding: 6px 10px;
     font-size: 12px;
     line-height: 1.15;
   }
 
   .hero-actions {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 7px;
-    margin-top: 10px;
+    margin-top: 8px;
   }
 
   .hero-actions a {
-    min-height: 42px;
-    padding: 9px 10px;
+    min-height: 40px;
+    padding: 8px 8px;
+    font-size: 12px;
     text-align: center;
   }
 
   .hero-proof {
-    gap: 8px;
-    margin-top: 14px;
+    gap: 7px;
+    margin-top: 10px;
   }
 
   .hero-proof span {
     min-height: 0;
     padding: 0;
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .hero-proof strong {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .hero-contacts {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2px;
-    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    margin-top: 6px;
   }
 
   .hero-contacts a {
     min-height: 0;
-    padding: 2px 0;
+    padding: 0;
   }
 
   .hero-contacts strong {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .hero-contacts span {
-    font-size: 11px;
-    line-height: 1.25;
+    display: none;
   }
 
   .hero-assist {
